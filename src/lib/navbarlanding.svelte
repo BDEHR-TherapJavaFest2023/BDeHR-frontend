@@ -82,7 +82,7 @@
         </svg>
     </button>
     <img
-        src="./src/assets/images/mainlogo.png"
+        src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&width=1200"
         alt="BDeHR Logo"
         width={125}
         height={25}

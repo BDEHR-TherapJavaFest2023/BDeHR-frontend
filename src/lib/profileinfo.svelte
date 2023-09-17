@@ -13,17 +13,7 @@
         // For example, redirect to the login page
         window.location.href = "/userlogin"; // Change the URL to your login page
     };
-    let userProfile = {
-        user_id: "NDLKX6781TT",
-        name: "Nazmus Sakib",
-        dob: "1990-01-15",
-        gender: "Male",
-        address: "Suhrawardy Hall, Dhaka",
-        nid: "123456789",
-        phone: "+8801716171819",
-        email: "sakib@gmail.com",
-        userImage: "./src/assets/images/userdefault.png",
-    };
+    export let userProfile;
     let medications = [
         {
             name: "Medication 1",

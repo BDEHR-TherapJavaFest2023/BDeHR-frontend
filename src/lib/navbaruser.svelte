@@ -1,6 +1,7 @@
 <script>
     import Link from "svelte-spa-router";
     import navigate from "svelte-spa-router";
+
     let drawerOpen = false;
     let typingText = "";
 

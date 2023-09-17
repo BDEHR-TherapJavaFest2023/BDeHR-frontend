@@ -1,5 +1,16 @@
 <script>
     import UserProfile from "./profileinfo.svelte";
+    let userData = {
+        user_id: "NDLKX6781TT",
+        name: "Nazmus Sakib",
+        dob: "1990-01-15",
+        gender: "Male",
+        address: "Suhrawardy Hall, Dhaka",
+        nid: "123456789",
+        phone: "+8801716171819",
+        email: "sakib@gmail.com",
+        userImage: "./src/assets/images/userdefault.png",
+    };
 </script>
 
 <main>
@@ -19,7 +30,7 @@
                 <!-- svelte-ignore a11y-label-has-associated-control -->
                 <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                     <div class="w-15 rounded-full">
-                        <img src="./src/assets/images/sakib.png" />
+                        <img src={userData.userImage} />
                     </div>
                 </label>
                 <ul
@@ -40,7 +51,7 @@
             </div>
         </div>
     </div>
-    <UserProfile />
+    <UserProfile bind:userProfile={userData} />
 </main>
 
 <style>
