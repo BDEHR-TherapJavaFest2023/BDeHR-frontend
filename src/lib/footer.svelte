@@ -18,11 +18,17 @@
                 <p>Suhrawardi Hall, BUET</p>
             </div>
             <div class="flex items-center space-x-2">
-                <img src="./src/assets/icons/phone.svg" alt="Phone Icon" />
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/phone.svg"
+                    alt="Phone Icon"
+                />
                 <p>Nazmus Sakib: +8801759947779</p>
             </div>
             <div class="flex items-center space-x-2">
-                <img src="./src/assets/icons/phone.svg" alt="Phone Icon" />
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/phone.svg"
+                    alt="Phone Icon"
+                />
                 <p>Rafid Pial: +8801759947779</p>
             </div>
             <div class="flex items-center space-x-2">
