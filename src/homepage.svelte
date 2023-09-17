@@ -56,7 +56,26 @@
     }
 
     // Start observing when the component is mounted
-    onMount(initIntersectionObserver);
+    //onMount(initIntersectionObserver);
+
+    async function test() {
+        await fetch(
+            "https://cors-anywhere.herokuapp.com/https://bdehr-backend.onrender.com/test"
+        )
+            .then((response) => {
+                console.log(response);
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+            });
+    }
+
+    onMount(() => {
+        //console.log("Here");
+        initIntersectionObserver();
+        test();
+    });
 </script>
 
 <main>
@@ -228,7 +247,9 @@
                 <br />
                 Provide treatment considering every details
             </p>
-            <button class=" btn btn-outline btn-warning">Get Started</button>
+            <a href="#/doctorlogin" class="w-full btn btn-outline btn-warning"
+                >Get Started</a
+            >
         </div>
     </div>
 
@@ -259,7 +280,8 @@
                 <br />
                 Organize your files & authorize access to your files.
             </p>
-            <button class="w-2/3 btn btn-outline btn-accent">Get Started</button
+            <a href="#/hospitalogin" class="w-2/3 btn btn-outline btn-accent"
+                >Get Started</a
             >
         </div>
         <figure

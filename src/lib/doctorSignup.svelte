@@ -1,6 +1,7 @@
 <script>
-    let username = "";
-    let nid = "";
+    let doctorName = "";
+    let doctorid = "";
+    let bmdc = "";
     let dob = "";
     let address = "";
     let phoneNumber = "";
@@ -37,31 +38,32 @@
             <div class="mb-4">
                 <label
                     class="block text-gray-700 text-sm font-bold mb-2"
-                    for="username"
+                    for="doctorName"
                 >
-                    User Name
+                    Doctor Name
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
+                    id="doctorName"
                     type="text"
-                    placeholder="User Name"
-                    bind:value={username}
+                    placeholder="Enter Name"
+                    bind:value={doctorName}
                 />
             </div>
+
             <div class="mb-4">
                 <label
                     class="block text-gray-700 text-sm font-bold mb-2"
-                    for="nid"
+                    for="bmdc"
                 >
-                    NID Number
+                    BMDC Number
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="nid"
+                    id="bmdc"
                     type="text"
-                    placeholder="NID Number"
-                    bind:value={nid}
+                    placeholder="Enter BMDC Number"
+                    bind:value={bmdc}
                 />
             </div>
             <div class="mb-4">
@@ -75,7 +77,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="dob"
                     type="date"
-                    placeholder="Date of Birth"
+                    placeholder="Enter Date of Birth"
                     bind:value={dob}
                 />
             </div>
@@ -90,7 +92,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="address"
                     type="text"
-                    placeholder="Address"
+                    placeholder="Enter Address"
                     bind:value={address}
                 />
             </div>
@@ -105,7 +107,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="phoneNumber"
                     type="text"
-                    placeholder="Phone Number"
+                    placeholder="Enter Phone Number"
                     bind:value={phoneNumber}
                 />
             </div>
@@ -121,7 +123,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="mail"
                     type="text"
-                    placeholder="Email"
+                    placeholder="Enter Email"
                     bind:value={mail}
                 />
             </div>
@@ -171,7 +173,7 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="password"
                     type="password"
-                    placeholder="Password"
+                    placeholder="Type Password"
                     bind:value={password}
                 />
             </div>
