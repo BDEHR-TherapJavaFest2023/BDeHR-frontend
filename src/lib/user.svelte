@@ -9,7 +9,8 @@
         nid: "123456789",
         phone: "+8801716171819",
         email: "sakib@gmail.com",
-        userImage: "./src/assets/images/userdefault.png",
+        userImage:
+            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
     };
 </script>
 
@@ -17,7 +18,7 @@
     <div class="navbar bg-base-100" style="background-color: #D2F3FB;">
         <div class="flex-1">
             <img
-                src="./src/assets/images/mainlogo.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
                 alt="BDeHR Logo"
                 width={125}
                 height={25}

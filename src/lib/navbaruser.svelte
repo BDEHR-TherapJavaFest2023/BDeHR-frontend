@@ -83,7 +83,7 @@
         </svg>
     </button>
     <img
-        src="./src/assets/images/mainlogo.png"
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
         alt="BDeHR Logo"
         width={125}
         height={25}
@@ -115,7 +115,7 @@
             >
         </button>
         <img
-            src="./src/assets/images/mainlogo.png"
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
             alt="BDeHR Logo"
             width={100}
             height={15}

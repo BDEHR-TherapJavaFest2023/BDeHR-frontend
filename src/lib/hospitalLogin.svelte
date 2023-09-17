@@ -1,14 +1,17 @@
 <div
     class="flex items-center justify-center min-h-screen relative"
-    style="background-image: url('./src/assets/images/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
+    style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
     <div class="card lg:card-side bg-ash shadow-xl z-50">
         <figure>
-            <img src="./src/assets/images/hospitalLogin.jpg" alt="Album" />
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospitalLogin.jpg"
+                alt="Album"
+            />
         </figure>
         <div class="card-body flex flex-col items-center absolute inset-0">
             <img
-                src="./src/assets/images/mainlogoBag.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
                 alt="Album"
                 width={145}
                 height={20}

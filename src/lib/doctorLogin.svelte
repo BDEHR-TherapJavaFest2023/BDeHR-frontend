@@ -1,10 +1,13 @@
 <div
     class="flex items-center justify-center min-h-screen relative"
-    style="background-image: url('./src/assets/images/orangeblur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
+    style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/orangeblur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
     <div class="card lg:card-side bg-ash shadow-xl z-50">
         <figure>
-            <img src="./src/assets/images/doctorLogin.jpg" alt="Album" />
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/doctorLogin.jpg"
+                alt="Album"
+            />
         </figure>
         <div class="card-body flex flex-col items-center absolute inset-1/4">
             <h1 class="text-5xl font-bold" style="color: #000000;">BDeHR</h1>

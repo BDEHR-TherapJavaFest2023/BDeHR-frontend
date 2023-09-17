@@ -1,6 +1,4 @@
 <script>
-    import TotalFlow from "./assets/images/totalFlow.png";
-    import svelteLogo from "./assets/images/mainlogo.png";
     import Navbar from "./lib/navbarlanding.svelte";
     import Footer from "./lib/footer.svelte";
     import { onMount } from "svelte";
@@ -59,12 +57,9 @@
     //onMount(initIntersectionObserver);
 
     async function test() {
-        await fetch(
-            "https://cors-anywhere.herokuapp.com/https://bdehr-backend.onrender.com/test"
-        )
+        await fetch("https://bdehr-backend.onrender.com/test")
             .then((response) => {
-                console.log(response);
-                return response.json();
+                return response.text();
             })
             .then((data) => {
                 console.log(data);
@@ -111,12 +106,12 @@
                 </div>
                 <div class="relative w-1/2">
                     <img
-                        src="./src/assets/images/hero-image-desktop.png"
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hero-image-desktop.png"
                         class="w-full h-full"
                         alt="Hero"
                     />
                     <img
-                        src="./src/assets/images/hero-image-mobile.png"
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hero-image-mobile.png"
                         class="absolute -bottom-4 -left-3"
                         alt="Hero"
                     />
@@ -133,7 +128,7 @@
         <figure style="height: 500px;">
             <!-- Set the height here -->
             <img
-                src="./src/assets/images/totalFlow.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/totalFlow.png"
                 alt="Doctor"
                 class="w-full h-full"
                 style="background-color: #F5F8EE;"
@@ -204,7 +199,7 @@
             class={isHovered ? "animate-right-to-left" : ""}
         >
             <img
-                src="./src/assets/images/userCard2.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userCard2.png"
                 alt="User"
                 class="w-full h-full"
                 style="background-color: #FFFFFF;"
@@ -223,7 +218,7 @@
             class={isHoveredDoctor ? "animate-right-to-left" : ""}
         >
             <img
-                src="./src/assets/images/doctorCard.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/doctorCard.png"
                 alt="User"
                 class="w-full h-full"
                 style="background-color: #FFFFFF;"
@@ -308,7 +303,7 @@
             class={isHoveredLab ? "animate-right-to-left" : ""}
         >
             <img
-                src="./src/assets/images/labCard.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/labCard.png"
                 alt="User"
                 class="w-full h-full"
                 style="background-color: #FFFFFF;"
@@ -371,7 +366,7 @@
             class={isHoveredAdmin ? "animate-right-to-left" : ""}
         >
             <img
-                src="./src/assets/images/adminCard.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/adminCard.png"
                 alt="User"
                 class="w-full h-full"
                 style="background-color: #FFFFFF;"

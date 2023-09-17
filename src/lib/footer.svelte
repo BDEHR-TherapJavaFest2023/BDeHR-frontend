@@ -2,7 +2,7 @@
     <div class="max-w-screen-xl mx-auto flex justify-between space-x-14">
         <div class="flex flex-col space-y-6 w-1/4">
             <img
-                src="./src/assets/images/mainlogo.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
                 width={140}
                 height={20}
                 alt="Screeno Logo"

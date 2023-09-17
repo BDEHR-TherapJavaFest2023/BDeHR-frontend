@@ -18,7 +18,7 @@
 
 <main
     class="flex justify-center items-center min-h-screen"
-    style="background-image: url('./src/assets/images/blurblue.jpg'); background-size: cover; backdrop-filter: blur(0px);"
+    style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(0px);"
 >
     <div
         class="shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
@@ -26,7 +26,7 @@
     >
         <div class="flex justify-center">
             <img
-                src="./src/assets/images/mainlogo.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
                 alt="Album"
                 width={145}
                 height={20}
