@@ -97,7 +97,7 @@
                             Profile Info
                         </p>
                         <img
-                            src="./src/assets/icons/arrow.svg"
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/arrow.svg"
                             class="transition transform group-hover:translate-x-1"
                             alt="Arrow Icon"
                         />
@@ -112,7 +112,7 @@
                             Medication Info
                         </p>
                         <img
-                            src="./src/assets/icons/arrow.svg"
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/arrow.svg"
                             class="transition transform group-hover:translate-x-1"
                             alt="Arrow Icon"
                         />
@@ -127,7 +127,7 @@
                             Test Reports
                         </p>
                         <img
-                            src="./src/assets/icons/arrow.svg"
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/arrow.svg"
                             class="transition transform group-hover:translate-x-1"
                             alt="Arrow Icon"
                         />

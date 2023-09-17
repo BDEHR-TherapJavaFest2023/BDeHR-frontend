@@ -12,7 +12,7 @@
             <h6 class="font-semibold font-heading">Contact Info</h6>
             <div class="flex items-start space-x-2">
                 <img
-                    src="./src/assets/icons/location.svg"
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location.svg"
                     alt="Location Icon"
                 />
                 <p>Suhrawardi Hall, BUET</p>
@@ -26,11 +26,17 @@
                 <p>Rafid Pial: +8801759947779</p>
             </div>
             <div class="flex items-center space-x-2">
-                <img src="./src/assets/icons/email-blue.svg" alt="Email Icon" />
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
+                    alt="Email Icon"
+                />
                 <p>Nazmus Sakib: sakibbd150520@gmail.com</p>
             </div>
             <div class="flex items-center space-x-2">
-                <img src="./src/assets/icons/email-blue.svg" alt="Email Icon" />
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
+                    alt="Email Icon"
+                />
                 <p>Rafid Pial: saadmrp@gmail.com</p>
             </div>
         </div>
