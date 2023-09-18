@@ -36,7 +36,7 @@
 
             <div class="card-actions justify-end mt-5">
                 <a
-                    href="#/user"
+                    href="#/doctor/home"
                     class="w-full btn btn-outline btn-md hover:bg-black text-black"
                 >
                     Login

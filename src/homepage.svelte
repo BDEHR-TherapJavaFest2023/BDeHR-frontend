@@ -2,6 +2,7 @@
     import Navbar from "./lib/navbarlanding.svelte";
     import Footer from "./lib/footer.svelte";
     import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
 
     let animateCard = false;
     let isHovered = false;
@@ -53,6 +54,27 @@
         }
     }
 
+    let activeSlide = 0;
+
+    // Define an array of image URLs
+    const images = [
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/admin%20(1).jpg",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userBegin-transformed-removebg%20(1).png",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Doctor_module.png",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.png",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/labbegin.jpeg",
+    ];
+
+    function nextSlide() {
+        console.log("Next Slide function called");
+        activeSlide = (activeSlide + 1) % images.length;
+    }
+
+    function prevSlide() {
+        console.log("Prev Slide function called");
+        activeSlide = (activeSlide - 1 + images.length) % images.length;
+    }
+
     // Start observing when the component is mounted
     //onMount(initIntersectionObserver);
 
@@ -79,7 +101,7 @@
 
     <!-- Flowchart Component -->
     <section
-        class="py-20"
+        class="py-20 mb-20"
         style="background-color: #FFFFFF ; color: black; padding: 1.5rem; z-index: 10;"
     >
         <div class="max-w-screen-xl mx-auto mt-48">
@@ -120,48 +142,66 @@
         </div>
     </section>
 
-    <div
-        class="relative flex card lg:card-side bg-base-100 shadow-xl px-4"
-        id="animated-card"
-        class:animate-left-to-right={animateCard}
-    >
-        <figure style="height: 500px;">
-            <!-- Set the height here -->
-            <img
-                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/totalFlow.png"
-                alt="Doctor"
-                class="w-full h-full"
-                style="background-color: #F5F8EE;"
-            />
-        </figure>
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div class="card lg:card-side bg-white shadow-xl p-4 gap-x-60">
         <div
-            class="card-body animate-right-to-left"
-            style="background-color: #E9E6F7;"
+            class="w-1/2 card-body animate-right-to-left"
+            style="background-color: #FFFFFF;"
         >
             <h1 class="text-4xl font-bold font-heading">Our Services</h1>
-            <p>
+            <p class="text-2xl font-semibold mb-2">
                 You take care your health and let us take care of everything
                 else
             </p>
-            <div class="flex mt-4 space-x-3">
+            <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline">Administrator</button>
+                <button class="w-full btn btn-outline text-2xl font-bold"
+                    >Administrator</button
+                >
             </div>
-            <div class="flex mt-4 space-x-3">
+            <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline">User</button>
+                <button class="w-full btn btn-outline text-2xl font-bold"
+                    >User</button
+                >
             </div>
-            <div class="flex mt-4 space-x-3">
+            <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline">Doctor</button>
+                <button class="w-full btn btn-outline text-2xl font-bold"
+                    >Doctor</button
+                >
             </div>
-            <div class="flex mt-4 space-x-3">
+            <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline">Hospital</button>
+                <button class="w-full btn btn-outline text-2xl font-bold"
+                    >Hospital</button
+                >
             </div>
-            <div class="flex mt-4 space-x-3">
+            <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline">Laboratory</button>
+                <button class="w-full btn btn-outline text-2xl font-bold"
+                    >Laboratory</button
+                >
+            </div>
+        </div>
+
+        <div class="carousel w-full relative">
+            {#each images as image, i (i)}
+                <div
+                    id={"slide" + i}
+                    class="carousel-item w-full transition-opacity"
+                    class:active={i === activeSlide}
+                    in:fade={{ duration: 500 }}
+                    out:fade={{ duration: 500 }}
+                >
+                    <img src={image} class="w-full" alt="Slide Image" />
+                </div>
+            {/each}
+            <div
+                class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2"
+            >
+                <button class="btn btn-circle" on:click={prevSlide}>❮</button>
+                <button class="btn btn-circle" on:click={nextSlide}>❯</button>
             </div>
         </div>
     </div>
@@ -406,5 +446,12 @@
 
     .animate-right-to-left {
         animation: right-to-left 1s ease forwards;
+    }
+    .carousel-item {
+        display: none;
+    }
+
+    .carousel-item.active {
+        display: block;
     }
 </style>
