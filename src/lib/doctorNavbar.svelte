@@ -75,7 +75,7 @@
     <div class="typing-text">
         <div>{typingText}</div>
     </div>
-    <a href="#/about" class="btn btn-outline ml-auto">About</a>
+    <a href="#/doctorlogin" class="btn btn-outline ml-auto mr-2">Logout</a>
 </div>
 
 <style>

@@ -1,1 +1,7 @@
-<h1>eta hospitals</h1>
+<script>
+    export let data;
+</script>
+
+<main>
+    <h1>data.name</h1>
+</main>

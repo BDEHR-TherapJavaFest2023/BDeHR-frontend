@@ -32,7 +32,7 @@
     }
 </script>
 
-<main class="p-4 max-w-xl mx-auto">
+<main class="p-4 max-w-xl mx-auto shadow-2xl">
     <div class="mb-6">
         <img
             src={doctorData.userImage}
