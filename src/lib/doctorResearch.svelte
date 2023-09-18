@@ -1,25 +1,87 @@
 <script>
-    export let research = [
-        {
-            title: "The Effects of XYZ on Human Health",
-            publication: "Journal of Medical Research, 2021",
-        },
-        {
-            title: "Case Study on ABC Disease",
-            publication: "Health Science Journal, 2020",
-        },
-        // You can add more research entries to the list as needed
-    ];
+    import { doctorResearch } from "./doctorStore";
+    import { doctorRunningName } from "./doctorStore";
+    import NavbarRunning from "./doctorNavbar.svelte";
+
+    let doctor_Researches = [];
+    let NameRunning;
+
+    // Subscribe to the doctorId store to get the value
+    doctorResearch.subscribe((value) => {
+        doctor_Researches = value;
+    });
+    doctorRunningName.subscribe((value) => {
+        NameRunning = value;
+    });
+    function navigateToProfile() {
+        // Navigate to the Profile page
+        window.location.hash = "#/doctorhome";
+    }
+    function navigateToHospital() {
+        // Navigate to the hospitals page
+        window.location.hash = "#/doctorhome/hospitals";
+    }
 </script>
 
-<section>
-    <h2 class="text-2xl font-bold mb-4">Research Work</h2>
-    <ul class="space-y-2">
-        {#each research as entry}
-            <li>
-                <strong>{entry.title}</strong> - Published in:
-                <i>{entry.publication}</i>
-            </li>
+<main class="bg-gray-100 min-h-screen">
+    <NavbarRunning doctorName={NameRunning} />
+
+    <div style="padding-top: 145px;">
+        <div class="flex justify-center mt-4 space-x-4">
+            <button
+                class="btn border-black text-white bg-slate-400 hover:bg-black"
+                on:click={navigateToProfile}
+            >
+                Profile
+            </button>
+
+            <button
+                class="btn border-black text-white bg-slate-400 hover:bg-black"
+                on:click={navigateToHospital}
+            >
+                Hospitals
+            </button>
+            <button
+                class="btn border-black text-white bg-black cursor-default hover:bg-black"
+            >
+                Research
+            </button>
+        </div>
+    </div>
+
+    <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+        style="padding-top: 10px;"
+    >
+        <!-- Display cards for each hospital name -->
+        {#each doctor_Researches as hospital, index}
+            <div
+                class="bg-white p-6 rounded-lg shadow-md text-center transition-colors hover:bg-gray-200
+                transition-transform transform hover:scale-90"
+            >
+                <div class="flex items-center justify-center space-x-4">
+                    <!-- Assuming you have an icon component or library, replace with your icon of choice -->
+
+                    <span class="text-blue-500 font-bold">{hospital}</span>
+                </div>
+            </div>
         {/each}
-    </ul>
-</section>
+    </div>
+</main>
+
+<style>
+    .btn {
+        padding: 8px 12px;
+        border: 1px solid;
+        border-radius: 4px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .bg-darkGray {
+        background-color: #bcbcbc;
+    }
+
+    button:focus {
+        outline: none;
+    }
+</style>

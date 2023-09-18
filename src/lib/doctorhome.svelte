@@ -1,7 +1,10 @@
 <script>
     import Navbardoc from "./doctorNavbar.svelte";
     import ProfileTab from "./doctorProfile.svelte";
-    import haspitalTab from "./doctorHospital.svelte";
+    import navigate from "svelte-spa-router";
+    import { doctorHospitals } from "./doctorStore";
+    import { doctorRunningName } from "./doctorStore";
+    import { doctorResearch } from "./doctorStore";
 
     let doctorDatas = {
         doctor_id: "NDLKX6781TT",
@@ -15,8 +18,32 @@
         userImage:
             "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
     };
-    function navigateTo(url) {
-        window.location.hash = url;
+    let doctorHospital = [
+        "Dhaka Medical College",
+        "Popular Hospital Limited",
+        "Holy Care Hospital & Clinic",
+        "FMCR Diagonostic Center",
+    ];
+    let doctorResearches = [
+        "Dengue on Elderly",
+        "Why Pial is Boksod",
+        "Common Cold on Children",
+        "Renal diseases on diabetec patient",
+    ];
+    function navigateToHospitals() {
+        // Set the doctor_id in the store
+        doctorResearch.set(doctorResearches);
+        doctorHospitals.set(doctorHospital);
+        doctorRunningName.set(doctorDatas.name);
+        // Navigate to the hospitals page
+        window.location.hash = "#/doctorhome/hospitals";
+    }
+    function navigateToResearch() {
+        doctorResearch.set(doctorResearches);
+        doctorHospitals.set(doctorHospital);
+        doctorRunningName.set(doctorDatas.name);
+        // Navigate to the hospitals page
+        window.location.hash = "#/doctorhome/researches";
     }
 </script>
 
@@ -34,12 +61,13 @@
             </button>
             <button
                 class="btn border-black text-white bg-slate-400 hover:bg-black"
-                on:click={() => navigateTo("/doctorhome/hospitals")}
+                on:click={navigateToHospitals}
             >
                 Hospitals
             </button>
             <button
                 class="btn border-black text-white bg-slate-400 hover:bg-black"
+                on:click={navigateToResearch}
             >
                 Research
             </button>
