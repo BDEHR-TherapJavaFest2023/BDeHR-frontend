@@ -2,9 +2,11 @@
     import { onMount } from "svelte";
     import L from "leaflet";
     import "leaflet/dist/leaflet.css";
+    import { doctors } from "./hospitalstore";
+    import { hospitalName } from "./hospitalstore";
 
     const data = {
-        name: "Dhaka Medical College",
+        name: "Dhaka Medical College Hospital",
         hospitalID: "ABCD4321",
         latitude: 23.726,
         longitude: 90.3976,
@@ -21,6 +23,38 @@
         NumberCurrentPatient: "20,000",
         NumberCurrentUnit: "300",
     };
+    let DoctorsIntro = [
+        {
+            doctorName: "Dr. M. Rezaul Karim",
+            speciality: "Medicine",
+            degrees: ["MBBS", "FCPS", "FRCS"],
+            imageURL:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+        },
+        {
+            doctorName: "Dr. Shirin Akhter",
+            speciality: "Gynae & Obstetrics",
+            degrees: ["MBBS", "MCPS", "FCPS"],
+            imageURL:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+        },
+        {
+            doctorName: "Dr. Faiza Roshni",
+            speciality: "Surgery",
+            degrees: ["MBBS", "FCPS", "FRCS"],
+            imageURL:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+        },
+    ];
+
+    function navigateToHospitalDoctors() {
+        // Set the doctor_id in the store
+        doctors.set(DoctorsIntro);
+        hospitalName.set(data.name);
+
+        // Navigate to the hospitals page
+        window.location.hash = "#/hospitalhome/doctors";
+    }
 
     let map;
 
@@ -113,6 +147,20 @@
                 <div>
                     <strong class="text-gray-700">Current Unit:</strong>
                     <span class="ml-2">{data.NumberCurrentUnit}</span>
+                </div>
+                <div class="mt-2">
+                    <button
+                        class="btn border-black text-white bg-violet-500 hover:bg-violet-900 mr-2"
+                        on:click={navigateToHospitalDoctors}
+                    >
+                        Doctors
+                    </button>
+                    <button
+                        class="btn border-black text-white bg-violet-500 hover:bg-violet-900"
+                        on:click={navigateToHospitalDoctors}
+                    >
+                        Patients
+                    </button>
                 </div>
             </div>
         </div>
