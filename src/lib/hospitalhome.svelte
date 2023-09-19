@@ -4,6 +4,7 @@
     import "leaflet/dist/leaflet.css";
     import { doctors } from "./hospitalstore";
     import { hospitalName } from "./hospitalstore";
+    import { patients } from "./hospitalstore";
 
     const data = {
         name: "Dhaka Medical College Hospital",
@@ -46,7 +47,50 @@
                 "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
         },
     ];
-
+    let patientsIntro = [
+        {
+            patientName: "Nazmus Sakib",
+            patientID: "AB13WE8",
+            Status: "Visiting Doctor",
+            DoctorAssigned: "Dr M. Rezaul Karim",
+            ContactNumber: "01759922550",
+        },
+        {
+            patientName: "Saad Md. Rafid Pial",
+            patientID: "ASC439O",
+            Status: "Doing Diagnostics",
+            DoctorAssigned: null,
+            ContactNumber: "01729456209",
+        },
+        {
+            patientName: "Salman Sayeed",
+            patientID: "99WE5Q7",
+            Status: "Admitted",
+            DoctorAssigned: "Dr Shirin Akhter",
+            ContactNumber: "01482956918",
+        },
+        {
+            patientName: "Mahir Labib Dihan",
+            patientID: "99RS5Q7",
+            Status: "Visiting Doctor",
+            DoctorAssigned: "Dr M. Rezaul Karim",
+            ContactNumber: "01482956918",
+        },
+        {
+            patientName: "Abir Muhtasim",
+            patientID: "99RG8Q7",
+            Status: "Visiting Doctor",
+            DoctorAssigned: "Dr M. Rezaul Karim",
+            ContactNumber: "01482956918",
+        },
+        {
+            patientName: "Sayem Shahad",
+            patientID: "99RS9S7",
+            Status: "Doing Diagnostics",
+            DoctorAssigned: null,
+            ContactNumber: "01482956918",
+        },
+    ];
     function navigateToHospitalDoctors() {
         // Set the doctor_id in the store
         doctors.set(DoctorsIntro);
@@ -54,6 +98,14 @@
 
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/doctors";
+    }
+    function navigateToHospitalPatients() {
+        // Set the doctor_id in the store
+        patients.set(patientsIntro);
+        hospitalName.set(data.name);
+
+        // Navigate to the hospitals page
+        window.location.hash = "#/hospitalhome/patients";
     }
 
     let map;
@@ -65,7 +117,7 @@
 
         const defaultIcon = L.icon({
             iconUrl,
-            iconSize: [25, 41], // Default size, adjust if needed
+            iconSize: [35, 35], // Default size, adjust if needed
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
             shadowSize: [41, 41],
@@ -156,10 +208,16 @@
                         Doctors
                     </button>
                     <button
-                        class="btn border-black text-white bg-violet-500 hover:bg-violet-900"
-                        on:click={navigateToHospitalDoctors}
+                        class="btn border-black text-white bg-violet-500 hover:bg-violet-900 mr-2"
+                        on:click={navigateToHospitalPatients}
                     >
                         Patients
+                    </button>
+                    <button
+                        class="btn border-black text-white bg-rose-500 hover:bg-rose-900"
+                        on:click={navigateToHospitalDoctors}
+                    >
+                        Authority
                     </button>
                 </div>
             </div>
