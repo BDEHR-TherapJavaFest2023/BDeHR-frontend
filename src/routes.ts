@@ -3,6 +3,7 @@ import userLogin from './lib/userlogin.svelte';
 import hospitalLogin from './lib/hospitalLogin.svelte';
 import doctorLogin from './lib/doctorLogin.svelte';
 import doctorHome from './lib/doctorhome.svelte';
+import hospitalHome from './lib/hospitalhome.svelte';
 import doctorHospital from './lib/doctorHospital.svelte';
 import doctorResearch from './lib/doctorResearch.svelte';
 import About from './lib/about.svelte';
@@ -23,5 +24,6 @@ export const routes = {
     '/doctorhome': doctorHome,
     '/doctorhome/hospitals': doctorHospital,
     '/doctorhome/researches': doctorResearch,
+    '/hospitalhome': hospitalHome,
     // Add more routes as needed
 };

@@ -161,20 +161,24 @@
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline text-2xl font-bold"
-                    >User</button
+                <a
+                    href="#/userlogin"
+                    class="w-full btn btn-outline text-2xl font-bold">User</a
                 >
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline text-2xl font-bold"
-                    >Doctor</button
+                <a
+                    href="#/doctorlogin"
+                    class="w-full btn btn-outline text-2xl font-bold">Doctor</a
                 >
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline text-2xl font-bold"
-                    >Hospital</button
+                <a
+                    href="#/hospitalogin"
+                    class="w-full btn btn-outline text-2xl font-bold"
+                    >Hospital</a
                 >
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
@@ -324,7 +328,7 @@
             class={isHoveredHospital ? "animate-right-to-left" : ""}
         >
             <img
-                src="./src/assets/images/hospitalCard.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospitalCard.png"
                 alt="User"
                 class="w-full h-full"
                 style="background-color: #FFFFFF;"
