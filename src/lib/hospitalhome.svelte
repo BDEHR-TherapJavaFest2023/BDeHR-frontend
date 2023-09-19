@@ -5,6 +5,7 @@
     import { doctors } from "./hospitalstore";
     import { hospitalName } from "./hospitalstore";
     import { patients } from "./hospitalstore";
+    import { hospitalLogo } from "./hospitalstore";
 
     const data = {
         name: "Dhaka Medical College Hospital",
@@ -42,6 +43,13 @@
         {
             doctorName: "Dr. Faiza Roshni",
             speciality: "Surgery",
+            degrees: ["MBBS", "FCPS", "FRCS"],
+            imageURL:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+        },
+        {
+            doctorName: "Dr. Tasnim Ishrat Sara",
+            speciality: "Medicine",
             degrees: ["MBBS", "FCPS", "FRCS"],
             imageURL:
                 "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
@@ -106,6 +114,16 @@
 
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/patients";
+    }
+
+    function navigateToHospitalAuthority() {
+        // Set the doctor_id in the store
+        doctors.set(DoctorsIntro);
+        hospitalLogo.set(data.logoUrl);
+        hospitalName.set(data.name);
+
+        // Navigate to the hospitals page
+        window.location.hash = "#/hospitalhome/authorityLogin";
     }
 
     let map;
@@ -215,7 +233,7 @@
                     </button>
                     <button
                         class="btn border-black text-white bg-rose-500 hover:bg-rose-900"
-                        on:click={navigateToHospitalDoctors}
+                        on:click={navigateToHospitalAuthority}
                     >
                         Authority
                     </button>
