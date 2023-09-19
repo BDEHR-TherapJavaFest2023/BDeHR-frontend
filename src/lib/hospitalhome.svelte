@@ -26,6 +26,18 @@
 
     onMount(async () => {
         // No need for the 'require' here anymore
+        const iconUrl =
+            "https://www.iconarchive.com/download/i103443/paomedia/small-n-flat/map-marker.1024.png";
+
+        const defaultIcon = L.icon({
+            iconUrl,
+            iconSize: [25, 41], // Default size, adjust if needed
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41],
+        });
+
+        L.Marker.prototype.options.icon = defaultIcon;
 
         // Wait for the next micro-task to ensure the DOM is fully ready
         await Promise.resolve();
