@@ -10,6 +10,8 @@ import dospitalAuthorityLogin from './lib/hospitalauthoritylogin.svelte'
 import HospitalAuthority from './lib/hospitalAuthority.svelte';
 import doctorHospital from './lib/doctorHospital.svelte';
 import doctorResearch from './lib/doctorResearch.svelte';
+import doctorPatient from './lib/doctorPatient.svelte';
+import doctorOnPatient from './lib/doctorOnPatient.svelte';
 import adminHome from './lib/adminhome.svelte';
 import About from './lib/about.svelte';
 import userSignUp from './lib/usersignup.svelte';
@@ -35,5 +37,7 @@ export const routes = {
     '/adminhome': adminHome,
     '/hospitalhome/authorityLogin': dospitalAuthorityLogin,
     '/doctorhome/Authority': HospitalAuthority,
-    // Add more routes as needed
+    '/doctorhome/doctorPatient/:hospitalName': doctorPatient,
+    '/doctorhome/doctorPatient/:hospitalName/:patientId': doctorOnPatient,
+
 };
