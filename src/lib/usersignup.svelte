@@ -2,14 +2,14 @@
     import toast, { Toaster } from "svelte-french-toast";
     import { supabase } from "./supabaseClient";
     import { serverUrl } from "./constants";
-    let username = "1";
-    let nid = "1";
-    let dob = "1";
-    let address = "1";
-    let phoneNumber = "1";
-    let gender = "male";
-    let password = "1";
-    let mail = "1";
+    let username = "";
+    let nid = "";
+    let dob = "";
+    let address = "";
+    let phoneNumber = "";
+    let gender = "";
+    let password = "";
+    let mail = "";
     let profilePicture;
 
     async function setDefaultPhoto(id) {
@@ -83,7 +83,7 @@
 
                 //Signup Failed
                 if (ret == 0) {
-                    toast.error("Singup Failed 🙁");
+                    toast.error("Signup Failed 🙁");
                 }
                 //Signup Successful
                 else {

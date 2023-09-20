@@ -1,19 +1,58 @@
 <script>
+    import toast, { Toaster } from "svelte-french-toast";
+    import { serverUrl } from "./constants";
+    import { doctorInfo } from "./store";
     let doctorID = "";
     let doctorPass = "";
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (doctorID && doctorPass) {
-            // Here you can take necessary actions with the form data
-            // Example: You can send this data to your backend for verification
+    async function handleSubmit(event) {
+        //Testing Direct Login
+        // window.location.hash = `#/user`;
 
-            // For now, we're simply redirecting to the user route
-            window.location.href = "#/doctorhome";
-        }
+        const form = event.target;
+        const data = new FormData(form);
+
+        console.log(data.get("id"));
+        console.log(data.get("password"));
+
+        await fetch(serverUrl + "doctor/login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .catch(() => null)
+            .then((data) => {
+                // let ret = +data;
+                console.log(data);
+
+                //Login Failed
+                if (!data) {
+                    toast.error("Login Failed 🙁");
+                }
+                //Login Success
+                else {
+                    doctorInfo.set({
+                        doctorName: data["name"],
+                        doctorId: data["id"],
+                        doctorEmail: data["email"],
+                        doctorBmdc: data["bmdc"],
+                        doctorDob: data["dob"],
+                        doctorAddress: data["address"],
+                        doctorGender: data["gender"],
+                        doctorPhone: data["phone"],
+                        doctorPhoto: data["photo"],
+                    });
+                    window.location.hash = `#/doctorhome`;
+                }
+            });
+
+        form.reset();
     }
 </script>
 
+<Toaster />
 <div
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/orangeblur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
@@ -30,19 +69,23 @@
             <h5 class="text-3xl font-bold" style="color: #000000;">
                 Sign In to Doctor's Account
             </h5>
-            <form on:submit={handleSubmit}>
+            <form on:submit|preventDefault={handleSubmit}>
                 <div class="mb-2">
                     <input
+                        required
                         bind:value={doctorID}
-                        type="text"
+                        type="number"
+                        name="id"
                         placeholder="Enter Doctor ID"
                         class="input input-bordered w-full max-w-xs"
                     />
                 </div>
                 <div>
                     <input
+                        required
                         bind:value={doctorPass}
                         type="text"
+                        name="password"
                         placeholder="Enter Password"
                         class="w-full input input-bordered max-w-xs"
                     />

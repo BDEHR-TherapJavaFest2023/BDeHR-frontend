@@ -1,5 +1,11 @@
 <script>
+    import toast, { Toaster } from "svelte-french-toast";
+    import { serverUrl } from "./constants";
     import { onMount } from "svelte";
+    import { supabase } from "./supabaseClient";
+
+    let returnId;
+
     let doctorName = "";
     let doctorid = "";
     let bmdc = "";
@@ -9,22 +15,103 @@
     let gender = "";
     let password = "";
     let mail = "";
-    let profilePicture = null;
+    let profilePicture;
 
     let modal;
 
-    function handleSubmit() {
-        // Handle form submission here
-        // You can access the form values using the above variables
-        doctorid = "127SKU123MKSN"; // Replace this with your ID generation logic
+    async function setDefaultPhoto(id) {
+        let { data: res1 } = await supabase.storage
+            .from("doctorPhoto")
+            .copy("default.png", id);
 
-        modal.classList.remove("hidden");
-        console.log("Form submitted");
+        let { data: res2 } = await supabase.storage
+            .from("doctorPhoto")
+            .getPublicUrl(id);
+        return res2;
+    }
+
+    async function uploadDefaultPhoto(id, photo) {
+        await setDefaultPhoto(id).then((response) => {
+            let payload = {id: id, url:response['publicUrl']}
+
+            fetch(serverUrl + "doctor/change-photo", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+        });
+    }
+
+    async function setCustomPhoto(id, photo) {
+        let { data: res1 } = await supabase.storage
+            .from("doctorPhoto")
+            .copy("default.png", id);
+
+        let { data: res2 } = await supabase.storage
+            .from("doctorPhoto")
+            .update(id, photo, {
+                cacheControl: "0",
+                upsert: true,
+            });
+
+        let { data: res3 } = await supabase.storage
+            .from("doctorPhoto")
+            .getPublicUrl(id);
+
+        return res3;
+    }
+
+    async function uploadCustomPhoto(id, photo) {
+        await setCustomPhoto(id, photo).then((response) => {
+            let payload = {id: id, url:response['publicUrl']}
+
+            fetch(serverUrl + "doctor/change-photo", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+        });
+    }
+
+    async function handleSubmit(event) {
+        const form = event.target;
+        const formData = new FormData(form);
+
+        console.log(formData.get("photo")["name"]);
+
+        await fetch(serverUrl + "doctor/signup", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let ret = +data;
+                returnId = ret;
+                console.log(ret);
+
+                //Signup Failed
+                if (ret == 0) {
+                    toast.error("Signup Failed 🙁");
+                }
+                //Signup Successful
+                else {
+                    if (formData.get("photo")["name"] === "") {
+                        uploadDefaultPhoto(data);
+                    } else {
+                        uploadCustomPhoto(data, formData.get("photo"));
+                    }
+
+                    modal.classList.remove("hidden");
+                    // window.location.hash = `#/doctorlogin`;
+                }
+            });
+
+        form.reset();
     }
 
     function copyToClipboard() {
         navigator.clipboard
-            .writeText(doctorid)
+            .writeText(returnId)
             .then(() => {
                 console.log("Text copied to clipboard");
             })
@@ -42,7 +129,7 @@
         modal.classList.add("hidden");
     });
 </script>
-
+<Toaster />
 <main
     class="flex justify-center items-center min-h-screen"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/orangeblur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
@@ -66,11 +153,12 @@
                     class="block text-black text-sm font-bold mb-2"
                     for="doctorName"
                 >
-                    Doctor Name
+                    Doctor Name<span class="text-red-600">*</span>
                 </label>
                 <input
+                required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="doctorName"
+                    name="name"
                     type="text"
                     placeholder="Enter Name"
                     bind:value={doctorName}
@@ -82,11 +170,12 @@
                     class="block text-black text-sm font-bold mb-2"
                     for="bmdc"
                 >
-                    BMDC Number
+                    BMDC Number<span class="text-red-600">*</span>
                 </label>
                 <input
+                required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="bmdc"
+                    name="bmdc"
                     type="text"
                     placeholder="Enter BMDC Number"
                     bind:value={bmdc}
@@ -97,11 +186,12 @@
                     class="block text-black text-sm font-bold mb-2"
                     for="dob"
                 >
-                    Date of Birth
+                    Date of Birth<span class="text-red-600">*</span>
                 </label>
                 <input
+                required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="dob"
+                    name="dob"
                     type="date"
                     placeholder="Enter Date of Birth"
                     bind:value={dob}
@@ -116,7 +206,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="address"
+                    name="address"
                     type="text"
                     placeholder="Enter Address"
                     bind:value={address}
@@ -127,11 +217,12 @@
                     class="block text-black text-sm font-bold mb-2"
                     for="phoneNumber"
                 >
-                    Phone Number
+                    Phone Number<span class="text-red-600">*</span>
                 </label>
                 <input
+                required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="phoneNumber"
+                    name="phone"
                     type="text"
                     placeholder="Enter Phone Number"
                     bind:value={phoneNumber}
@@ -147,7 +238,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="mail"
+                    name="email"
                     type="text"
                     placeholder="Enter Email"
                     bind:value={mail}
@@ -156,10 +247,12 @@
 
             <div class="mb-4">
                 <label class="block text-black text-sm font-bold mb-2"
-                    >Gender</label
+                    >Gender<span class="text-red-600">*</span>
+                    </label
                 >
                 <div class="flex items-center">
                     <input
+                    required
                         class="mr-2 leading-tight"
                         type="radio"
                         id="male"
@@ -193,11 +286,12 @@
                     class="block text-black text-sm font-bold mb-2"
                     for="password"
                 >
-                    Password
+                    Password<span class="text-red-600">*</span>
                 </label>
                 <input
+                required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password"
+                    name="password"
                     type="password"
                     placeholder="Type Password"
                     bind:value={password}
@@ -212,7 +306,7 @@
                 </label>
                 <input
                     class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="profilePicture"
+                    name="photo"
                     type="file"
                     accept="image/*"
                     bind:this={profilePicture}
@@ -251,7 +345,7 @@
                         Congratulations on successfully signing up. Below is
                         your generated ID:
                     </p>
-                    <p class="text-blue-600 font-bold">{doctorid}</p>
+                    <p class="text-blue-600 font-bold">{returnId}</p>
                 </div>
 
                 <!-- Modal Footer -->

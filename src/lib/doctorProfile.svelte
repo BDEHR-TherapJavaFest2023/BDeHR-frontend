@@ -1,7 +1,11 @@
 <script>
+    import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
+    import { doctorInfo } from "./store";
+    import { supabase } from "./supabaseClient";
+
     export let doctorData;
     let isEditing = false;
-    let uploadedImage;
 
     function toggleEditing() {
         isEditing = !isEditing;
@@ -12,7 +16,7 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                doctorData.userImage = e.target.result;
+                doctorData.doctorImage = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -30,92 +34,177 @@
         }
         return age;
     }
+    async function uploadPhoto(id, photo) {
+        console.log(id+" "+typeof id)
+        let { data: res2 } = await supabase.storage
+            .from("doctorPhoto")
+            .update(id.toString(), photo, {
+                cacheControl: "0",
+                upsert: true,
+            });
+
+        let { data: res3 } = await supabase.storage
+            .from("doctorPhoto")
+            .getPublicUrl(id);
+
+        return res3;
+    }
+
+    async function uploadProfile() {
+        await fetch(serverUrl + "doctor/update-doctor", {
+            method: "POST",
+            body: JSON.stringify(doctorData),
+        });
+    }
+
+    async function handleSubmit(event) {
+        console.log("Form Submitted");
+        const form = event.target;
+        const formData = new FormData(form);
+
+        console.log(formData.get("photo"));
+
+        if (formData.get("photo")["name"] === "") {
+            doctorInfo.set({
+                doctorName: formData.get("name").toString(),
+                doctorId: get(doctorInfo).doctorId,
+                doctorEmail: formData.get("email").toString(),
+                doctorBmdc: get(doctorInfo).doctorBmdc,
+                doctorDob: get(doctorInfo).doctorDob,
+                doctorAddress: formData.get("address").toString(),
+                doctorGender: get(doctorInfo).doctorGender,
+                doctorPhone: formData.get("phone").toString(),
+                doctorPhoto: get(doctorInfo).doctorPhoto,
+            });
+
+            doctorData = {
+                doctor_id: get(doctorInfo).doctorId,
+                name: get(doctorInfo).doctorName,
+                dob: get(doctorInfo).doctorDob,
+                gender: get(doctorInfo).doctorGender,
+                address: get(doctorInfo).doctorAddress,
+                bmdc: get(doctorInfo).doctorBmdc,
+                phone: get(doctorInfo).doctorPhone,
+                email: get(doctorInfo).doctorEmail,
+                doctorImage: get(doctorInfo).doctorPhoto,
+            };
+
+            uploadProfile();
+        } else {
+            await uploadPhoto(doctorData.doctor_id, formData.get("photo")).then(
+                (response) => {
+                    doctorInfo.set({
+                        doctorName: formData.get("name").toString(),
+                        doctorId: get(doctorInfo).doctorId,
+                        doctorEmail: formData.get("email").toString(),
+                        doctorBmdc: get(doctorInfo).doctorBmdc,
+                        doctorDob: get(doctorInfo).doctorDob,
+                        doctorAddress: formData.get("address").toString(),
+                        doctorGender: get(doctorInfo).doctorGender,
+                        doctorPhone: formData.get("phone").toString(),
+                        doctorPhoto: response["publicUrl"] + "?v=" + Date.now(),
+                    });
+
+                    doctorData = {
+                        doctor_id: get(doctorInfo).doctorId,
+                        name: get(doctorInfo).doctorName,
+                        dob: get(doctorInfo).doctorDob,
+                        gender: get(doctorInfo).doctorGender,
+                        address: get(doctorInfo).doctorAddress,
+                        bmdc: get(doctorInfo).doctorBmdc,
+                        phone: get(doctorInfo).doctorPhone,
+                        email: get(doctorInfo).doctorEmail,
+                        doctorImage: get(doctorInfo).doctorPhoto,
+                    };
+
+                    uploadProfile();
+                }
+            );
+        }
+
+        toggleEditing();
+    }
 </script>
 
 <main class="p-4 max-w-xl mx-auto shadow-2xl">
     <div class="mb-6">
         <img
-            src={doctorData.userImage}
-            alt="User Profile"
+            src={doctorData.doctorImage}
+            alt="doctor Profile"
             class="rounded-full w-48 h-48 mx-auto"
         />
-
+    </div>
+    <form on:submit|preventDefault={handleSubmit}>
         {#if isEditing}
-            <div class="mt-4">
+            <div class="space-y-4">
                 <input
                     type="file"
+                    name="photo"
                     accept="image/*"
                     on:change={handleImageUpload}
                 />
+                <input
+                    type="text"
+                    name="name"
+                    bind:value={doctorData.name}
+                    class="daisy-input w-full"
+                    placeholder="Name"
+                />
+                <input
+                    type="text"
+                    name="address"
+                    bind:value={doctorData.address}
+                    class="daisy-input w-full"
+                    placeholder="Address"
+                />
+                <input
+                    type="text"
+                    name="phone"
+                    bind:value={doctorData.phone}
+                    class="daisy-input w-full"
+                    placeholder="Phone Number"
+                />
+                <input
+                    type="email"
+                    name="email"
+                    bind:value={doctorData.email}
+                    class="daisy-input w-full"
+                    placeholder="Email"
+                />
+            </div>
+        {:else}
+            <div class="space-y-4">
+                <p><strong>Name:</strong> {doctorData.name}</p>
+                <p><strong>Doctor ID:</strong> {doctorData.doctor_id}</p>
+                <p><strong>BMDC ID:</strong> {doctorData.bmdc}</p>
+
+                <p><strong>Age:</strong> {calculateAge(doctorData.dob)}</p>
+                <p><strong>Gender:</strong> {doctorData.gender}</p>
+                <p><strong>Address:</strong> {doctorData.address}</p>
+                <p><strong>Phone:</strong> {doctorData.phone}</p>
+                <p><strong>Email:</strong> {doctorData.email}</p>
             </div>
         {/if}
-    </div>
 
-    {#if isEditing}
-        <div class="space-y-4">
-            <input
-                type="text"
-                bind:value={doctorData.name}
-                class="daisy-input w-full"
-                placeholder="Name"
-            />
-            <input
-                type="date"
-                bind:value={doctorData.dob}
-                class="daisy-input w-full"
-                placeholder="Date of Birth"
-            />
-            <input
-                type="text"
-                bind:value={doctorData.gender}
-                class="daisy-input w-full"
-                placeholder="Gender"
-            />
-            <input
-                type="text"
-                bind:value={doctorData.address}
-                class="daisy-input w-full"
-                placeholder="Address"
-            />
-            <input
-                type="text"
-                bind:value={doctorData.phone}
-                class="daisy-input w-full"
-                placeholder="Phone Number"
-            />
-            <input
-                type="email"
-                bind:value={doctorData.email}
-                class="daisy-input w-full"
-                placeholder="Email"
-            />
+        <div class="mt-6">
+            {#if isEditing}
+                <div class="flex flec-col justify-around">
+                    <button class="daisy-btn daisy-btn-primary" type="submit"
+                        >Save Changes</button
+                    >
+                    <button
+                        class="daisy-btn daisy-btn-primary"
+                        on:click={toggleEditing}>Cancel</button
+                    >
+                </div>
+            {:else}
+                <button
+                    class="daisy-btn daisy-btn-secondary"
+                    on:click={toggleEditing}>Edit</button
+                >
+            {/if}
         </div>
-    {:else}
-        <div class="space-y-4">
-            <p><strong>Name:</strong> {doctorData.name}</p>
-            <p><strong>Doctor ID:</strong> {doctorData.doctor_id}</p>
-            <p><strong>BMDC ID:</strong> {doctorData.BMDC_id}</p>
-
-            <p><strong>Age:</strong> {calculateAge(doctorData.dob)}</p>
-            <p><strong>Gender:</strong> {doctorData.gender}</p>
-            <p><strong>Address:</strong> {doctorData.address}</p>
-            <p><strong>Phone:</strong> {doctorData.phone}</p>
-            <p><strong>Email:</strong> {doctorData.email}</p>
-        </div>
-    {/if}
-
-    <div class="mt-6">
-        {#if isEditing}
-            <button class="daisy-btn daisy-btn-primary" on:click={toggleEditing}
-                >Save Changes</button
-            >
-        {:else}
-            <button
-                class="daisy-btn daisy-btn-secondary"
-                on:click={toggleEditing}>Edit</button
-            >
-        {/if}
-    </div>
+    </form>
 </main>
 
 <style>

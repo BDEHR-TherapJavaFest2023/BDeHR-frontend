@@ -1,10 +1,12 @@
 <script>
     import { get } from "svelte/store";
-    export let userData;
+
     import { serverUrl } from "./constants";
     import { userInfo } from "./store";
     import { onMount } from "svelte";
     import { supabase } from "./supabaseClient";
+
+    export let userData;
     let isEditing = false;
 
     function toggleEditing() {
@@ -36,7 +38,7 @@
     }
 
     async function uploadPhoto(id, photo) {
-        let { data: res2} = await supabase.storage
+        let { data: res2 } = await supabase.storage
             .from("userPhoto")
             .update(id.toString(), photo, {
                 cacheControl: "0",
@@ -102,7 +104,7 @@
                         userAddress: formData.get("address").toString(),
                         userGender: get(userInfo).userGender,
                         userPhone: formData.get("phone").toString(),
-                        userPhoto: response["publicUrl"] + "?v="+Date.now(),
+                        userPhoto: response["publicUrl"] + "?v=" + Date.now(),
                     });
 
                     userData = {
@@ -124,9 +126,7 @@
 
         toggleEditing();
     }
-    onMount(() => {
-        console.log("Profile Loaded");
-    });
+
 </script>
 
 <main class="p-4 max-w-xl mx-auto shadow-2xl">

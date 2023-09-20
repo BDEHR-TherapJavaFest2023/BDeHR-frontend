@@ -4,19 +4,20 @@
     import navigate from "svelte-spa-router";
     import { doctorInfo,doctorHospitalList,doctorResearchList } from "./store";
     import { get } from "svelte/store";
+    import { onMount } from "svelte";
 
-    let doctorDatas = {
-        doctor_id: "NDLKX6781TT",
-        name: "Dr. M. Rezaul Karim",
-        dob: "1990-01-15",
-        gender: "Male",
-        address: "Dhaka Medical College, Dhaka",
-        BMDC_id: "123456789",
-        phone: "+8801716171819",
-        email: "Karim@gmail.com",
-        userImage:
-            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+    let doctorData = {
+        user_id: get(doctorInfo).doctorId,
+        name: get(doctorInfo).doctorName,
+        dob: get(doctorInfo).doctorDob,
+        gender: get(doctorInfo).doctorGender,
+        address: get(doctorInfo).doctorAddress,
+        bmdc: get(doctorInfo).doctorBmdc,
+        phone: get(doctorInfo).doctorPhone,
+        email: get(doctorInfo).doctorEmail,
+        doctorImage: get(doctorInfo).doctorPhoto
     };
+
     let doctorHospital = [
         "Dhaka Medical College",
         "Popular Hospital Limited",
@@ -31,24 +32,37 @@
     ];
     function navigateToHospitals() {
         // Set the doctor_id in the store
-        doctorInfo.set({doctorName:doctorDatas.name});
         doctorHospitalList.set({hospitalList: doctorHospital});
         doctorResearchList.set({researchList: doctorResearches});
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/hospitals";
     }
     function navigateToResearch() {
-        doctorInfo.set({doctorName:doctorDatas.name});
         doctorHospitalList.set({hospitalList: doctorHospital});
         doctorResearchList.set({researchList: doctorResearches});
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/researches";
     }
+
+    onMount(()=>{
+        doctorData = {
+        user_id: get(doctorInfo).doctorId,
+        name: get(doctorInfo).doctorName,
+        dob: get(doctorInfo).doctorDob,
+        gender: get(doctorInfo).doctorGender,
+        address: get(doctorInfo).doctorAddress,
+        bmdc: get(doctorInfo).doctorBmdc,
+        phone: get(doctorInfo).doctorPhone,
+        email: get(doctorInfo).doctorEmail,
+        doctorImage: get(doctorInfo).doctorPhoto
+    };
+    })
+
 </script>
 
 <main class="flex mb-10">
     <div>
-        <Navbardoc bind:doctorName={doctorDatas.name} />
+        <Navbardoc bind:doctorName={doctorData.name} />
     </div>
 
     <div class="container">
@@ -71,7 +85,7 @@
                 Research
             </button>
         </div>
-        <ProfileTab bind:doctorData={doctorDatas} />
+        <ProfileTab bind:doctorData={doctorData} />
     </div>
 </main>
 
