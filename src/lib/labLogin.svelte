@@ -10,7 +10,7 @@
             // Example: You can send this data to your backend for verification
 
             // For now, we're simply redirecting to the user route
-            window.location.href = "#/hospitalhome";
+            window.location.href = "#/labhome";
         }
     }
 </script>
