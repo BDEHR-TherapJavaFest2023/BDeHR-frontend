@@ -1,5 +1,7 @@
 <script>
     import { getContext } from "svelte";
+    import { createPDF } from "./pdfUtility";
+    import { supabase } from "./supabaseClient";
     export let params = {};
 
     let tabs = ["Past Medications", "Test Reports"];
@@ -45,32 +47,64 @@
     let showModal = false;
 
     let newMedication = {
-        Address: "",
-        Contact: "",
-        Occupation: "",
-        ChiefComplaints: "",
-        HOillness: "",
-        PastHistory: "",
-        TreatmentHistory: "",
-        OccupationalHistory: "",
-        SocioEconomicCondition: "",
-        Vaccinationhistory: "",
-        MenstrualHistory: "",
-        GeneralExamination: "",
-        CardioVascularSystem: "",
-        RespiratorySystemm: "",
-        GastroIntestinalSystem: "",
-        MusculoSkeletalSystem: "",
-        NervousSystem: "",
-        workupDiagnosis: "",
-        DifferentialDiagnosis: "",
-        RelativeInvestigationFindings: "",
-        ConfirmatoryDiagnosis: "",
-        Treatment: "",
-        FollowUpAdvice: "",
-        DischargePrescription: "",
-        remarks: "",
+        Address: "Dhaka",
+        Contact: "+880",
+        Occupation: "Student",
+        ChiefComplaints: "Headache",
+        HOillness: "Growth of headache",
+        PastHistory: "Migrane",
+        TreatmentHistory: "Paracetamol",
+        OccupationalHistory: "Tution",
+        SocioEconomicCondition: "Rich",
+        Vaccinationhistory: "vaccinated properly",
+        MenstrualHistory: "nil",
+        GeneralExamination: "Pale",
+        CardioVascularSystem: "Normal",
+        RespiratorySystemm: "Normal",
+        GastroIntestinalSystem: "Normal",
+        MusculoSkeletalSystem: "Normal",
+        NervousSystem: "Normal",
+        workupDiagnosis: "Tumour",
+        DifferentialDiagnosis: "Tumour, cancer",
+        RelativeInvestigationFindings: "Cancer",
+        ConfirmatoryDiagnosis: "Cancer",
+        Treatment: "Inevitable death",
+        FollowUpAdvice: "RIP",
+        DischargePrescription: "discharged",
+        remarks: "pialBoksod",
     };
+
+    async function handleSubmit() {
+        const pdfBytes = await createPDF(newMedication);
+
+        // Convert PDF bytes to Blob
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+
+        // Create a link element to enable download
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `medication_${new Date().toISOString()}.pdf`;
+        link.click(); // This triggers the download
+
+        // Upload the PDF to Supabase after saving to local machine
+        const { data, error } = await supabase.storage
+            .from("medications")
+            .upload(`medication_${new Date().toISOString()}.pdf`, pdfBytes, {
+                contentType: "application/pdf",
+            });
+
+        if (error) {
+            console.error("Error uploading file:", error);
+            showModal = false;
+            return;
+        }
+
+        const fileLink = supabase.storage
+            .from("medications")
+            .getPublicUrl(data.Key);
+        console.log(fileLink);
+        showModal = false;
+    }
 
     function addMedication() {
         pastMedications = [...pastMedications, newMedication];
@@ -185,10 +219,7 @@
                         New Medication Entry for {patientData.name}
                     </h3>
 
-                    <form
-                        on:submit|preventDefault={addMedication}
-                        class="space-y-6"
-                    >
+                    <form on:submit={handleSubmit} class="space-y-6">
                         <!-- Initial Info -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
