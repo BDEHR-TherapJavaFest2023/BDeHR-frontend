@@ -2,34 +2,42 @@
     import ProfileTab from "./userProfile.svelte";
     import Navbardoc from "./doctorNavbar.svelte";
     import { userInfo } from "./store";
+    import { get } from "svelte/store";
     import { onMount } from "svelte";
-    let userData = {
-        user_id: "NDLKX6781TT",
-        name: "Nazmus Sakib",
-        dob: "1990-01-15",
-        gender: "Male",
-        address: "Suhrawardy Hall, Dhaka",
-        nid: "123456789",
-        phone: "+8801716171819",
-        email: "sakib@gmail.com",
-        userImage:
-            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-    };
 
+    let userData = {
+        user_id: get(userInfo).userId,
+        name: get(userInfo).userName,
+        dob: get(userInfo).userDob,
+        gender: get(userInfo).userGender,
+        address: get(userInfo).userAddress,
+        nid: get(userInfo).userNid,
+        phone: get(userInfo).userPhone,
+        email: get(userInfo).userEmail,
+        userImage: get(userInfo).userPhoto,
+    };
 
     function navigateToMedicationInfo() {
         window.location.hash = `#/user/medication`;
     }
 
-
     function navigateToTestReports() {
         window.location.hash = `#/user/report`;
     }
 
-    onMount(()=>{
-        userInfo.set({userName: userData.name})
-    })
-
+    onMount(() => {
+        userData = {
+            user_id: get(userInfo).userId,
+            name: get(userInfo).userName,
+            dob: get(userInfo).userDob,
+            gender: get(userInfo).userGender,
+            address: get(userInfo).userAddress,
+            nid: get(userInfo).userNid,
+            phone: get(userInfo).userPhone,
+            email: get(userInfo).userEmail,
+            userImage: get(userInfo).userPhoto,
+        };
+    });
 </script>
 
 <main class="flex mb-10">
@@ -57,7 +65,7 @@
                 Test Reports
             </button>
         </div>
-        <ProfileTab bind:userData={userData} />
+        <ProfileTab bind:userData />
     </div>
 </main>
 

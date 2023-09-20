@@ -1,7 +1,7 @@
 import { persisted } from 'svelte-local-storage-store';
 
 //User Stores
-export const userInfo = persisted('userInfo',{userName:''})
+export const userInfo = persisted('userInfo',{userName:'',userId:'',userEmail:'',userNid:'',userDob:'',userAddress:'',userGender:'',userPhone:'',userPhoto:''});
 
 //Doctor Stores
 export const doctorInfo = persisted('doctorInfo',{doctorName:''});

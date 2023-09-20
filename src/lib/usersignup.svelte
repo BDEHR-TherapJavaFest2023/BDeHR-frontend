@@ -92,12 +92,11 @@
                     } else {
                         uploadCustomPhoto(data, formData.get("photo"));
                     }
-                    //window.location.hash = `#/userlogin`;
+                    window.location.hash = `#/userlogin`;
                 }
             });
 
         form.reset();
-        console.log(formData.get("photo"));
     }
 </script>
 

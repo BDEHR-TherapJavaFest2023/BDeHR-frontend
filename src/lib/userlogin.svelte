@@ -1,12 +1,13 @@
 <script>
     import toast, { Toaster } from "svelte-french-toast";
     import { serverUrl } from "./constants";
+    import { userInfo } from "./store";
     let id = "";
     let password = "";
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        window.location.hash = `#/user`;
+        // window.location.hash = `#/user`;
 
         const form = event.target;
         const data = new FormData(form);
@@ -16,19 +17,31 @@
             body: data,
         })
             .then((response) => {
-                return response.text();
+                return response.json();
             })
+            .catch(() => null)
             .then((data) => {
-                let ret = +data;
+                // let ret = +data;
                 console.log(data);
 
-                //Login Successful
-                if (ret == 1) {
-                    window.location.hash = `#/user`;
-                }
-                //Login Failed 
-                else {
+                //Login Failed
+                if (!data) {
                     toast.error("Login Failed 🙁");
+                }
+                //Login Failed
+                else {
+                    userInfo.set({
+                        userName: data["name"],
+                        userId: data["id"],
+                        userEmail: data["email"],
+                        userNid: data["nid"],
+                        userDob: data["dob"],
+                        userAddress: data["address"],
+                        userGender: data["gender"],
+                        userPhone: data["phone"],
+                        userPhoto: data["photo"],
+                    });
+                    window.location.hash = `#/user`;
                 }
             });
 
@@ -61,7 +74,7 @@
                     <input
                         required
                         bind:value={id}
-                        type="text"
+                        type="number"
                         name="id"
                         placeholder="Enter ID"
                         class="input input-bordered w-full max-w-xs mb-2"
