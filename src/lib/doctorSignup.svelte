@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     let doctorName = "";
     let doctorid = "";
     let bmdc = "";
@@ -10,11 +11,36 @@
     let mail = "";
     let profilePicture = null;
 
+    let modal;
+
     function handleSubmit() {
         // Handle form submission here
         // You can access the form values using the above variables
+        doctorid = "127SKU123MKSN"; // Replace this with your ID generation logic
+
+        modal.classList.remove("hidden");
         console.log("Form submitted");
     }
+
+    function copyToClipboard() {
+        navigator.clipboard
+            .writeText(doctorid)
+            .then(() => {
+                console.log("Text copied to clipboard");
+            })
+            .catch((err) => {
+                console.error("Could not copy text: ", err);
+            });
+    }
+
+    function goToLoginPage() {
+        // Navigate to the login page. Adjust the URL to your requirement.
+        window.location.href = "#/doctorlogin";
+    }
+
+    onMount(() => {
+        modal.classList.add("hidden");
+    });
 </script>
 
 <main
@@ -34,7 +60,7 @@
             />
         </div>
         <h2 class="text-2xl text-center font-bold mb-4">Sign Up</h2>
-        <form on:submit={handleSubmit}>
+        <form on:submit|preventDefault={handleSubmit}>
             <div class="mb-4">
                 <label
                     class="block text-gray-700 text-sm font-bold mb-2"
@@ -202,6 +228,29 @@
                 </button>
             </div>
         </form>
+    </div>
+    <div bind:this={modal} class="fixed z-10 inset-0 overflow-y-auto hidden">
+        <div class="flex items-end justify-center min-h-screen">
+            <div
+                class="bg-green-400 rounded-lg text-left overflow-hidden shadow-xl transform transition-all p-4"
+            >
+                <div class="mb-4">
+                    <p class="text-2xl font-bold">Sign up Successful</p>
+                </div>
+                <div class="mb-4">
+                    <p>Your generated ID: {doctorid}</p>
+                </div>
+                <div class="flex gap-4">
+                    <button
+                        on:click={copyToClipboard}
+                        class="btn btn-outline btn-accent">Copy</button
+                    >
+                    <button on:click={goToLoginPage} class="btn btn-outline"
+                        >Return</button
+                    >
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

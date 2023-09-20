@@ -19,14 +19,15 @@
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
-    <div class="card lg:card-side bg-ash shadow-xl z-50">
+    <div class="card lg:card-side bg-ash shadow-2xl z-50">
         <figure>
             <img
-                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospitalLogin.jpg"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pngtree-laboratory-utensils-for-scientific-research-image_1061390.jpg"
                 alt="Album"
+                class="h-full"
             />
         </figure>
-        <div class="card-body flex flex-col items-center absolute inset-0">
+        <div class="card-body flex flex-col items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
                 alt="Album"
@@ -35,7 +36,7 @@
                 class="mt-5 mb-10 z-100"
             />
             <h5 class="text-3xl font-bold" style="color: #000000;">
-                Sign In to Hospital's Account
+                Sign In to Lab's Account
             </h5>
             <form on:submit={handleSubmit}>
                 <div class="mb-2">
@@ -46,9 +47,17 @@
                         class="input input-bordered w-full max-w-xs"
                     />
                 </div>
+                <div class="mb-2">
+                    <input
+                        bind:value={labId}
+                        type="text"
+                        placeholder="Enter Laboratory ID"
+                        class="input input-bordered w-full max-w-xs"
+                    />
+                </div>
                 <div>
                     <input
-                        bind:value={hospitalPass}
+                        bind:value={labPass}
                         type="text"
                         placeholder="Enter Password"
                         class="w-full input input-bordered max-w-xs"

@@ -371,8 +371,9 @@
                 <br />
                 pore lekhbo
             </p>
-            <button class="w-2/3 btn btn-outline btn-secondary"
-                >Secondary</button
+
+            <a href="#/lablogin" class="w-2/3 btn btn-outline btn-secondary"
+                >Get Started</a
             >
         </div>
     </div>

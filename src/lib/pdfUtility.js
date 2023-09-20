@@ -208,14 +208,18 @@ export async function createPDF(data) {
     endFieldset(startInitialInfoY3);
 
 
-    const startInitialInfoY4 = drawFieldset("Provational Stage");
-    drawText("work-up Diagnosis:", fontSize, true); drawText(`${data["workupDiagnosis"]} `);
+    const startInitialInfoY4 = drawFieldset("Provisional Stage");
+    drawText("Working Diagnosis:", fontSize, true); drawText(`${data["workupDiagnosis"]} `);
     drawText("Differential Diagnosis:", fontSize, true); drawText(`${data["DifferentialDiagnosis"]} `);
     endFieldset(startInitialInfoY4);
 
+    const startInitialInfoY55 = drawFieldset("Investigations & Summary");
+    drawText("Relative-Investigation Findings:", fontSize, true); drawText(`${data["RelativeInvestigationFindings"]} `);
+    drawText("Salient Features:", fontSize, true); drawText(`${data["SalientFeature"]} `);
+    endFieldset(startInitialInfoY55);
 
     const startInitialInfoY5 = drawFieldset("Final Diagnosis");
-    drawText("Relative-Investigation Findings:", fontSize, true); drawText(`${data["RelativeInvestigationFindings"]} `);
+
     drawText("Confirmatory Diagnosis:", fontSize, true); drawText(`${data["ConfirmatoryDiagnosis"]} `);
     endFieldset(startInitialInfoY5);
 

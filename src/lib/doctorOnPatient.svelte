@@ -85,6 +85,7 @@
         workupDiagnosis: "Tumour",
         DifferentialDiagnosis: "Tumour, cancer",
         RelativeInvestigationFindings: "Cancer",
+        SalientFeature:"null",
         ConfirmatoryDiagnosis: "Cancer",
         Treatment: "Inevitable death",
         FollowUpAdvice: "RIP",
@@ -163,6 +164,7 @@
             workupDiagnosis: "",
             DifferentialDiagnosis: "",
             RelativeInvestigationFindings: "",
+            SalientFeature:"",
             ConfirmatoryDiagnosis: "",
             Treatment: "",
             FollowUpAdvice: "",
@@ -664,14 +666,14 @@
                         <!-- ProvationalStage -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
-                                >Provational Stage</legend
+                                >Provisional Stage</legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Work-up Diagnosis</span
+                                        >Working Diagnosis</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
@@ -694,10 +696,9 @@
                             <!-- ... Add your fields here ... -->
                         </fieldset>
 
-                        <!-- FinalDiagnosis -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
-                                >Final Diagnosis</legend
+                                >Investigations & Summary </legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -711,6 +712,30 @@
                                         bind:value={newMedication.RelativeInvestigationFindings}
                                     />
                                 </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Salient Features</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.SalientFeature}
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: RelativeInvestigationFindings, DeterministicDiagnosis -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- FinalDiagnosis -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Final Diagnosis</legend
+                            >
+                            <div>
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
                                         >Confirmatory Diagnosis</span
