@@ -1,4 +1,5 @@
 <script>
+    import { serverUrl } from "./constants";
     let username = "";
     let nid = "";
     let dob = "";
@@ -13,7 +14,7 @@
         const form = event.target;
         const data = new FormData(form);
 
-        await fetch("http://localhost:8080/user/signup", {
+        await fetch(serverUrl+"user/signup", {
             method: "POST",
             body: data,
         });
