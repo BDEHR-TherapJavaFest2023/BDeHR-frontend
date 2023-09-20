@@ -2,10 +2,8 @@
     import { onMount } from "svelte";
     import L from "leaflet";
     import "leaflet/dist/leaflet.css";
-    import { doctors } from "./hospitalstore";
-    import { hospitalName } from "./hospitalstore";
-    import { patients } from "./hospitalstore";
-    import { hospitalLogo } from "./hospitalstore";
+    import { hospitalDoctorList, hospitalPatientList, hospitalInfo } from "./store";
+    import DoctorHospital from "./doctorHospital.svelte";
 
     const data = {
         name: "Dhaka Medical College Hospital",
@@ -101,16 +99,16 @@
     ];
     function navigateToHospitalDoctors() {
         // Set the doctor_id in the store
-        doctors.set(DoctorsIntro);
-        hospitalName.set(data.name);
+        hospitalDoctorList.set({doctorList: DoctorsIntro});
+        hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/doctors";
     }
     function navigateToHospitalPatients() {
         // Set the doctor_id in the store
-        patients.set(patientsIntro);
-        hospitalName.set(data.name);
+        hospitalPatientList.set({patientList: patientsIntro})
+        hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/patients";
@@ -118,9 +116,8 @@
 
     function navigateToHospitalAuthority() {
         // Set the doctor_id in the store
-        doctors.set(DoctorsIntro);
-        hospitalLogo.set(data.logoUrl);
-        hospitalName.set(data.name);
+        hospitalDoctorList.set({doctorList: DoctorsIntro});
+        hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/authorityLogin";

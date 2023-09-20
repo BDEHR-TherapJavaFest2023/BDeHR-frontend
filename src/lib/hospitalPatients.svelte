@@ -1,16 +1,10 @@
 <script>
-    // @ts-nocheck
-
-    import { patients } from "./hospitalstore";
+    import { onMount } from "svelte";
     import { hospitalName } from "./hospitalstore";
+    import { hospitalPatientList,hospitalInfo } from "./store";
+    import { get } from "svelte/store";
     let hospital_patients = [];
-    let nameHospital;
-    patients.subscribe((value) => {
-        hospital_patients = value;
-    });
-    hospitalName.subscribe((value) => {
-        nameHospital = value;
-    });
+
     function navigateBack() {
         window.location.hash = "#/hospitalhome";
     }
@@ -31,6 +25,8 @@
 
     function savePatient() {
         hospital_patients = [...hospital_patients, newPatient];
+        hospitalPatientList.set({patientList: hospital_patients});
+
         newPatient = {
             patientName: "",
             patientID: "",
@@ -40,6 +36,11 @@
         };
         showForm = false;
     }
+
+    onMount(()=>{
+        hospital_patients = get(hospitalPatientList).patientList
+    })
+
 </script>
 
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">
@@ -47,13 +48,13 @@
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
-                alt={nameHospital + " Logo"}
+                alt={get(hospitalInfo).hospitalName + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
                 on:click={navigateBack}
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{nameHospital}</span
+                >{get(hospitalInfo).hospitalName}</span
             >
             <span>
                 <a href="#/hospitalogin" class="btn btn-outline ml-auto mr-2"
@@ -74,7 +75,7 @@
         <div class="overlay">
             <form class="form-content">
                 <div class="ml-40">
-                    <h1>{nameHospital}</h1>
+                    <h1>{get(hospitalInfo).hospitalName}</h1>
                 </div>
                 <div class="field">
                     <label for="patientName">Name:</label>

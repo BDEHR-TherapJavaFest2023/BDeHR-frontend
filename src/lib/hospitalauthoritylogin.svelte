@@ -1,25 +1,8 @@
 <script>
-    import { hospitalName } from "./hospitalstore";
-    import { hospitalLogo } from "./hospitalstore";
-    import { doctors } from "./hospitalstore";
-
-    let nameHospital;
-    let logoHospital;
-    let authorityDoctors;
-    hospitalLogo.subscribe((value) => {
-        logoHospital = value;
-    });
-    hospitalName.subscribe((value) => {
-        nameHospital = value;
-    });
-    doctors.subscribe((value) => {
-        authorityDoctors = value;
-    });
+    import { get } from "svelte/store";
+    import { hospitalInfo} from "./store";
     let password = "";
     function handleLogin() {
-        hospitalLogo.set(logoHospital);
-        hospitalName.set(nameHospital);
-        doctors.set(authorityDoctors);
         window.location.hash = "#/doctorhome/Authority";
     }
 </script>
@@ -33,7 +16,7 @@
         <div class="flex justify-center items-center mb-2">
             <!-- Hospital Logo -->
             <img
-                src={logoHospital}
+                src={get(hospitalInfo).hospitalLogo}
                 alt="Hospital Logo"
                 class="w-24 h-24 mr-6"
             />
@@ -48,7 +31,7 @@
 
         <!-- Hospital Name -->
         <div class="text-center mb-2">
-            <h2 class="text-2xl font-bold text-gray-700">{nameHospital}</h2>
+            <h2 class="text-2xl font-bold text-gray-700">{get(hospitalInfo).hospitalName}</h2>
         </div>
         <div class="text-center mb-6">
             <h2 class="font-semibold text-gray-700">Authority</h2>

@@ -3,9 +3,6 @@
     import { doctorInfo,doctorResearchList } from "./store";
     import {get} from "svelte/store"
 
-    let doctor_Researches = [];
-    let NameRunning;
-
     function navigateToProfile() {
         // Navigate to the Profile page
         window.location.hash = "#/doctorhome";

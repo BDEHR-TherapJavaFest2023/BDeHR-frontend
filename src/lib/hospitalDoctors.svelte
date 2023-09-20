@@ -1,16 +1,9 @@
 <script>
+    import { get } from "svelte/store";
+
     // @ts-nocheck
 
-    import { doctors } from "./hospitalstore";
-    import { hospitalName } from "./hospitalstore";
-    let hospital_doctors = [];
-    let nameHospital;
-    doctors.subscribe((value) => {
-        hospital_doctors = value;
-    });
-    hospitalName.subscribe((value) => {
-        nameHospital = value;
-    });
+    import { hospitalDoctorList, hospitalInfo } from "./store";
     function navigateBack() {
         window.location.hash = "#/hospitalhome";
     }
@@ -21,13 +14,13 @@
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
-                alt={nameHospital + " Logo"}
+                alt={get(hospitalInfo).hospitalName + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
                 on:click={navigateBack}
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{nameHospital}</span
+                >{get(hospitalInfo).hospitalName}</span
             >
             <span>
                 <a href="#/hospitalogin" class="btn btn-outline ml-auto mr-2"
@@ -37,7 +30,7 @@
         </div>
     </nav>
     <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {#each hospital_doctors as doctor, index}
+        {#each get(hospitalDoctorList).doctorList as doctor, index}
             <div
                 class="bg-white p-6 rounded-lg shadow-xl transition-transform transform hover:scale-90"
             >

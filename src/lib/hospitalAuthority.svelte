@@ -1,14 +1,8 @@
 <script>
-    import { doctors } from "./hospitalstore";
-    import { hospitalName } from "./hospitalstore";
+    import { onMount } from "svelte";
+    import { hospitalDoctorList, hospitalInfo } from "./store";
+    import { get } from "svelte/store";
     let DoctorDatas = [];
-    let nameHospital;
-    doctors.subscribe((value) => {
-        DoctorDatas = value;
-    });
-    hospitalName.subscribe((value) => {
-        nameHospital = value;
-    });
 
     let showModal = false;
 
@@ -18,9 +12,7 @@
     let degreeInput = "";
     let degrees = [];
 
-    const uniqueSpecialities = [
-        ...new Set(DoctorDatas.map((doctor) => doctor.speciality)),
-    ];
+    let uniqueSpecialities = [];
 
     function addDegree() {
         if (degreeInput.trim()) {
@@ -49,6 +41,8 @@
         };
 
         DoctorDatas = [...DoctorDatas, newDoctor];
+        hospitalDoctorList.set({ doctorList: DoctorDatas });
+        //console.log(DoctorDatas);
 
         // Reset form values
         doctorName = "";
@@ -65,6 +59,14 @@
         // Add your form submission logic here
         console.log({ doctorName, doctorID, speciality, degrees });
     }
+
+    onMount(() => {
+        //console.log(get(hospitalDoctorList).doctorList);
+        DoctorDatas = get(hospitalDoctorList).doctorList;
+        uniqueSpecialities = [
+            ...new Set(DoctorDatas.map((doctor) => doctor.speciality)),
+        ];
+    });
 </script>
 
 <main>
@@ -73,12 +75,12 @@
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
-                alt={nameHospital + " Logo"}
+                alt={get(hospitalInfo).hospitalName + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{nameHospital} Authority</span
+                >{get(hospitalInfo).hospitalName} Authority</span
             >
             <span>
                 <a href="#/hospitalhome" class="btn btn-outline ml-auto mr-2"
