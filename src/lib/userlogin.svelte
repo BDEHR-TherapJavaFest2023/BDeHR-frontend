@@ -21,15 +21,18 @@
             .then((data) => {
                 let ret = +data;
                 console.log(data);
+
+                //Login Successful
                 if (ret == 1) {
                     window.location.hash = `#/user`;
-                } else {
+                }
+                //Login Failed 
+                else {
                     toast.error("Login Failed 🙁");
                 }
             });
 
-        id = "";
-        password = "";
+        form.reset();
     }
 </script>
 

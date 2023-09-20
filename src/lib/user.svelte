@@ -1,5 +1,4 @@
 <script>
-    import UserProfile from "./profileinfo.svelte";
     import ProfileTab from "./userProfile.svelte";
     import Navbardoc from "./doctorNavbar.svelte";
     import { userInfo } from "./store";

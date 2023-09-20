@@ -1,43 +1,107 @@
 <script>
+    import toast, { Toaster } from "svelte-french-toast";
+    import { supabase } from "./supabaseClient";
     import { serverUrl } from "./constants";
-    let username = "";
-    let nid = "";
-    let dob = "";
-    let address = "";
-    let phoneNumber = "";
-    let gender = "";
-    let password = "";
-    let mail = "";
-    let profilePicture = "";
+    let username = "1";
+    let nid = "1";
+    let dob = "1";
+    let address = "1";
+    let phoneNumber = "1";
+    let gender = "male";
+    let password = "1";
+    let mail = "1";
+    let profilePicture;
+
+    async function setDefaultPhoto(id) {
+        let { data: res1 } = await supabase.storage
+            .from("userPhoto")
+            .copy("default.png", id);
+
+        let { data: res2 } = await supabase.storage
+            .from("userPhoto")
+            .getPublicUrl(id);
+        return res2;
+    }
+
+    async function uploadDefaultPhoto(id, photo) {
+        await setDefaultPhoto(id).then((response) => {
+            let payload = {id: id, url:response['publicUrl']}
+
+            fetch(serverUrl + "user/change-photo", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+        });
+    }
+
+    async function setCustomPhoto(id, photo) {
+        let { data: res1 } = await supabase.storage
+            .from("userPhoto")
+            .copy("default.png", id);
+
+        let { data: res2 } = await supabase.storage
+            .from("userPhoto")
+            .update(id, photo, {
+                cacheControl: "0",
+                upsert: true,
+            });
+
+        let { data: res3 } = await supabase.storage
+            .from("userPhoto")
+            .getPublicUrl(id);
+
+        return res3;
+    }
+
+    async function uploadCustomPhoto(id, photo) {
+        await setCustomPhoto(id, photo).then((response) => {
+            let payload = {id: id, url:response['publicUrl']}
+
+            fetch(serverUrl + "user/change-photo", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+        });
+    }
 
     async function handleSubmit(event) {
         const form = event.target;
-        const data = new FormData(form);
+        const formData = new FormData(form);
+
+        console.log(formData.get("photo")["name"]);
 
         await fetch(serverUrl + "user/signup", {
             method: "POST",
-            body: data,
+            body: formData,
         })
             .then((response) => {
                 return response.text();
             })
             .then((data) => {
-                console.log(data);
-                window.location.hash = `#/userlogin`;
+                let ret = +data;
+                console.log(ret);
+
+                //Signup Failed
+                if (ret == 0) {
+                    toast.error("Singup Failed 🙁");
+                }
+                //Signup Successful
+                else {
+                    if (formData.get("photo")["name"] === "") {
+                        uploadDefaultPhoto(data);
+                    } else {
+                        uploadCustomPhoto(data, formData.get("photo"));
+                    }
+                    //window.location.hash = `#/userlogin`;
+                }
             });
 
-        username = "";
-        nid = "";
-        dob = "";
-        address = "";
-        phoneNumber = "";
-        gender = "";
-        password = "";
-        mail = "";
-        profilePicture = "";
+        form.reset();
+        console.log(formData.get("photo"));
     }
 </script>
 
+<Toaster />
 <main
     class="flex justify-center items-center min-h-screen"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(0px);"
@@ -216,7 +280,7 @@
                     name="photo"
                     type="file"
                     accept="image/*"
-                    bind:this={profilePicture}
+                    bind:value={profilePicture}
                 />
             </div>
 
