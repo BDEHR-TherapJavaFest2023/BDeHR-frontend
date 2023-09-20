@@ -17,6 +17,7 @@ import About from './lib/about.svelte';
 import userSignUp from './lib/usersignup.svelte';
 import labLogin from './lib/labLogin.svelte';
 import labHome from './lib/labHome.svelte';
+import labPatient from './lib/labPatients.svelte';
 import doctorSignUp from './lib/doctorSignup.svelte';
 import User from './lib/user.svelte';
 import UserMedication from './lib/userMedication.svelte';
@@ -46,6 +47,6 @@ export const routes = {
     '/doctorhome/doctorPatient/:hospitalName': doctorPatient,
     '/doctorhome/doctorPatient/:hospitalName/:patientId': doctorOnPatient,
     '/lablogin': labLogin,
-    '/labhome' : labHome,
-
+    '/labhome': labHome,
+    '/labhome/labpatients': labPatient,
 };

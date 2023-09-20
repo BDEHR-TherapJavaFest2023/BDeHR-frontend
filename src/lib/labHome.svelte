@@ -49,7 +49,9 @@
         // ... add more instruments as needed ...
     ];
     let hoveredMachine = null;
-    function navigateToPatients() {}
+    function navigateToPatients() {
+        window.location.hash = "#/labhome/labpatients";
+    }
 </script>
 
 <!-- Navbar -->
@@ -58,11 +60,11 @@
         <img
             src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
             alt="Company Logo"
-            class="h-10 w-auto mr-4"
+            class="h-10 w-auto mr-4 transition-transform transform hover:scale-125"
         />
 
         <h1 class="text-white text-xl font-semibold">{hospitalName}</h1>
-        <button class="btn btn-error hover:bg-red-600">Logout</button>
+        <a href="#/lablogin" class="btn btn-error hover:bg-red-600">Logout</a>
     </div>
 </nav>
 
