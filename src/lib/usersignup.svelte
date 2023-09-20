@@ -14,10 +14,17 @@
         const form = event.target;
         const data = new FormData(form);
 
-        await fetch(serverUrl+"user/signup", {
+        await fetch(serverUrl + "user/signup", {
             method: "POST",
             body: data,
-        });
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+                window.location.hash = `#/userlogin`;
+            });
 
         username = "";
         nid = "";
@@ -54,9 +61,10 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="username"
                 >
-                    User Name
+                    User Name<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="name"
                     type="text"
@@ -69,9 +77,10 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="nid"
                 >
-                    NID Number
+                    NID Number<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="nid"
                     type="text"
@@ -84,9 +93,10 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="dob"
                 >
-                    Date of Birth
+                    Date of Birth<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="dob"
                     type="date"
@@ -114,12 +124,13 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="phoneNumber"
                 >
-                    Phone Number
+                    Phone Number<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="phone"
-                    type="text"
+                    type="number"
                     placeholder="Phone Number"
                     bind:value={phoneNumber}
                 />
@@ -143,10 +154,11 @@
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2"
-                    >Gender</label
-                >
+                    >Gender<span class="text-red-600">*</span>
+                </label>
                 <div class="flex items-center">
                     <input
+                        required
                         class="mr-2 leading-tight"
                         type="radio"
                         id="male"
@@ -181,8 +193,10 @@
                     for="password"
                 >
                     Password
+                    <span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="password"
                     type="password"

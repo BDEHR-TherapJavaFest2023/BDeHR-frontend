@@ -1,19 +1,36 @@
 <script>
+    import toast, { Toaster } from "svelte-french-toast";
+    import { serverUrl } from "./constants";
     let id = "";
     let password = "";
 
     async function handleSubmit(event) {
-        event.preventDefault();
-        if (id && password) {
-            // Here you can take necessary actions with the form data
-            // Example: You can send this data to your backend for verification
+        const form = event.target;
+        const data = new FormData(form);
 
-            // For now, we're simply redirecting to the user route
-            window.location.href = "#/user";
-        }
+        await fetch(serverUrl + "user/login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let ret = +data;
+                console.log(data);
+                if (ret == 1) {
+                    window.location.hash = `#/user`;
+                } else {
+                    toast.error("Login Failed 🙁");
+                }
+            });
+
+        id = "";
+        password = "";
     }
 </script>
 
+<Toaster />
 <div class="flex items-center justify-center min-h-screen relative">
     <div class="card lg:card-side bg-ash shadow-xl z-50">
         <figure>
@@ -33,19 +50,23 @@
             <h5 class="text-3xl font-bold" style="color: #FFFFFF;">
                 Sign In to your Account
             </h5>
-            <form on:submit={handleSubmit}>
+            <form on:submit|preventDefault={handleSubmit}>
                 <div>
                     <input
+                        required
                         bind:value={id}
                         type="text"
+                        name="id"
                         placeholder="Enter ID"
                         class="input input-bordered w-full max-w-xs mb-2"
                     />
                 </div>
                 <div>
                     <input
+                        required
                         bind:value={password}
                         type="password"
+                        name="password"
                         placeholder="Enter Password"
                         class="w-full input input-bordered w-full max-w-xs"
                     />
