@@ -17,6 +17,8 @@ import About from './lib/about.svelte';
 import userSignUp from './lib/usersignup.svelte';
 import doctorSignUp from './lib/doctorSignup.svelte';
 import User from './lib/user.svelte';
+import UserMedication from './lib/userMedication.svelte';
+import UserReport from './lib/userReport.svelte';
 
 export const routes = {
     // Define your routes here
@@ -25,6 +27,8 @@ export const routes = {
     '/userlogin': userLogin,
     '/usersignup': userSignUp,
     '/user': User,
+    '/user/medication': UserMedication,
+    '/user/report': UserReport,
     '/hospitalogin': hospitalLogin,
     '/doctorlogin': doctorLogin,
     '/doctorsignup': doctorSignUp,
