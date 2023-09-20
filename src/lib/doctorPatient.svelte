@@ -1,6 +1,5 @@
 <script>
     console.log("Started doctorPatient.svelte");
-    import { doctorRunningName } from "./doctorStore";
     import { getContext } from "svelte";
     export let params = {};
 
@@ -11,10 +10,6 @@
 
     let hospitalName;
     let patients = []; // You'd fetch this list based on the hospitalName, typically from an API or store
-    let NameRunning;
-    doctorRunningName.subscribe((value) => {
-        NameRunning = value;
-    });
     // Dummy data for patients
     let patientsData = {
         "Dhaka Medical College": [
@@ -81,7 +76,6 @@
         // Set the hospital name in a global store or send as a parameter
         // For simplicity, sending as a parameter
         console.log("Navigating to patients for hospital:", hospitalName);
-        doctorRunningName.set(NameRunning);
         window.location.hash = `#/doctorhome/doctorPatient/${hospitalName}/${patientId}`;
     }
 

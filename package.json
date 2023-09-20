@@ -27,6 +27,7 @@
     "leaflet": "^1.9.4",
     "leaflet-heatmap": "^1.0.0",
     "leaflet.heat": "^0.2.0",
+    "svelte-local-storage-store": "^0.6.0",
     "svelte-spa-router": "^3.3.0"
   }
 }

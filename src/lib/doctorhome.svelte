@@ -2,9 +2,8 @@
     import Navbardoc from "./doctorNavbar.svelte";
     import ProfileTab from "./doctorProfile.svelte";
     import navigate from "svelte-spa-router";
-    import { doctorHospitals } from "./doctorStore";
-    import { doctorRunningName } from "./doctorStore";
-    import { doctorResearch } from "./doctorStore";
+    import { doctorInfo,doctorHospitalList,doctorResearchList } from "./store";
+    import { get } from "svelte/store";
 
     let doctorDatas = {
         doctor_id: "NDLKX6781TT",
@@ -32,16 +31,16 @@
     ];
     function navigateToHospitals() {
         // Set the doctor_id in the store
-        doctorResearch.set(doctorResearches);
-        doctorHospitals.set(doctorHospital);
-        doctorRunningName.set(doctorDatas.name);
+        doctorInfo.set({doctorName:doctorDatas.name});
+        doctorHospitalList.set({hospitalList: doctorHospital});
+        doctorResearchList.set({researchList: doctorResearches});
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/hospitals";
     }
     function navigateToResearch() {
-        doctorResearch.set(doctorResearches);
-        doctorHospitals.set(doctorHospital);
-        doctorRunningName.set(doctorDatas.name);
+        doctorInfo.set({doctorName:doctorDatas.name});
+        doctorHospitalList.set({hospitalList: doctorHospital});
+        doctorResearchList.set({researchList: doctorResearches});
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/researches";
     }

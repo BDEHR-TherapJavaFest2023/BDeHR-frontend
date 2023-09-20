@@ -1,18 +1,11 @@
 <script>
-    import { doctorResearch } from "./doctorStore";
-    import { doctorRunningName } from "./doctorStore";
     import NavbarRunning from "./doctorNavbar.svelte";
+    import { doctorInfo,doctorResearchList } from "./store";
+    import {get} from "svelte/store"
 
     let doctor_Researches = [];
     let NameRunning;
 
-    // Subscribe to the doctorId store to get the value
-    doctorResearch.subscribe((value) => {
-        doctor_Researches = value;
-    });
-    doctorRunningName.subscribe((value) => {
-        NameRunning = value;
-    });
     function navigateToProfile() {
         // Navigate to the Profile page
         window.location.hash = "#/doctorhome";
@@ -24,7 +17,7 @@
 </script>
 
 <main class="bg-gray-100 min-h-screen">
-    <NavbarRunning doctorName={NameRunning} />
+    <NavbarRunning doctorName={get(doctorInfo).doctorName} />
 
     <div style="padding-top: 145px;">
         <div class="flex justify-center mt-4 space-x-4">
@@ -54,7 +47,7 @@
         style="padding-top: 10px;"
     >
         <!-- Display cards for each hospital name -->
-        {#each doctor_Researches as hospital, index}
+        {#each get(doctorResearchList).researchList as hospital, index}
             <div
                 class="bg-white p-6 rounded-lg shadow-md text-center transition-colors hover:bg-gray-200
                 transition-transform transform hover:scale-90"
