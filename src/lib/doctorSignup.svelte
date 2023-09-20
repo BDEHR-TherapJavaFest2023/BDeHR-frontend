@@ -45,11 +45,11 @@
 
 <main
     class="flex justify-center items-center min-h-screen"
-    style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(0px);"
+    style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/orangeblur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
     <div
-        class="shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
-        style="background-color: #B1E6F3 ;"
+        class="shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 shadow-2xl"
+        style="background-color: #FF9600;"
     >
         <div class="flex justify-center">
             <img
@@ -63,7 +63,7 @@
         <form on:submit|preventDefault={handleSubmit}>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="doctorName"
                 >
                     Doctor Name
@@ -79,7 +79,7 @@
 
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="bmdc"
                 >
                     BMDC Number
@@ -94,7 +94,7 @@
             </div>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="dob"
                 >
                     Date of Birth
@@ -109,7 +109,7 @@
             </div>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="address"
                 >
                     Address
@@ -124,7 +124,7 @@
             </div>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="phoneNumber"
                 >
                     Phone Number
@@ -140,7 +140,7 @@
 
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="mail"
                 >
                     Email
@@ -155,7 +155,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2"
+                <label class="block text-black text-sm font-bold mb-2"
                     >Gender</label
                 >
                 <div class="flex items-center">
@@ -190,7 +190,7 @@
             </div>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="password"
                 >
                     Password
@@ -205,7 +205,7 @@
             </div>
             <div class="mb-4">
                 <label
-                    class="block text-gray-700 text-sm font-bold mb-2"
+                    class="block text-black text-sm font-bold mb-2"
                     for="profilePicture"
                 >
                     Profile Picture
@@ -221,7 +221,7 @@
 
             <div class="flex items-center justify-between">
                 <button
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    class="bg-slate-300 hover:bg-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="submit"
                 >
                     Sign Up
@@ -231,19 +231,34 @@
     </div>
     <div bind:this={modal} class="fixed z-10 inset-0 overflow-y-auto hidden">
         <div class="flex items-end justify-center min-h-screen">
+            <!-- Modal overlay that causes the blurring effect -->
+            <div class="fixed inset-0 bg-gray-900 opacity-50" />
+
+            <!-- Actual Modal -->
             <div
-                class="bg-green-400 rounded-lg text-left overflow-hidden shadow-xl transform transition-all p-4"
+                class="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all p-4 max-w-md mx-auto mt-20"
             >
-                <div class="mb-4">
-                    <p class="text-2xl font-bold">Sign up Successful</p>
+                <!-- Modal Header -->
+                <div
+                    class="bg-green-500 text-white px-6 py-4 mb-4 rounded-t-lg"
+                >
+                    <h3 class="font-semibold text-xl">Signup Success</h3>
                 </div>
-                <div class="mb-4">
-                    <p>Your generated ID: {doctorid}</p>
+
+                <!-- Modal Content -->
+                <div class="mb-4 px-6 py-2">
+                    <p class="text-gray-700 mb-4">
+                        Congratulations on successfully signing up. Below is
+                        your generated ID:
+                    </p>
+                    <p class="text-blue-600 font-bold">{doctorid}</p>
                 </div>
-                <div class="flex gap-4">
+
+                <!-- Modal Footer -->
+                <div class="flex gap-4 px-6 py-4">
                     <button
                         on:click={copyToClipboard}
-                        class="btn btn-outline btn-accent">Copy</button
+                        class="btn btn-outline btn-primary">Copy</button
                     >
                     <button on:click={goToLoginPage} class="btn btn-outline"
                         >Return</button
