@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
-    import { hospitalName } from "./hospitalstore";
-    import { hospitalPatientList,hospitalInfo } from "./store";
+
+    import { hospitalPatientList, hospitalInfo } from "./store";
     import { get } from "svelte/store";
     let hospital_patients = [];
 
@@ -25,7 +25,7 @@
 
     function savePatient() {
         hospital_patients = [...hospital_patients, newPatient];
-        hospitalPatientList.set({patientList: hospital_patients});
+        hospitalPatientList.set({ patientList: hospital_patients });
 
         newPatient = {
             patientName: "",
@@ -37,10 +37,9 @@
         showForm = false;
     }
 
-    onMount(()=>{
-        hospital_patients = get(hospitalPatientList).patientList
-    })
-
+    onMount(() => {
+        hospital_patients = get(hospitalPatientList).patientList;
+    });
 </script>
 
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">

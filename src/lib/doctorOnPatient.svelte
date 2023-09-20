@@ -48,7 +48,8 @@
         Address: "",
         Contact: "",
         Occupation: "",
-        ChiefComplaints: [],
+        ChiefComplaints: "",
+        HOillness: "",
         PastHistory: "",
         TreatmentHistory: "",
         OccupationalHistory: "",
@@ -61,12 +62,14 @@
         GastroIntestinalSystem: "",
         MusculoSkeletalSystem: "",
         NervousSystem: "",
-        ProvisionalDiagnosis: "",
+        workupDiagnosis: "",
+        DifferentialDiagnosis: "",
         RelativeInvestigationFindings: "",
-        DeterministicDiagnosis: "",
+        ConfirmatoryDiagnosis: "",
         Treatment: "",
         FollowUpAdvice: "",
         DischargePrescription: "",
+        remarks: "",
     };
 
     function addMedication() {
@@ -75,7 +78,8 @@
             Address: "",
             Contact: "",
             Occupation: "",
-            ChiefComplaints: [],
+            ChiefComplaints: "",
+            HOillness: "",
             PastHistory: "",
             TreatmentHistory: "",
             OccupationalHistory: "",
@@ -88,12 +92,14 @@
             GastroIntestinalSystem: "",
             MusculoSkeletalSystem: "",
             NervousSystem: "",
-            ProvisionalDiagnosis: "",
+            workupDiagnosis: "",
+            DifferentialDiagnosis: "",
             RelativeInvestigationFindings: "",
-            DeterministicDiagnosis: "",
+            ConfirmatoryDiagnosis: "",
             Treatment: "",
             FollowUpAdvice: "",
             DischargePrescription: "",
+            remarks: "",
         };
         showModal = false;
     }
@@ -130,7 +136,7 @@
     <div class="mt-6 bg-white p-6 rounded-md shadow-xl relative">
         {#if selectedTab === "Past Medications"}
             <button
-                class="mb-4 bg-blue-500 text-white py-2 px-4 rounded-md"
+                class="mb-4 bg-green-400 hover:bg-green-700 text-white py-2 px-4 rounded-md"
                 on:click={() => (showModal = true)}
             >
                 Create Medication
@@ -169,55 +175,367 @@
                 class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
             >
                 <div
-                    class="bg-white p-6 rounded-md shadow-md relative w-full max-w-4xl"
+                    class="bg-white p-6 rounded-md shadow-md relative w-full max-w-4xl max-h-screen overflow-y-auto my-8"
                 >
                     <button
                         class="absolute top-2 right-2 text-xl"
                         on:click={() => (showModal = false)}>&times;</button
                     >
-                    <h3 class="text-xl font-semibold mb-4">
-                        New Medication Entry
+                    <h3 class="text-2xl font-bold mb-4">
+                        New Medication Entry for {patientData.name}
                     </h3>
 
                     <form
                         on:submit|preventDefault={addMedication}
                         class="space-y-6"
                     >
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                            <label class="block">
-                                <span class="block font-semibold mb-2"
-                                    >Address</span
-                                >
-                                <input
-                                    bind:value={newMedication.Address}
-                                    class="w-full p-2 border rounded-md"
-                                    required
-                                />
-                            </label>
-                            <label class="block">
-                                <span class="block font-semibold mb-2"
-                                    >Contact</span
-                                >
-                                <input
-                                    bind:value={newMedication.Contact}
-                                    class="w-full p-2 border rounded-md"
-                                    required
-                                />
-                            </label>
-                            <!-- Add other short fields here in a similar pattern -->
-                        </div>
-
-                        <div>
-                            <span class="block font-semibold mb-2"
-                                >Chief Complaints</span
+                        <!-- Initial Info -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Initial Info</legend
                             >
-                            <textarea
-                                bind:value={newMedication.ChiefComplaints}
-                                class="w-full p-2 border rounded-md"
-                            />
-                        </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Address</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Address}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Contact</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Contact}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Occupation</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Occupation}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Occupational History</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.OccupationalHistory}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                        </fieldset>
 
-                        <!-- Repeat the pattern above for other longer text fields like PastHistory, TreatmentHistory, etc. -->
+                        <!-- Complaints -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Complaints</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Chief Complaints</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.ChiefComplaints}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >History of Illness</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.HOillness}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: ChiefComplaints, HOpresentillness -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- History -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >History</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Past Illness</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.PastHistory}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >History of Treatment</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.TreatmentHistory}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Status of Vaccination</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Vaccinationhistory}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Menstrual History</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.MenstrualHistory}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: PastHistory, PastTreatment, OccupationalHistory, VaccinationStatus, MenstrualHistory -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- Examination -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Examination</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >General Examination</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.GeneralExamination}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Cardio Vascular System</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.CardioVascularSystem}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Respiratory System</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.RespiratorySystemm}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Gastro-Intestinal System</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.GastroIntestinalSystem}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Musculo-Skeletal System</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.MusculoSkeletalSystem}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Nervous System</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.NervousSystem}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: GeneralExamination, CardioVascularSystem, RespiratorySystem, GastroIntestinalSystem, MusculoSkeletalSystem, NervousSystem -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- ProvationalStage -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Provational Stage</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Work-up Diagnosis</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.workupDiagnosis}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Differential Diagnosis</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.DifferentialDiagnosis}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: WorkupDiagnosis, DifferentialDiagnosis -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- FinalDiagnosis -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Final Diagnosis</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Relative Investigations Findings</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.RelativeInvestigationFindings}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Confirmatory Diagnosis</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.ConfirmatoryDiagnosis}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: RelativeInvestigationFindings, DeterministicDiagnosis -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- Treatment -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Treatment</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Treatment</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Treatment}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Follow up Advice</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.FollowUpAdvice}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: Treatment, FollowUpAdvice -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
+
+                        <!-- Discharge -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <legend class="font-bold text-lg mb-4"
+                                >Discharge</legend
+                            >
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Final Remarks</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.remarks}
+                                        class="w-full p-2 border rounded-md"
+                                        required
+                                    />
+                                </label>
+
+                                <!-- ... Continue with the rest ... -->
+                            </div>
+                            <!-- Fields: Remarks -->
+                            <!-- ... Add your fields here ... -->
+                        </fieldset>
 
                         <div class="flex justify-end mt-6">
                             <button
