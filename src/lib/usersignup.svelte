@@ -7,12 +7,26 @@
     let gender = "";
     let password = "";
     let mail = "";
-    let profilePicture = null;
+    let profilePicture = "";
 
-    function handleSubmit() {
-        // Handle form submission here
-        // You can access the form values using the above variables
-        console.log("Form submitted");
+    async function handleSubmit(event) {
+        const form = event.target;
+        const data = new FormData(form);
+
+        await fetch("http://localhost:8080/user/signup", {
+            method: "POST",
+            body: data,
+        });
+
+        username = "";
+        nid = "";
+        dob = "";
+        address = "";
+        phoneNumber = "";
+        gender = "";
+        password = "";
+        mail = "";
+        profilePicture = "";
     }
 </script>
 
@@ -33,7 +47,7 @@
             />
         </div>
         <h2 class="text-2xl text-center font-bold mb-4">Sign Up</h2>
-        <form on:submit={handleSubmit}>
+        <form on:submit|preventDefault={handleSubmit}>
             <div class="mb-4">
                 <label
                     class="block text-gray-700 text-sm font-bold mb-2"
@@ -43,7 +57,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
+                    name="name"
                     type="text"
                     placeholder="User Name"
                     bind:value={username}
@@ -58,7 +72,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="nid"
+                    name="nid"
                     type="text"
                     placeholder="NID Number"
                     bind:value={nid}
@@ -73,7 +87,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="dob"
+                    name="dob"
                     type="date"
                     placeholder="Date of Birth"
                     bind:value={dob}
@@ -88,7 +102,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="address"
+                    name="address"
                     type="text"
                     placeholder="Address"
                     bind:value={address}
@@ -103,7 +117,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="phoneNumber"
+                    name="phone"
                     type="text"
                     placeholder="Phone Number"
                     bind:value={phoneNumber}
@@ -119,7 +133,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="mail"
+                    name="email"
                     type="text"
                     placeholder="Email"
                     bind:value={mail}
@@ -169,7 +183,7 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password"
+                    name="password"
                     type="password"
                     placeholder="Password"
                     bind:value={password}
@@ -184,7 +198,7 @@
                 </label>
                 <input
                     class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="profilePicture"
+                    name="photo"
                     type="file"
                     accept="image/*"
                     bind:this={profilePicture}

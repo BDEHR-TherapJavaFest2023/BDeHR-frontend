@@ -2,7 +2,7 @@
     let id = "";
     let password = "";
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         if (id && password) {
             // Here you can take necessary actions with the form data
