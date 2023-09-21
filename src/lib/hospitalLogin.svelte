@@ -4,7 +4,8 @@
 
     function handleSubmit(event) {
         //Testing
-        window.location.href = "#/hospitalhome";
+        event.preventDefault();
+        window.location.href = `#/hospitalhome`;
     }
 </script>
 
