@@ -1,51 +1,48 @@
 <script>
     import toast, { Toaster } from "svelte-french-toast";
-    import { serverUrl } from "./constants";
-    import { userInfo } from "./store";
+    // import { serverUrl } from "./constants";
+    // import { userInfo } from "./store";
     let id = "";
     let password = "";
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        // window.location.hash = `#/user`;
-
-        const form = event.target;
-        const data = new FormData(form);
-
-        await fetch(serverUrl + "user/login", {
-            method: "POST",
-            body: data,
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .catch(() => null)
-            .then((data) => {
-                // let ret = +data;
-                console.log(data);
-
-                //Login Failed
-                if (!data) {
-                    toast.error("Login Failed 🙁");
-                }
-                //Login Failed
-                else {
-                    userInfo.set({
-                        userName: data["name"],
-                        userId: data["id"],
-                        userEmail: data["email"],
-                        userNid: data["nid"],
-                        userDob: data["dob"],
-                        userAddress: data["address"],
-                        userGender: data["gender"],
-                        userPhone: data["phone"],
-                        userPhoto: data["photo"],
-                    });
-                    window.location.hash = `#/user`;
-                }
-            });
-
-        form.reset();
+        window.location.hash = `#/adminhome`;
+        toast.success("Login Successful");
+        // const form = event.target;
+        // const data = new FormData(form);
+        // await fetch(serverUrl + "user/login", {
+        //     method: "POST",
+        //     body: data,
+        // })
+        //     .then((response) => {
+        //         return response.json();
+        //     })
+        //     .catch(() => null)
+        //     .then((data) => {
+        //         // let ret = +data;
+        //         console.log(data);
+        //         //Login Failed
+        //         if (!data) {
+        //             toast.error("Login Failed 🙁");
+        //         }
+        //         //Login Failed
+        //         else {
+        //             userInfo.set({
+        //                 userName: data["name"],
+        //                 userId: data["id"],
+        //                 userEmail: data["email"],
+        //                 userNid: data["nid"],
+        //                 userDob: data["dob"],
+        //                 userAddress: data["address"],
+        //                 userGender: data["gender"],
+        //                 userPhone: data["phone"],
+        //                 userPhoto: data["photo"],
+        //             });
+        //             window.location.hash = `#/user`;
+        //         }
+        //     });
+        // form.reset();
     }
 </script>
 
@@ -60,7 +57,7 @@
             class="hidden md:flex md:w-2/5 lg:w-2/5 items-center justify-center p-6"
         >
             <img
-                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLoginfinl.png"
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/adminCartoon2.png"
                 alt="User"
                 class="max-w-full max-h-full object-contain"
             />
@@ -86,7 +83,9 @@
             >
                 <div class="rounded-md shadow-sm -space-y-px">
                     <div>
-                        <label for="userID" class="sr-only">User ID</label>
+                        <label for="adminID" class="sr-only"
+                            >Administrator ID</label
+                        >
                         <input
                             required
                             bind:value={id}
@@ -123,14 +122,6 @@
                         >
                             Remember me
                         </label>
-                    </div>
-                    <div class="text-sm">
-                        <a
-                            href="#/usersignup"
-                            class="font-medium text-indigo-600 hover:text-indigo-500"
-                        >
-                            Don't Have an Account? Sign Up Here
-                        </a>
                     </div>
                 </div>
 

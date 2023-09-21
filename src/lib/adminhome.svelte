@@ -35,6 +35,27 @@
 
     onMount(() => {
         // Initialize Hospital Map
+        animateValue(
+            0,
+            targetUserCount,
+            3000,
+            1000,
+            (val) => (userCount = val)
+        );
+        animateValue(
+            0,
+            targetHospitalCount,
+            1000,
+            1,
+            (val) => (hospitalCount = val)
+        );
+        animateValue(
+            0,
+            targetDoctorCount,
+            1000,
+            10,
+            (val) => (doctorCount = val)
+        );
         const hospitalMap = L.map("hospital-map").setView(
             [23.8103, 90.4125],
             7
@@ -92,11 +113,37 @@
         const heatmapLayer = L.heatLayer(dengueData.data, cfg);
         dengueMap.addLayer(heatmapLayer);
     });
+    let userCount = 0;
+    let hospitalCount = 0;
+    let doctorCount = 0;
+    const targetUserCount = 79000;
+    const targetHospitalCount = 200;
+    const targetDoctorCount = 1000;
+
+    const animateValue = (start, end, duration, incrementStep, callback) => {
+        const range = end - start;
+        let current = start;
+        const increment = end > start ? incrementStep : -incrementStep;
+        const stepTime = Math.abs(
+            Math.floor(duration / (range / incrementStep))
+        );
+        const timer = setInterval(function () {
+            current += increment;
+            if (
+                (increment > 0 && current >= end) ||
+                (increment < 0 && current <= end)
+            ) {
+                current = end;
+                clearInterval(timer);
+            }
+            callback(current);
+        }, stepTime);
+    };
 </script>
 
 <main class="bg-gray-100 min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-white shadow-md p-4">
+    <nav class="bg-white shadow-md mb-8 p-4">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center">
                 <img
@@ -111,6 +158,35 @@
             >
         </div>
     </nav>
+    <div class="container mx-auto mb-8 p-8">
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-3 gap-4">
+            <div class="stat-box bg-gray-200 p-4 rounded-lg shadow-md">
+                <h2 class="stat-title text-lg font-semibold">
+                    Number of Users
+                </h2>
+                <div class="stat-number text-blue-500 text-4xl font-bold">
+                    {userCount}
+                </div>
+            </div>
+            <div class="stat-box bg-gray-200 p-4 rounded-lg shadow-md">
+                <h2 class="stat-title text-lg font-semibold">
+                    Number of Hospitals
+                </h2>
+                <div class="stat-number text-green-500 text-4xl font-bold">
+                    {hospitalCount}
+                </div>
+            </div>
+            <div class="stat-box bg-gray-200 p-4 rounded-lg shadow-md">
+                <h2 class="stat-title text-lg font-semibold">
+                    Number of Doctors
+                </h2>
+                <div class="stat-number text-red-500 text-4xl font-bold">
+                    {doctorCount}
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Map Container -->
     <!-- Map Container for Hospitals -->
@@ -143,5 +219,29 @@
     #map {
         width: 100%;
         height: 100%;
+    }
+    .stat-box {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        text-align: center;
+    }
+    .stat-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+    .animate__animated.animate__fadeIn {
+        animation: fadeIn ease 1.5s;
+    }
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 </style>

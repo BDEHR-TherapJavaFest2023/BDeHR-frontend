@@ -155,8 +155,10 @@
             </p>
             <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline text-2xl font-bold"
-                    >Administrator</button
+                <a
+                    href="#/adminlogin"
+                    class="w-full btn btn-outline text-2xl font-bold"
+                    >Administrator</a
                 >
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
@@ -183,8 +185,10 @@
             </div>
             <div class="flex mt-4 mb-2 space-x-3">
                 <!-- Adjust the margin-top here -->
-                <button class="w-full btn btn-outline text-2xl font-bold"
-                    >Laboratory</button
+                <a
+                    href="#/lablogin"
+                    class="w-full btn btn-outline text-2xl font-bold"
+                    >Laboratory</a
                 >
             </div>
         </div>
@@ -404,7 +408,7 @@
                 <br />
                 Data analysis & action
             </p>
-            <button class="w-2/3 btn btn-outline">Get Started</button>
+            <a href="#/adminlogin" class="w-2/3 btn btn-outline">Get Started</a>
         </div>
         <figure
             style="height: 500px;"

@@ -12,6 +12,18 @@
     let mail = "";
     let profilePicture;
 
+    let showModal = false;
+    let userID = "";
+
+    async function copyToClipboard() {
+        try {
+            await navigator.clipboard.writeText(userID);
+            toast.success("User ID copied to clipboard");
+        } catch (err) {
+            toast.error("Failed to copy User ID");
+        }
+    }
+
     async function setDefaultPhoto(id) {
         let { data: res1 } = await supabase.storage
             .from("userPhoto")
@@ -25,11 +37,11 @@
 
     async function uploadDefaultPhoto(id, photo) {
         await setDefaultPhoto(id).then((response) => {
-            let payload = {id: id, url:response['publicUrl']}
+            let payload = { id: id, url: response["publicUrl"] };
 
             fetch(serverUrl + "user/change-photo", {
                 method: "POST",
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
         });
     }
@@ -55,11 +67,11 @@
 
     async function uploadCustomPhoto(id, photo) {
         await setCustomPhoto(id, photo).then((response) => {
-            let payload = {id: id, url:response['publicUrl']}
+            let payload = { id: id, url: response["publicUrl"] };
 
             fetch(serverUrl + "user/change-photo", {
                 method: "POST",
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
         });
     }
@@ -83,16 +95,21 @@
 
                 //Signup Failed
                 if (ret == 0) {
+                    console.log("hoynai");
                     toast.error("Signup Failed 🙁");
                 }
                 //Signup Successful
                 else {
+                    console.log("hoise");
                     if (formData.get("photo")["name"] === "") {
                         uploadDefaultPhoto(data);
                     } else {
                         uploadCustomPhoto(data, formData.get("photo"));
                     }
-                    window.location.hash = `#/userlogin`;
+                    showModal = true;
+                    //eita id banaisi
+                    userID = "HSO224NDO90";
+                    //window.location.hash = `#/userlogin`;
                 }
             });
 
@@ -293,6 +310,27 @@
             </div>
         </form>
     </div>
+    {#if showModal}
+        <div
+            class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50"
+        >
+            <div class="bg-white p-4 rounded shadow-md">
+                <h2 class="text-xl font-bold mb-2">Signup Successful</h2>
+                <p>Your User ID: {userID}</p>
+                <div class="mt-4">
+                    <button
+                        class="mr-2 bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+                        on:click={copyToClipboard}>Copy</button
+                    >
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+                        on:click={() => (window.location.hash = `#/userlogin`)}
+                        >Return</button
+                    >
+                </div>
+            </div>
+        </div>
+    {/if}
 </main>
 
 <style>
