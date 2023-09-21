@@ -1,6 +1,6 @@
 <script>
     import ProfileTab from "./userProfile.svelte";
-    import Navbardoc from "./doctorNavbar.svelte";
+    import Navbardoc from "./userNavbar.svelte";
     import { userInfo } from "./store";
     import { get } from "svelte/store";
     import { onMount } from "svelte";
@@ -42,7 +42,7 @@
 
 <main class="flex mb-10">
     <div>
-        <Navbardoc bind:doctorName={userData.name} />
+        <Navbardoc bind:userName={userData.name} />
     </div>
 
     <div class="container">

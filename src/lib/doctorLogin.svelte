@@ -7,7 +7,7 @@
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        // window.location.hash = `#/user`;
+        window.location.hash = `#/doctorhome`;
 
         const form = event.target;
         const data = new FormData(form);
