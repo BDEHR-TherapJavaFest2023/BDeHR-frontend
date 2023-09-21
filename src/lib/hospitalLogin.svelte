@@ -3,14 +3,8 @@
     let hospitalPass = "";
 
     function handleSubmit(event) {
-        event.preventDefault();
-        if (hospitalId && hospitalPass) {
-            // Here you can take necessary actions with the form data
-            // Example: You can send this data to your backend for verification
-
-            // For now, we're simply redirecting to the user route
-            window.location.href = "#/hospitalhome";
-        }
+        //Testing
+        window.location.href = "#/hospitalhome";
     }
 </script>
 
@@ -39,16 +33,20 @@
             <form on:submit={handleSubmit}>
                 <div class="mb-2">
                     <input
+                        required
                         bind:value={hospitalId}
-                        type="text"
+                        type="id"
+                        name="id"
                         placeholder="Enter Hospital ID"
                         class="input input-bordered w-full max-w-xs"
                     />
                 </div>
                 <div>
                     <input
+                        required
                         bind:value={hospitalPass}
-                        type="text"
+                        type="password"
+                        name="password"
                         placeholder="Enter Password"
                         class="w-full input input-bordered max-w-xs"
                     />
