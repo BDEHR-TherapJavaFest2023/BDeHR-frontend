@@ -5,15 +5,20 @@
     import "leaflet-heatmap";
     import "leaflet.heat";
     import { fly } from "svelte/transition";
+    import * as d3 from "d3";
 
-    let categories = ["Users", "Doctors", "Hospitals"];
-    let months = ["Jan", "Feb", "Mar", "Apr", "May"];
-
-    let data = {
-        Users: [300, 400, 350, 500, 550],
-        Doctors: [50, 70, 40, 90, 80],
-        Hospitals: [10, 20, 15, 25, 30],
-    };
+    const categories = ["Users", "Doctors", "Hospitals"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May"];
+    const data = [
+        { month: "Jan", Users: 400, Doctors: 200, Hospitals: 100 },
+        { month: "Feb", Users: 300, Doctors: 150, Hospitals: 120 },
+        { month: "Mar", Users: 320, Doctors: 160, Hospitals: 110 },
+        { month: "Apr", Users: 310, Doctors: 170, Hospitals: 50 },
+        { month: "May", Users: 390, Doctors: 190, Hospitals: 30 },
+        { month: "Jun", Users: 350, Doctors: 120, Hospitals: 60 },
+        { month: "Jul", Users: 410, Doctors: 140, Hospitals: 50 },
+        { month: "Aug", Users: 400, Doctors: 100, Hospitals: 20 },
+    ];
 
     function setBarHeight(node, { category, index }) {
         onMount(() => {
@@ -131,15 +136,90 @@
             // Add more mock or real data points with lat, lng and count (number of cases) properties
         ],
     };
+    const topAdmissions = [
+        { hospital: "Dhaka Medical College", count: 500 },
+        { hospital: "Sir Salimullah Medical College", count: 490 },
+        { hospital: "Chittagong Medical College", count: 380 },
+        { hospital: "Mymensingh Medical College", count: 370 },
+        { hospital: "Sylhet Medical College", count: 250 },
+        { hospital: "Ibrahim Medical College", count: 207 },
+        { hospital: "Rajshahi Medical College", count: 150 },
+    ];
+
+    const topDeaths = [
+        { hospital: "Rajshahi Medical College", count: 10 },
+        { hospital: "Sir Salimullah Medical College", count: 9 },
+        { hospital: "Cumilla Medical College", count: 6 },
+        { hospital: "Dhaka Medical College", count: 5 },
+        { hospital: "Rajshahi Medical College", count: 4 },
+        { hospital: "Jessore Medical College", count: 2 },
+        { hospital: "Sylhet Medical College", count: 2 },
+    ];
 
     onMount(() => {
         // Initialize Hospital Map
+        const svg = d3.select("#mySvg");
+        const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+        const width = +svg.attr("width") - margin.left - margin.right;
+        const height = +svg.attr("height") - margin.top - margin.bottom;
+        const g = svg
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const x0 = d3.scaleBand().rangeRound([0, width]).paddingInner(0.1);
+
+        const x1 = d3.scaleBand().padding(0.05);
+
+        const y = d3.scaleLinear().rangeRound([height, 0]);
+
+        const z = d3.scaleOrdinal().range(["#ffbb78", "#98df8a", "#d62728"]);
+
+        const keys = ["Users", "Doctors", "Hospitals"];
+
+        x0.domain(data.map((d) => d.month));
+        x1.domain(keys).rangeRound([0, x0.bandwidth()]);
+        y.domain([
+            0,
+            d3.max(data, (d) => d3.max(keys, (key) => d[key])),
+        ]).nice();
+
+        g.append("g")
+            .selectAll("g")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("transform", (d) => `translate(${x0(d.month)},0)`)
+            .selectAll("rect")
+            .data((d) => keys.map((key) => ({ key, value: d[key] })))
+            .enter()
+            .append("rect")
+            .attr("x", (d) => x1(d.key))
+            .attr("y", height)
+            .attr("width", x1.bandwidth())
+            .attr("height", 0)
+            .attr("fill", (d) => z(d.key))
+            .transition()
+            .duration(750)
+            .delay((d, i) => i * 150)
+            .attr("y", (d) => y(d.value))
+            .attr("height", (d) => height - y(d.value));
+
+        g.append("g")
+            .attr("class", "axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x0));
+
+        g.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(y).ticks(null, "s"));
+
+        //-----------------------------------------
 
         animateValue(
             0,
             targetUserCount,
             3000,
-            1234,
+            3634,
             (val) => (userCount = val)
         );
         animateValue(
@@ -153,7 +233,7 @@
             0,
             targetDoctorCount,
             1000,
-            10,
+            19,
             (val) => (doctorCount = val)
         );
         const hospitalMap = L.map("hospital-map").setView(
@@ -293,6 +373,9 @@
             </div>
         </div>
     </nav>
+    <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
+        Dashboard
+    </h1>
 
     <div class="container mx-auto mb-8 p-8">
         <!-- Dashboard Stats -->
@@ -330,6 +413,20 @@
         </div>
     </div>
 
+    <div
+        class="card bordered max-w-screen-md mx-auto mt-12 p-4 shadow-xl mb-6 transition-transform transform hover:scale-110"
+    >
+        <h2 class="text-lg font-semibold mb-4">
+            Number of New Registration this year
+        </h2>
+        <h2 class="text-right mb-4">
+            <span class="inline-block w-4 h-4 mr-1 bg-orange-500" /> Users
+            <span class="inline-block w-4 h-4 mr-1 bg-green-500" /> Doctors
+            <span class="inline-block w-4 h-4 mr-1 bg-red-500" /> Hospitals
+        </h2>
+        <svg id="mySvg" width="700" height="400" />
+    </div>
+
     <!-- Map Container -->
     <!-- Map Container for Hospitals -->
     <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
@@ -346,26 +443,53 @@
         </div>
     </section>
 
-    <section class="bg-white shadow-xl rounded-lg p-10 mb-8 mx-2">
-        <div class="chart-container">
-            {#each months as month, i (month)}
-                <div class="month-container">
-                    {#each categories as category (category)}
-                        <div
-                            class="bar"
-                            style="height: 0px; background-color: {category ===
-                            'Users'
-                                ? 'blue'
-                                : category === 'Doctors'
-                                ? 'green'
-                                : 'red'};"
-                        />
+    <div class="flex justify-between gap-8 p-8 bg-gray-100">
+        <!-- First Table: Top Patient Admissions -->
+        <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl mb-4 font-semibold text-indigo-600">
+                Top Patient Admissions in Last 24 Hours
+            </h2>
+            <table class="min-w-full bg-white rounded-lg">
+                <thead>
+                    <tr class="text-lg text-gray-700">
+                        <th class="px-4 py-2 text-left">Hospital</th>
+                        <th class="px-4 py-2 text-left">Admissions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each topAdmissions as { hospital, count }}
+                        <tr class="text-gray-600">
+                            <td class="px-4 py-2 border">{hospital}</td>
+                            <td class="px-4 py-2 border">{count}</td>
+                        </tr>
                     {/each}
-                    <div>{month}</div>
-                </div>
-            {/each}
+                </tbody>
+            </table>
         </div>
-    </section>
+
+        <!-- Second Table: Top Deaths -->
+        <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl mb-4 font-semibold text-red-600">
+                Top Deaths in Hospitals in Last 24 Hours
+            </h2>
+            <table class="min-w-full bg-white rounded-lg">
+                <thead>
+                    <tr class="text-lg text-gray-700">
+                        <th class="px-4 py-2 text-left">Hospital</th>
+                        <th class="px-4 py-2 text-left">Deaths</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each topDeaths as { hospital, count }}
+                        <tr class="text-gray-600">
+                            <td class="px-4 py-2 border">{hospital}</td>
+                            <td class="px-4 py-2 border">{count}</td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     <!-- Map Container for Dengue Heatmap -->
     <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
@@ -402,20 +526,11 @@
     .animate__animated.animate__fadeIn {
         animation: fadeIn ease 1.5s;
     }
-    .chart-container {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-    }
-    .month-container {
-        display: flex;
-        align-items: flex-end;
-        flex-direction: row;
-    }
-    .bar {
-        width: 30px;
-        margin: 0 5px;
-        transition: height 1s ease-in-out;
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
     }
 
     @keyframes fadeIn {
