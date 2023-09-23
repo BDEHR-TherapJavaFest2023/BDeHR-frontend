@@ -1,6 +1,7 @@
 import Home from './homepage.svelte';
 import userLogin from './lib/userlogin.svelte';
 import hospitalLogin from './lib/hospitalLogin.svelte';
+import HospitalSignup from './lib/hospitalSignup.svelte';
 import doctorLogin from './lib/doctorLogin.svelte';
 import doctorHome from './lib/doctorhome.svelte';
 import hospitalHome from './lib/hospitalhome.svelte';
@@ -36,6 +37,7 @@ export const routes = {
     '/user/medication': UserMedication,
     '/user/report': UserReport,
     '/hospitalogin': hospitalLogin,
+    '/hospitalsignup': HospitalSignup,
     '/doctorlogin': doctorLogin,
     '/doctorsignup': doctorSignUp,
     '/doctorhome': doctorHome,

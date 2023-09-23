@@ -53,7 +53,10 @@
                     />
                 </div>
                 <div>
-                    <a href="#/usersignup" class="link link-hover text-black">
+                    <a
+                        href="#/hospitalsignup"
+                        class="link link-hover text-black"
+                    >
                         Don't Have an Account? Sign Up Here
                     </a>
                 </div>
