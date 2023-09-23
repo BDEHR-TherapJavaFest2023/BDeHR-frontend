@@ -122,10 +122,10 @@
         />
         <div class="flex flex-col space-y-7">
             <a href="#/userlogin" class="text-lg font-bold">User</a>
-            <a href="#" class="text-lg font-bold">Hospital</a>
+            <a href="#/hospitalogin" class="text-lg font-bold">Hospital</a>
             <a href="#/doctorlogin" class="text-lg font-bold">Doctor</a>
-            <a href="#" class="text-lg font-bold">Laboratory</a>
-            <a href="#" class="text-lg font-bold">Admin</a>
+            <a href="#/lablogin" class="text-lg font-bold">Laboratory</a>
+            <a href="#/adminlogin" class="text-lg font-bold">Admin</a>
         </div>
     </div>
 </div>

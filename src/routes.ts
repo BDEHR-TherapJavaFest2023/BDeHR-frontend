@@ -13,6 +13,8 @@ import doctorResearch from './lib/doctorResearch.svelte';
 import doctorPatient from './lib/doctorPatient.svelte';
 import doctorOnPatient from './lib/doctorOnPatient.svelte';
 import adminHome from './lib/adminhome.svelte';
+import adminQuery from './lib/adminQuery.svelte';
+import AdminAddHospital from './lib/adminAddHospital.svelte';
 import About from './lib/about.svelte';
 import userSignUp from './lib/usersignup.svelte';
 import labLogin from './lib/labLogin.svelte';
@@ -43,6 +45,7 @@ export const routes = {
     '/hospitalhome/patients': hospitalPatients,
     '/hospitalhome/doctors': hospitalDoctors,
     '/adminhome': adminHome,
+    '/adminhome/query': adminQuery,
     '/hospitalhome/authorityLogin': dospitalAuthorityLogin,
     '/doctorhome/Authority': HospitalAuthority,
     '/doctorhome/doctorPatient/:hospitalName': doctorPatient,
@@ -51,4 +54,5 @@ export const routes = {
     '/adminlogin': adminLogin,
     '/labhome': labHome,
     '/labhome/labpatients': labPatient,
+    '/adminhome/addhospital': AdminAddHospital,
 };

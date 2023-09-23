@@ -1,10 +1,11 @@
 <script>
+    import { onMount } from "svelte";
     import { getContext } from "svelte";
     import { createPDF } from "./pdfUtility";
     import { supabase } from "./supabaseClient";
     export let params = {};
 
-    let tabs = ["Past Medications", "Test Reports"];
+    let tabs = ["Past Medications", "Test Reports", "Past Diagnosis"];
     let selectedTab = tabs[0];
 
     let patientData = {
@@ -12,6 +13,23 @@
         age: 28,
         gender: "Male",
     };
+    let todayDateTime;
+    function updateDateTime() {
+        const now = new Date();
+        todayDateTime = `${now.getFullYear()}-${String(
+            now.getMonth() + 1
+        ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+            now.getHours()
+        ).padStart(2, "0")}:${String(now.getMinutes()).padStart(
+            2,
+            "0"
+        )}:${String(now.getSeconds()).padStart(2, "0")}`;
+    }
+
+    onMount(() => {
+        updateDateTime();
+        setInterval(updateDateTime, 1000); // Update every second
+    });
 
     let pastMedications = [
         {
@@ -85,7 +103,7 @@
         workupDiagnosis: "Tumour",
         DifferentialDiagnosis: "Tumour, cancer",
         RelativeInvestigationFindings: "Cancer",
-        SalientFeature:"null",
+        SalientFeature: "null",
         ConfirmatoryDiagnosis: "Cancer",
         Treatment: "Inevitable death",
         FollowUpAdvice: "RIP",
@@ -124,6 +142,21 @@
         console.log(fileLink);
         showModal = false;
     }
+    const pastDiagnosisData = [
+        {
+            date: "2022-05-20",
+            diagnosedWith: "Cholera",
+            dischargeCertLink:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/1905061_report.pdf",
+        },
+        {
+            date: "2022-07-11",
+            diagnosedWith: "Chronic Bronchitis",
+            dischargeCertLink:
+                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/1905061_report.pdf",
+        },
+        // Add more diagnosis records as needed
+    ];
 
     function addMedication() {
         pastMedications = [...pastMedications, newMedication];
@@ -164,7 +197,7 @@
             workupDiagnosis: "",
             DifferentialDiagnosis: "",
             RelativeInvestigationFindings: "",
-            SalientFeature:"",
+            SalientFeature: "",
             ConfirmatoryDiagnosis: "",
             Treatment: "",
             FollowUpAdvice: "",
@@ -209,7 +242,7 @@
                 class="mb-4 bg-green-400 hover:bg-green-700 text-white py-2 px-4 rounded-md"
                 on:click={() => (showModal = true)}
             >
-                Create Medication
+                Treatment on {todayDateTime}
             </button>
             <ul>
                 {#each pastMedications as { hospitalName, doctorName, date, fileLink }}
@@ -225,6 +258,40 @@
                     </li>
                 {/each}
             </ul>
+        {:else if selectedTab === "Past Diagnosis"}
+            <table
+                class="min-w-full bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300"
+            >
+                <thead
+                    class="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white"
+                >
+                    <tr>
+                        <th class="w-1/3 py-2 px-4 text-left">Date</th>
+                        <th class="w-1/3 py-2 px-4 text-left">Diagnosed With</th
+                        >
+                        <th class="w-1/3 py-2 px-4 text-left"
+                            >Discharge Certificate</th
+                        >
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each pastDiagnosisData as diagnosis}
+                        <tr class="bg-gray-100 hover:bg-gray-200">
+                            <td class="border px-4 py-2">{diagnosis.date}</td>
+                            <td class="border px-4 py-2"
+                                >{diagnosis.diagnosedWith}</td
+                            >
+                            <td class="border px-4 py-2">
+                                <a
+                                    href={diagnosis.dischargeCertLink}
+                                    target="_blank"
+                                    class="text-blue-500 underline">View PDF</a
+                                >
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
         {:else}
             <ul>
                 {#each testReports as { hospitalName, date, fileLink }}
@@ -698,8 +765,8 @@
 
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
-                                >Investigations & Summary </legend
-                            >
+                                >Investigations & Summary
+                            </legend>
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->

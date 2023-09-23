@@ -19,6 +19,16 @@
         { month: "Jul", Users: 410, Doctors: 140, Hospitals: 50 },
         { month: "Aug", Users: 400, Doctors: 100, Hospitals: 20 },
     ];
+    const data2 = [
+        { month: "Jan", Birth: 2000, Death: 1000 },
+        { month: "Feb", Birth: 1500, Death: 1200 },
+        { month: "Mar", Birth: 1600, Death: 1100 },
+        { month: "Apr", Birth: 1700, Death: 900 },
+        { month: "May", Birth: 1900, Death: 1300 },
+        { month: "Jun", Birth: 1200, Death: 1000 },
+        { month: "Jul", Birth: 1400, Death: 1100 },
+        { month: "Aug", Birth: 1000, Death: 500 },
+    ];
 
     function setBarHeight(node, { category, index }) {
         onMount(() => {
@@ -155,6 +165,24 @@
         { hospital: "Jessore Medical College", count: 2 },
         { hospital: "Sylhet Medical College", count: 2 },
     ];
+    const topDiseases = [
+        { Disease: "Dengue", count: 500 },
+        { Disease: "Cholera", count: 490 },
+        { Disease: "Tuberculosis", count: 380 },
+        { Disease: "Diabetes", count: 370 },
+        { Disease: "Heart Disease", count: 250 },
+        { Disease: "Chronic Respiratory Diseases", count: 207 },
+        { Disease: "Common cold", count: 150 },
+    ];
+    const topInvestigations = [
+        { Investigation: "Complete Blood Bount", count: 5000 },
+        { Investigation: "Dengue NS1", count: 4900 },
+        { Investigation: "HbA1c", count: 3800 },
+        { Investigation: "Urin Alysis", count: 3700 },
+        { Investigation: "Lipid Profile", count: 2500 },
+        { Investigation: "Comprehensive Metabolic Panel", count: 2070 },
+        { Investigation: "TSH", count: 1500 },
+    ];
 
     onMount(() => {
         // Initialize Hospital Map
@@ -218,8 +246,8 @@
         animateValue(
             0,
             targetUserCount,
-            3000,
-            3634,
+            1000,
+            1537,
             (val) => (userCount = val)
         );
         animateValue(
@@ -264,13 +292,13 @@
         });
 
         // Initialize Dengue Heatmap
-        const dengueMap = L.map("dengue-heatmap").setView(
-            [23.8103, 90.4125],
-            7
-        );
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "&copy; OpenStreetMap contributors",
-        }).addTo(dengueMap);
+        // const dengueMap = L.map("dengue-heatmap").setView(
+        //     [23.8103, 90.4125],
+        //     7
+        // );
+        // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        //     attribution: "&copy; OpenStreetMap contributors",
+        // }).addTo(dengueMap);
 
         let cfg = {
             radius: 25, // Increase if you want a larger spread for each point
@@ -290,8 +318,8 @@
             },
         };
 
-        const heatmapLayer = L.heatLayer(dengueData.data, cfg);
-        dengueMap.addLayer(heatmapLayer);
+        // const heatmapLayer = L.heatLayer(dengueData.data, cfg);
+        // dengueMap.addLayer(heatmapLayer);
     });
     let userCount = 0;
     let hospitalCount = 0;
@@ -319,189 +347,319 @@
             callback(current);
         }, stepTime);
     };
+    function navigateToDashboard() {
+        window.location.hash = `#/adminhome`;
+    }
+    function navigateToQuery() {
+        window.location.hash = `#/adminhome/query`;
+    }
+    function navigateToAddHospital() {
+        window.location.hash = `#/adminhome/addhospital`;
+    }
 </script>
 
 <main class="bg-gray-100 min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-white shadow-md mb-8">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo Section -->
-                <div class="flex items-center">
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 h-screen bg-white shadow-md fixed z-0 py-4">
+            <!-- Company Logo -->
+            <div class="text-center mb-10 mt-4">
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
+                    alt="Company Logo"
+                    class="w-32 mx-auto"
+                />
+            </div>
+
+            <!-- Menu Items -->
+            <ul class="text-base font-semibold">
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                <li
+                    class="flex items-center p-4 bg-red-400 cursor-default"
+                    on:click={navigateToDashboard}
+                >
                     <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
-                        alt="Company Logo"
-                        width={125}
-                        height={25}
-                        class="mx-0 my-0"
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/dashboard.svg"
+                        alt="Dashboard Icon"
+                        class="w-6 h-6 mr-2"
                     />
-                </div>
+                    Dashboard
+                </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToQuery}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/analytic.svg"
+                        alt="Query Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Query
+                </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToAddHospital}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
+                        alt="Add New Hospital Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Add New Hospital
+                </li>
+            </ul>
+        </div>
 
-                <!-- Notification and Logout Section -->
-                <div class="flex items-center space-x-4">
-                    <!-- Message Notification -->
-                    <div class="relative">
-                        <img
-                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
-                            alt="Message Icon"
-                            class="h-6 w-6"
-                        />
-                        <span
-                            class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                            >3</span
-                        >
-                        <!-- Number of unread messages -->
+        <!-- Main Dashboard Content -->
+        <div class="ml-64 w-full">
+            <nav class="bg-white shadow-md mb-8 z-10">
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-center py-4">
+                        <!-- Logo Section -->
+                        <div class="flex items-center">
+                            <img
+                                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
+                                alt="Company Logo"
+                                width={125}
+                                height={25}
+                                class="mx-0 my-0"
+                            />
+                        </div>
+
+                        <!-- Notification and Logout Section -->
+                        <div class="flex items-center space-x-4">
+                            <!-- Message Notification -->
+                            <div class="relative">
+                                <img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
+                                    alt="Message Icon"
+                                    class="h-6 w-6"
+                                />
+                                <span
+                                    class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
+                                    >3</span
+                                >
+                                <!-- Number of unread messages -->
+                            </div>
+
+                            <!-- General Notification -->
+                            <div class="relative">
+                                <img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Notification.svg"
+                                    alt="Notification Icon"
+                                    class="h-6 w-6"
+                                />
+                                <span
+                                    class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
+                                    >2</span
+                                >
+                                <!-- Number of unread notifications -->
+                            </div>
+
+                            <!-- Logout Button -->
+                            <button class="btn btn-primary btn-outline"
+                                >Logout</button
+                            >
+                        </div>
                     </div>
+                </div>
+            </nav>
+            <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
+                Dashboard
+            </h1>
 
-                    <!-- General Notification -->
-                    <div class="relative">
-                        <img
-                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Notification.svg"
-                            alt="Notification Icon"
-                            class="h-6 w-6"
-                        />
-                        <span
-                            class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                            >2</span
+            <div class="container mx-auto mb-8 p-8">
+                <!-- Dashboard Stats -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div
+                        class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
+                    >
+                        <h2 class="stat-title text-lg font-semibold">
+                            Number of Users
+                        </h2>
+                        <div
+                            class="stat-number text-blue-500 text-4xl font-bold"
                         >
-                        <!-- Number of unread notifications -->
+                            {userCount}
+                        </div>
                     </div>
+                    <div
+                        class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
+                    >
+                        <h2 class="stat-title text-lg font-semibold">
+                            Number of Hospitals
+                        </h2>
+                        <div
+                            class="stat-number text-green-500 text-4xl font-bold"
+                        >
+                            {hospitalCount}
+                        </div>
+                    </div>
+                    <div
+                        class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
+                    >
+                        <h2 class="stat-title text-lg font-semibold">
+                            Number of Doctors
+                        </h2>
+                        <div
+                            class="stat-number text-red-500 text-4xl font-bold"
+                        >
+                            {doctorCount}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Logout Button -->
-                    <button class="btn btn-primary btn-outline">Logout</button>
-                </div>
+            <div
+                class="card bordered max-w-screen-md mx-auto mt-12 p-4 shadow-xl mb-6 transition-transform transform hover:scale-110"
+            >
+                <h2 class="text-lg font-semibold mb-4">
+                    Number of New Registration this year
+                </h2>
+                <h2 class="text-right mb-4">
+                    <span class="inline-block w-4 h-4 mr-1 bg-orange-500" />
+                    Users
+                    <span class="inline-block w-4 h-4 mr-1 bg-green-500" />
+                    Doctors
+                    <span class="inline-block w-4 h-4 mr-1 bg-red-500" /> Hospitals
+                </h2>
+                <svg id="mySvg" width="700" height="400" />
             </div>
-        </div>
-    </nav>
-    <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
-        Dashboard
-    </h1>
 
-    <div class="container mx-auto mb-8 p-8">
-        <!-- Dashboard Stats -->
-        <div class="grid grid-cols-3 gap-4">
-            <div
-                class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
-            >
-                <h2 class="stat-title text-lg font-semibold">
-                    Number of Users
+            <!-- Map Container -->
+            <!-- Map Container for Hospitals -->
+            <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
+                <h2 class="text-xl font-semibold mb-4 text-purple-600">
+                    BDeHR intigration in Bangladesh
                 </h2>
-                <div class="stat-number text-blue-500 text-4xl font-bold">
-                    {userCount}
+                <div
+                    id="hospital-map"
+                    style="height: 500px;"
+                    class="rounded-lg shadow-md"
+                />
+                <div class="text-right">
+                    <button class="btn btn-outline mt-2"
+                        >See All Hospitals</button
+                    >
+                </div>
+            </section>
+
+            <div class="flex justify-between gap-8 p-8 bg-gray-100">
+                <!-- First Table: Top Patient Admissions -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl mb-4 font-semibold text-indigo-600">
+                        Top Patient Admissions in Last 24 Hours
+                    </h2>
+                    <table class="min-w-full bg-white rounded-lg">
+                        <thead>
+                            <tr class="text-lg text-gray-700">
+                                <th class="px-4 py-2 text-left">Hospital</th>
+                                <th class="px-4 py-2 text-left">Admissions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each topAdmissions as { hospital, count }}
+                                <tr class="text-gray-600">
+                                    <td class="px-4 py-2 border">{hospital}</td>
+                                    <td class="px-4 py-2 border">{count}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Second Table: Top Deaths -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl mb-4 font-semibold text-red-600">
+                        Top Deaths in Hospitals in Last 24 Hours
+                    </h2>
+                    <table class="min-w-full bg-white rounded-lg">
+                        <thead>
+                            <tr class="text-lg text-gray-700">
+                                <th class="px-4 py-2 text-left">Hospital</th>
+                                <th class="px-4 py-2 text-left">Deaths</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each topDeaths as { hospital, count }}
+                                <tr class="text-gray-600">
+                                    <td class="px-4 py-2 border">{hospital}</td>
+                                    <td class="px-4 py-2 border">{count}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div
-                class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
-            >
-                <h2 class="stat-title text-lg font-semibold">
-                    Number of Hospitals
-                </h2>
-                <div class="stat-number text-green-500 text-4xl font-bold">
-                    {hospitalCount}
+
+            <div class="flex justify-between gap-8 p-8 bg-gray-100">
+                <!-- First Table: Top Patient Admissions -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl mb-4 font-semibold text-indigo-600">
+                        Top Diseases Administered in Last 24 Hours
+                    </h2>
+                    <table class="min-w-full bg-white rounded-lg">
+                        <thead>
+                            <tr class="text-lg text-gray-700">
+                                <th class="px-4 py-2 text-left">Diseases</th>
+                                <th class="px-4 py-2 text-left">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each topDiseases as { Disease, count }}
+                                <tr class="text-gray-600">
+                                    <td class="px-4 py-2 border">{Disease}</td>
+                                    <td class="px-4 py-2 border">{count}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Second Table: Top Deaths -->
+                <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl mb-4 font-semibold text-red-600">
+                        Top Investigations done in Last 24 Hours
+                    </h2>
+                    <table class="min-w-full bg-white rounded-lg">
+                        <thead>
+                            <tr class="text-lg text-gray-700">
+                                <th class="px-4 py-2 text-left"
+                                    >Investigation</th
+                                >
+                                <th class="px-4 py-2 text-left">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {#each topInvestigations as { Investigation, count }}
+                                <tr class="text-gray-600">
+                                    <td class="px-4 py-2 border"
+                                        >{Investigation}</td
+                                    >
+                                    <td class="px-4 py-2 border">{count}</td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div
-                class="stat-box bg-gray-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-90"
-            >
-                <h2 class="stat-title text-lg font-semibold">
-                    Number of Doctors
+
+            <!-- Map Container for Dengue Heatmap -->
+            <!-- <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
+                <h2 class="text-xl font-semibold mb-4 text-red-600">
+                    Dengue Heatmap in Bangladesh
                 </h2>
-                <div class="stat-number text-red-500 text-4xl font-bold">
-                    {doctorCount}
-                </div>
-            </div>
+                <div
+                    id="dengue-heatmap"
+                    style="height: 500px;"
+                    class="rounded-lg shadow-md"
+                />
+            </section> -->
         </div>
     </div>
-
-    <div
-        class="card bordered max-w-screen-md mx-auto mt-12 p-4 shadow-xl mb-6 transition-transform transform hover:scale-110"
-    >
-        <h2 class="text-lg font-semibold mb-4">
-            Number of New Registration this year
-        </h2>
-        <h2 class="text-right mb-4">
-            <span class="inline-block w-4 h-4 mr-1 bg-orange-500" /> Users
-            <span class="inline-block w-4 h-4 mr-1 bg-green-500" /> Doctors
-            <span class="inline-block w-4 h-4 mr-1 bg-red-500" /> Hospitals
-        </h2>
-        <svg id="mySvg" width="700" height="400" />
-    </div>
-
-    <!-- Map Container -->
-    <!-- Map Container for Hospitals -->
-    <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
-        <h2 class="text-xl font-semibold mb-4 text-purple-600">
-            BDeHR intigration in Bangladesh
-        </h2>
-        <div
-            id="hospital-map"
-            style="height: 500px;"
-            class="rounded-lg shadow-md"
-        />
-        <div class="text-right">
-            <button class="btn btn-outline mt-2">See All Hospitals</button>
-        </div>
-    </section>
-
-    <div class="flex justify-between gap-8 p-8 bg-gray-100">
-        <!-- First Table: Top Patient Admissions -->
-        <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl mb-4 font-semibold text-indigo-600">
-                Top Patient Admissions in Last 24 Hours
-            </h2>
-            <table class="min-w-full bg-white rounded-lg">
-                <thead>
-                    <tr class="text-lg text-gray-700">
-                        <th class="px-4 py-2 text-left">Hospital</th>
-                        <th class="px-4 py-2 text-left">Admissions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each topAdmissions as { hospital, count }}
-                        <tr class="text-gray-600">
-                            <td class="px-4 py-2 border">{hospital}</td>
-                            <td class="px-4 py-2 border">{count}</td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Second Table: Top Deaths -->
-        <div class="w-1/2 bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl mb-4 font-semibold text-red-600">
-                Top Deaths in Hospitals in Last 24 Hours
-            </h2>
-            <table class="min-w-full bg-white rounded-lg">
-                <thead>
-                    <tr class="text-lg text-gray-700">
-                        <th class="px-4 py-2 text-left">Hospital</th>
-                        <th class="px-4 py-2 text-left">Deaths</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {#each topDeaths as { hospital, count }}
-                        <tr class="text-gray-600">
-                            <td class="px-4 py-2 border">{hospital}</td>
-                            <td class="px-4 py-2 border">{count}</td>
-                        </tr>
-                    {/each}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Map Container for Dengue Heatmap -->
-    <section class="bg-white shadow-xl rounded-lg p-6 mb-8 mx-4">
-        <h2 class="text-xl font-semibold mb-4 text-red-600">
-            Dengue Heatmap in Bangladesh
-        </h2>
-        <div
-            id="dengue-heatmap"
-            style="height: 500px;"
-            class="rounded-lg shadow-md"
-        />
-    </section>
 </main>
 
 <style>
