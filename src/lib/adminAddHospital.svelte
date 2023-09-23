@@ -1,6 +1,29 @@
 <script>
     import { onMount } from "svelte";
 
+    let hospitals = [
+        {
+            name: "United Hospitals Dhaka",
+            date: "2023-09-20",
+            Address: "Gulshan-2, Dhaka",
+        },
+        {
+            name: "Popular Hospitals Dhaka",
+            date: "2023-09-17",
+            Address: "Dhanmondi, Dhaka",
+        },
+        {
+            name: "Cumilla Tower Hospital",
+            date: "2023-09-19",
+            Address: "Ramghat, Cumilla",
+        },
+        {
+            name: "Al Haramain Hospital Private Limited",
+            date: "2023-09-15",
+            Address: "Sylhet",
+        },
+    ];
+
     function navigateToDashboard() {
         window.location.hash = `#/adminhome`;
     }
@@ -123,6 +146,43 @@
             <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
                 Hospital Approval Requests
             </h1>
+            <div class="container mx-auto px-4 mt-8">
+                <ul>
+                    {#each hospitals as hospital}
+                        <li
+                            class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg mb-4"
+                        >
+                            <div class="flex justify-between items-center">
+                                <!-- Hospital Information -->
+                                <div>
+                                    <h2 class="text-xl font-semibold">
+                                        {hospital.name}
+                                    </h2>
+                                    <p class="text-gray-600 text-sm">
+                                        {hospital.date}
+                                    </p>
+                                    <p class="text-gray-500 text-sm">
+                                        {hospital.Address}
+                                    </p>
+                                </div>
+                                <!-- Action Buttons -->
+                                <div class="flex space-x-2">
+                                    <button
+                                        class="bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded"
+                                    >
+                                        Approve
+                                    </button>
+                                    <button
+                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                                    >
+                                        Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    {/each}
+                </ul>
+            </div>
         </div>
     </div>
 </main>
