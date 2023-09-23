@@ -76,20 +76,46 @@
         },
     ];
 
+    const colors = [
+        { background: "rgba(255, 0, 0, 0.2)", border: "rgba(255, 0, 0, 1)" },
+        { background: "rgba(0, 255, 0, 0.2)", border: "rgba(0, 255, 0, 1)" },
+        { background: "rgba(0, 0, 255, 0.2)", border: "rgba(0, 0, 255, 1)" },
+        {
+            background: "rgba(255, 0, 255, 0.2)",
+            border: "rgba(255, 0, 255, 1)",
+        },
+        {
+            background: "rgba(0, 255, 255, 0.2)",
+            border: "rgba(0, 255, 255, 1)",
+        },
+        {
+            background: "rgba(255, 255, 0, 0.2)",
+            border: "rgba(255, 255, 0, 1)",
+        },
+        // Add more colors as needed
+    ];
+
     function generateBarGraph() {
         let labels = Patients.map((p) => p.age);
         let datasets = [];
 
+        let colorIndex = 0;
         for (const field of yValuesBarGraph) {
             if (Patients[0].hasOwnProperty(field)) {
                 let data = Patients.map((p) => p[field]);
+
+                // Use the current color from the colors array, and move to the next one
+                const currentColor = colors[colorIndex];
                 datasets.push({
                     label: field,
                     data: data,
-                    backgroundColor: "rgba(75, 192, 192, 0.2)",
-                    borderColor: "rgba(75, 192, 192, 1)",
+                    backgroundColor: currentColor.background,
+                    borderColor: currentColor.border,
                     borderWidth: 1,
                 });
+
+                // Increment the color index, loop back to 0 if we go past the end of the array
+                colorIndex = (colorIndex + 1) % colors.length;
             }
         }
 
