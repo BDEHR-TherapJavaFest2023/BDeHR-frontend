@@ -73,6 +73,10 @@
             toast.error("Please add " + numDepartments + " departments");
             return;
         }
+        if (departments.length > numDepartments) {
+            toast.error("Please Increase your Number of Department");
+            return;
+        }
         if (labInstruments.length === 0) {
             toast.error("Please at least add 1 instrument");
             return;
@@ -91,7 +95,7 @@
 >
     <div
         class="shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
-        style="background-color: #67FF3E ;"
+        style="background-color: #8BFD6C ;"
     >
         <div class="flex justify-center">
             <img
