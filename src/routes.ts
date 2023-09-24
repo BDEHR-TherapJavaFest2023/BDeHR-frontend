@@ -24,6 +24,11 @@ import adminLogin from './lib/adminLogin.svelte'
 import labHome from './lib/labHome.svelte';
 import labPatient from './lib/labPatients.svelte';
 import doctorSignUp from './lib/doctorSignup.svelte';
+import appUserHome from './lib/appUserHome.svelte';
+import appUserEntry from './lib/appUserEntry.svelte';
+import appUserFind from './lib/appUserFind.svelte';
+import appUserMedications from './lib/appUserMedications.svelte';
+import appUserReports from './lib/appUserReports.svelte';
 import User from './lib/user.svelte';
 import UserMedication from './lib/userMedication.svelte';
 import UserReport from './lib/userReport.svelte';
@@ -59,4 +64,9 @@ export const routes = {
     '/labhome/labpatients': labPatient,
     '/adminhome/addhospital': AdminAddHospital,
     '/adminhome/messages': AdminMessages,
+    '/appuser/home': appUserHome,
+    '/appuser/entry': appUserEntry,
+    '/appuser/find': appUserFind,
+    '/appuser/medications': appUserMedications,
+    '/appuser/reports': appUserReports,
 };

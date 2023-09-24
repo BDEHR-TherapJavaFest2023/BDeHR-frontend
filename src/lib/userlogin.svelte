@@ -7,7 +7,7 @@
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        window.location.hash = `#/user`;
+        window.location.hash = `#/appuser/home`;
 
         const form = event.target;
         const data = new FormData(form);
@@ -41,7 +41,7 @@
                         userPhone: data["phone"],
                         userPhoto: data["photo"],
                     });
-                    window.location.hash = `#/user`;
+                    window.location.hash = `#/appuser/home`;
                 }
             });
 

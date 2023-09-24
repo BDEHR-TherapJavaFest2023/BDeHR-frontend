@@ -30,6 +30,7 @@
     "chart.js": "^4.4.0",
     "leaflet": "^1.9.4",
     "leaflet-heatmap": "^1.0.0",
+    "leaflet-routing-machine": "^3.2.12",
     "leaflet.heat": "^0.2.0",
     "pdf-lib": "^1.17.1",
     "svelte-french-toast": "^1.2.0",
