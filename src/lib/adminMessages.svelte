@@ -1,28 +1,30 @@
 <script>
     import { onMount } from "svelte";
 
-    let hospitals = [
+    let Messages = [
         {
-            name: "United Hospitals Dhaka",
-            date: "2023-09-20",
-            Address: "Gulshan-2, Dhaka",
+            hospitalName: "Dhaka Medical College",
+            dateTime: "2022-09-01T12:30:00Z",
+            MessageBody: "We need More Covid Vaccines",
         },
         {
-            name: "Popular Hospitals Dhaka",
-            date: "2023-09-17",
-            Address: "Dhanmondi, Dhaka",
+            hospitalName: "Cumilla Medical College",
+            dateTime: "2022-09-20T09:15:00Z",
+            MessageBody: "We need More Doctors",
         },
         {
-            name: "Cumilla Tower Hospital",
-            date: "2023-09-19",
-            Address: "Ramghat, Cumilla",
+            hospitalName: "Chittagong Medical College",
+            dateTime: "2022-09-20T12:35:00Z",
+            MessageBody: "The dengue cases are rising",
         },
         {
-            name: "Al Haramain Hospital Private Limited",
-            date: "2023-09-15",
-            Address: "Sylhet",
+            hospitalName: "Rangpur Medical College",
+            dateTime: "2022-09-20T09:15:00Z",
+            MessageBody: "We need to organize a seminar",
         },
+        // add more messages like this
     ];
+    Messages.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
 
     function navigateToDashboard() {
         window.location.hash = `#/adminhome`;
@@ -82,7 +84,7 @@
                     Query
                 </li>
                 <li
-                    class="flex items-center p-4 bg-red-400 cursor-default"
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
                     on:click={navigateToAddHospital}
                 >
                     <img
@@ -93,7 +95,7 @@
                     Add New Hospital
                 </li>
                 <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    class="flex items-center p-4 bg-red-400 cursor-default"
                     on:click={navigateToMessages}
                 >
                     <img
@@ -155,53 +157,36 @@
                             </div>
 
                             <!-- Logout Button -->
-                            <button
-                                class="btn btn-outline btn-error"
-                                on:click={navigateToLogin}>Logout</button
+                            <button class="btn btn-outline btn-error" on:click={navigateToLogin}
+                                >Logout</button
                             >
                         </div>
                     </div>
                 </div>
             </nav>
             <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
-                Hospital Approval Requests
+                Messages
             </h1>
-            <div class="container mx-auto px-4 mt-8">
-                <ul>
-                    {#each hospitals as hospital}
-                        <li
-                            class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg mb-4"
-                        >
-                            <div class="flex justify-between items-center">
-                                <!-- Hospital Information -->
-                                <div>
-                                    <h2 class="text-xl font-semibold">
-                                        {hospital.name}
-                                    </h2>
-                                    <p class="text-gray-600 text-sm">
-                                        {hospital.date}
-                                    </p>
-                                    <p class="text-gray-500 text-sm">
-                                        {hospital.Address}
-                                    </p>
-                                </div>
-                                <!-- Action Buttons -->
-                                <div class="flex space-x-2">
-                                    <button
-                                        class="bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded"
-                                    >
-                                        Approve
-                                    </button>
-                                    <button
-                                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
-                                    >
-                                        Reject
-                                    </button>
-                                </div>
+            <div class="container px-4 mt-8">
+                <div class="space-y-4 overflow-y-auto max-h-[70vh]">
+                    {#each Messages as { hospitalName, dateTime, MessageBody }}
+                        <div class="bg-white rounded-lg shadow-md p-4">
+                            <h2 class="text-xl font-semibold text-blue-600">
+                                {hospitalName}
+                            </h2>
+                            <p class="text-sm text-gray-500">
+                                {new Date(dateTime).toLocaleString()}
+                            </p>
+                            <div
+                                class="mt-2 p-3 rounded-full bg-blue-100 inline-block"
+                            >
+                                <p class="text-base whitespace-pre-line">
+                                    {MessageBody}
+                                </p>
                             </div>
-                        </li>
+                        </div>
                     {/each}
-                </ul>
+                </div>
             </div>
         </div>
     </div>

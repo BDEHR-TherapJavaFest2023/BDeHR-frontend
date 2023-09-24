@@ -13,7 +13,9 @@
     let map;
     let heat;
     let chart;
+    let chart2;
     let isChartVisible = false;
+    let isLineChartVisible = false;
     let tempValue = "";
     let diseaseName = ""; // Dummy field for Disease Name
     let ageFrom = 0; // Dummy field for Age From
@@ -134,17 +136,67 @@
             },
         });
     }
+    function generateLineGraph() {
+        let labels = Patients.map((p) => p.age);
+        let datasets = [];
+
+        // Define an array of colors to use for different datasets.
+
+        let colorIndex = 0;
+        for (const field of yValuesLineGraph) {
+            if (Patients[0].hasOwnProperty(field)) {
+                let data = Patients.map((p) => p[field]);
+
+                // Use the current color from the colors array, and move to the next one
+                const currentColor = colors[colorIndex];
+                datasets.push({
+                    label: field,
+                    data: data,
+                    fill: false,
+                    backgroundColor: currentColor.background,
+                    borderColor: currentColor.border,
+                    borderWidth: 1,
+                });
+
+                // Increment the color index, loop back to 0 if we go past the end of the array
+                colorIndex = (colorIndex + 1) % colors.length;
+            }
+        }
+
+        const ctx = document.getElementById("myLineChart").getContext("2d");
+        chart2 = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: datasets,
+            },
+            options: {
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { beginAtZero: true },
+                },
+            },
+        });
+    }
 
     function handleMapSubmit() {
         // Add any logic to validate or process the form data, if needed.
         showMap = true; // Set the map to be visible
+        isLineChartVisible = false;
         isChartVisible = false;
         generateMap(); // Function call to generate the map
     }
     function handleBarDiagramSubmit() {
         isChartVisible = true;
+        isLineChartVisible = false;
         showMap = false;
         generateBarGraph();
+    }
+    function handleLineDiagramSubmit() {
+        isChartVisible = false;
+        isLineChartVisible = true;
+        showMap = false;
+        generateLineGraph();
     }
     function generateMap() {
         // Initialize the map
@@ -276,9 +328,13 @@
                 tempValue = "";
             }
         }
-        if (isChartVisible) {
+        if (targetArray === "bar" && isChartVisible) {
             chart.destroy();
             generateBarGraph();
+        }
+        if (targetArray === "line" && isLineChartVisible) {
+            chart2.destroy();
+            generateLineGraph();
         }
     }
     function removeValue(index, targetArray) {
@@ -289,9 +345,13 @@
             yValuesLineGraph.splice(index, 1);
             yValuesLineGraph = [...yValuesLineGraph];
         }
-        if (isChartVisible) {
+        if (targetArray === "bar" && isChartVisible) {
             chart.destroy();
             generateBarGraph();
+        }
+        if (targetArray === "line" && isLineChartVisible) {
+            chart2.destroy();
+            generateLineGraph();
         }
     }
     function navigateToDashboard() {
@@ -302,6 +362,12 @@
     }
     function navigateToAddHospital() {
         window.location.hash = `#/adminhome/addhospital`;
+    }
+    function navigateToMessages() {
+        window.location.hash = `#/adminhome/messages`;
+    }
+    function navigateToLogin() {
+        window.location.hash = `#/adminlogin`;
     }
 </script>
 
@@ -355,6 +421,17 @@
                     />
                     Add New Hospital
                 </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToMessages}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/message.svg"
+                        alt="Messages Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Messages
+                </li>
             </ul>
         </div>
         <div class="ml-64 w-full">
@@ -379,11 +456,12 @@
                                 <img
                                     src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
                                     alt="Message Icon"
-                                    class="h-6 w-6"
+                                    class="h-6 w-6 transition-transform transform hover:scale-150"
+                                    on:click={navigateToMessages}
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >3</span
+                                    >4</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -393,17 +471,18 @@
                                 <img
                                     src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Notification.svg"
                                     alt="Notification Icon"
-                                    class="h-6 w-6"
+                                    class="h-6 w-6 transition-transform transform hover:scale-150"
+                                    on:click={navigateToAddHospital}
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >2</span
+                                    >4</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>
 
                             <!-- Logout Button -->
-                            <button class="btn btn-primary btn-outline"
+                            <button class="btn btn-outline btn-error"on:click={navigateToLogin}
                                 >Logout</button
                             >
                         </div>
@@ -424,6 +503,9 @@
                     {/if}
                     {#if isChartVisible}
                         <canvas id="myBarChart" width="400" height="200" />
+                    {/if}
+                    {#if isLineChartVisible}
+                        <canvas id="myLineChart" width="400" height="200" />
                     {/if}
 
                     <!-- Existing Navbar and Main Content -->
@@ -557,6 +639,7 @@
                                     {/each}
                                 </div>
                                 <button
+                                    on:click={handleLineDiagramSubmit}
                                     class="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
                                     >Submit</button
                                 >

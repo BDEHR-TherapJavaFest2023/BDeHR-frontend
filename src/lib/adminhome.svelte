@@ -356,6 +356,12 @@
     function navigateToAddHospital() {
         window.location.hash = `#/adminhome/addhospital`;
     }
+    function navigateToMessages() {
+        window.location.hash = `#/adminhome/messages`;
+    }
+    function navigateToLogin() {
+        window.location.hash = `#/adminlogin`;
+    }
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -410,6 +416,17 @@
                     />
                     Add New Hospital
                 </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToMessages}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/message.svg"
+                        alt="Messages Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Messages
+                </li>
             </ul>
         </div>
 
@@ -436,11 +453,12 @@
                                 <img
                                     src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
                                     alt="Message Icon"
-                                    class="h-6 w-6"
+                                    class="h-6 w-6 transition-transform transform hover:scale-150"
+                                    on:click={navigateToMessages}
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >3</span
+                                    >4</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -450,17 +468,18 @@
                                 <img
                                     src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Notification.svg"
                                     alt="Notification Icon"
-                                    class="h-6 w-6"
+                                    class="h-6 w-6 transition-transform transform hover:scale-150"
+                                    on:click={navigateToAddHospital}
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >2</span
+                                    >4</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>
 
                             <!-- Logout Button -->
-                            <button class="btn btn-primary btn-outline"
+                            <button class="btn btn-outline btn-error" on:click={navigateToLogin}
                                 >Logout</button
                             >
                         </div>

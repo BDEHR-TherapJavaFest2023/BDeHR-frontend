@@ -16,6 +16,7 @@ import doctorOnPatient from './lib/doctorOnPatient.svelte';
 import adminHome from './lib/adminhome.svelte';
 import adminQuery from './lib/adminQuery.svelte';
 import AdminAddHospital from './lib/adminAddHospital.svelte';
+import AdminMessages from './lib/adminMessages.svelte';
 import About from './lib/about.svelte';
 import userSignUp from './lib/usersignup.svelte';
 import labLogin from './lib/labLogin.svelte';
@@ -57,4 +58,5 @@ export const routes = {
     '/labhome': labHome,
     '/labhome/labpatients': labPatient,
     '/adminhome/addhospital': AdminAddHospital,
+    '/adminhome/messages': AdminMessages,
 };
