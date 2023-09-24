@@ -131,32 +131,6 @@
                         <!-- Notification and Logout Section -->
                         <div class="flex items-center space-x-4">
                             <!-- Message Notification -->
-                            <div class="relative">
-                                <img
-                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
-                                    alt="Message Icon"
-                                    class="h-6 w-6 transition-transform transform hover:scale-150"
-                                />
-                                <span
-                                    class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
-                                >
-                                <!-- Number of unread messages -->
-                            </div>
-
-                            <!-- General Notification -->
-                            <div class="relative">
-                                <img
-                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Notification.svg"
-                                    alt="Notification Icon"
-                                    class="h-6 w-6 transition-transform transform hover:scale-150"
-                                />
-                                <span
-                                    class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
-                                >
-                                <!-- Number of unread notifications -->
-                            </div>
 
                             <!-- Logout Button -->
                             <button
