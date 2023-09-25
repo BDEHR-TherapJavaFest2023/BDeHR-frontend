@@ -25,6 +25,15 @@
             "0"
         )}:${String(now.getSeconds()).padStart(2, "0")}`;
     }
+    function saveFormData(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // To get form data from local storage
+    function getFormData(key) {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : null;
+    }
 
     onMount(() => {
         updateDateTime();
@@ -64,7 +73,7 @@
     ];
     let showModal = false;
 
-    let newMedication = {
+    let newMedication = getFormData("newMedication") || {
         Address: "Dhaka",
         Contact: "+880",
         Occupation: "Student",
@@ -111,6 +120,11 @@
         remarks: "pialBoksod",
     };
 
+    function handleEdit() {
+        saveFormData("newMedication", newMedication);
+        showModal = false;
+    }
+
     async function handleSubmit() {
         const pdfBytes = await createPDF(newMedication);
 
@@ -135,6 +149,7 @@
             showModal = false;
             return;
         }
+        saveFormData("newMedication", newMedication);
 
         const fileLink = supabase.storage
             .from("medications")
@@ -220,6 +235,14 @@
             <p><span class="font-semibold">ID: </span>{params.patientId}</p>
         </div>
     </div>
+    <div>
+        <button
+            class="mb-4 mt-4 bg-green-400 hover:bg-green-700 text-white py-2 px-4 rounded-md"
+            on:click={() => (showModal = true)}
+        >
+            Treatment on {todayDateTime}
+        </button>
+    </div>
 
     <div class="mt-8 flex space-x-4">
         {#each tabs as tab}
@@ -238,12 +261,6 @@
 
     <div class="mt-6 bg-white p-6 rounded-md shadow-xl relative">
         {#if selectedTab === "Past Medications"}
-            <button
-                class="mb-4 bg-green-400 hover:bg-green-700 text-white py-2 px-4 rounded-md"
-                on:click={() => (showModal = true)}
-            >
-                Treatment on {todayDateTime}
-            </button>
             <ul>
                 {#each pastMedications as { hospitalName, doctorName, date, fileLink }}
                     <li class="mb-4">
@@ -878,9 +895,16 @@
 
                         <div class="flex justify-end mt-6">
                             <button
+                                type="button"
+                                class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md mr-2"
+                                on:click={handleEdit}
+                            >
+                                Submit
+                            </button>
+                            <button
                                 type="submit"
                                 class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
-                                >Add Medication</button
+                                >Discharge</button
                             >
                         </div>
                     </form>
