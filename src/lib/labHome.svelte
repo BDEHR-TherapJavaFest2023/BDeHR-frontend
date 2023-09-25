@@ -3,6 +3,33 @@
     let hospitalLogo =
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/dmc.png";
     let labId = "VBI2NIRD";
+    let showMachineForm = false;
+    let newMachine = {
+        machineName: "",
+        companyName: "",
+        model: "",
+        incorporateDate: "",
+        image: "",
+    };
+
+    function handleFileChange(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => (newMachine.image = e.target.result);
+        reader.readAsDataURL(file);
+    }
+
+    function addMachine() {
+        machines = [...machines, { ...newMachine }];
+        newMachine = {
+            machineName: "",
+            companyName: "",
+            model: "",
+            incorporateDate: "",
+            image: "",
+        };
+        showMachineForm = false;
+    }
     let machines = [
         {
             machineName: "ECG Machine",
@@ -121,6 +148,51 @@
                 </div>
             {/each}
         </div>
+        {#if showMachineForm}
+            <div class="bg-white p-4 rounded-lg shadow-lg mt-8">
+                <h3 class="text-xl font-semibold mb-4">Add New Machine</h3>
+                <div class="space-y-4">
+                    <input
+                        type="text"
+                        placeholder="Machine Name"
+                        bind:value={newMachine.machineName}
+                        class="border p-2 w-full rounded"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Company Name"
+                        bind:value={newMachine.companyName}
+                        class="border p-2 w-full rounded"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Model"
+                        bind:value={newMachine.model}
+                        class="border p-2 w-full rounded"
+                    />
+                    <input
+                        type="date"
+                        placeholder="Incorporate Date"
+                        bind:value={newMachine.incorporateDate}
+                        class="border p-2 w-full rounded"
+                    />
+                    <input
+                        type="file"
+                        accept="image/*"
+                        on:change={handleFileChange}
+                        class="border p-2 w-full rounded"
+                    />
+                </div>
+                <button
+                    class="bg-green-500 text-white p-2 mt-4 rounded"
+                    on:click={addMachine}>Add Machine</button
+                >
+            </div>
+        {/if}
+        <button
+            class="bg-green-500 text-white p-2 rounded mt-6 hover:bg-green-600"
+            on:click={() => (showMachineForm = true)}>Add Machinery</button
+        >
     </div>
 </main>
 

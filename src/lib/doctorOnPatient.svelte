@@ -2,10 +2,11 @@
     import { onMount } from "svelte";
     import { getContext } from "svelte";
     import { createPDF } from "./pdfUtility";
+    import { createPDF2 } from "./dischargePdf";
     import { supabase } from "./supabaseClient";
     export let params = {};
 
-    let tabs = ["Past Medications", "Test Reports", "Past Diagnosis"];
+    let tabs = ["Past Diagnosis", "Past Medications", "Test Reports"];
     let selectedTab = tabs[0];
 
     let patientData = {
@@ -126,37 +127,60 @@
     }
 
     async function handleSubmit() {
-        const pdfBytes = await createPDF(newMedication);
+        try {
+            const pdfBytes = await createPDF(newMedication);
+            const blob = new Blob([pdfBytes], { type: "application/pdf" });
+            const link = document.createElement("a");
+            const currentTime = new Date().toISOString();
 
-        // Convert PDF bytes to Blob
-        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+            link.href = URL.createObjectURL(blob);
+            link.download = `medication_${currentTime}.pdf`;
+            link.click();
 
-        // Create a link element to enable download
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `medication_${new Date().toISOString()}.pdf`;
-        link.click(); // This triggers the download
+            let { data, error } = await supabase.storage
+                .from("medications")
+                .upload(`medication_${currentTime}.pdf`, pdfBytes, {
+                    contentType: "application/pdf",
+                });
 
-        // Upload the PDF to Supabase after saving to local machine
-        const { data, error } = await supabase.storage
-            .from("medications")
-            .upload(`medication_${new Date().toISOString()}.pdf`, pdfBytes, {
-                contentType: "application/pdf",
-            });
+            if (error) {
+                console.error("Error uploading file:", error);
+                showModal = false;
+                return;
+            }
 
-        if (error) {
-            console.error("Error uploading file:", error);
+            saveFormData("newMedication", newMedication);
+            const fileLink = supabase.storage
+                .from("medications")
+                .getPublicUrl(data.Key);
+            console.log(fileLink);
+
+            const pdfBytes2 = await createPDF2(newMedication);
+
+            ({ data, error } = await supabase.storage
+                .from("discharge")
+                .upload(`discharge_${currentTime}.pdf`, pdfBytes2, {
+                    contentType: "application/pdf",
+                }));
+
+            if (error) {
+                console.error("Error uploading file:", error);
+                showModal = false;
+                return;
+            }
+
+            const fileLink2 = supabase.storage
+                .from("discharge")
+                .getPublicUrl(data.Key);
+            console.log(fileLink2);
+
             showModal = false;
-            return;
+        } catch (e) {
+            console.error("An unexpected error occurred:", e);
+            showModal = false;
         }
-        saveFormData("newMedication", newMedication);
-
-        const fileLink = supabase.storage
-            .from("medications")
-            .getPublicUrl(data.Key);
-        console.log(fileLink);
-        showModal = false;
     }
+
     const pastDiagnosisData = [
         {
             date: "2022-05-20",
@@ -680,7 +704,6 @@
                                     <input
                                         bind:value={newMedication.Others}
                                         class="w-full p-2 border rounded-md"
-                                        required
                                     />
                                 </label>
                             </div>
