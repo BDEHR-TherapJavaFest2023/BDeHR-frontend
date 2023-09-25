@@ -120,7 +120,7 @@
             height={15}
             class="mx-0 my-0"
         />
-        <div class="flex flex-col space-y-7">
+        <div class="flex flex-col space-y-7 min-h-screen">
             <a href="#/userlogin" class="text-lg font-bold">User</a>
             <a href="#/hospitalogin" class="text-lg font-bold">Hospital</a>
             <a href="#/doctorlogin" class="text-lg font-bold">Doctor</a>
