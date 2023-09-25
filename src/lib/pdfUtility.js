@@ -167,13 +167,14 @@ export async function createPDF(data) {
 
 
     const startInitialInfoY2 = drawFieldset("History");
-    drawText("History of Past Illness:", fontSize, true); drawText(`${data["PastHistory"]}`);
+    drawText("History of Past Illness(Medical History):", fontSize, true); drawText(`${data["PastHistoryMedical"]}`);
+    drawText("History of Past Illness(Surgical History):", fontSize, true); drawText(`${data["PastHistorySurgical"]}`);
     drawText("History of Treatment:", fontSize, true); drawText(`${data["TreatmentHistory"]}`);
     drawText("Family History:", fontSize, true); drawText(`${data["FamilyHistory"]}`);
     drawText("Personal History:", fontSize, true); drawText(`${data["PersonalHistory"]}`);
     drawText("Occupational History:", fontSize, true); drawText(`${data["OccupationalHistory"]}`);
     drawText("Socio-Economic History:", fontSize, true); drawText(`${data["SocioEconomicCondition"]} `);
-    drawText("Vaccination Status:", fontSize, true); drawText(`${data["Vaccinationhistory"]} `);
+    drawText("Immunizations History:", fontSize, true); drawText(`${data["Vaccinationhistory"]} `);
     drawText("Menstrual History:", fontSize, true); drawText(`${data["MenstrualHistory"]} `);
     endFieldset(startInitialInfoY2);
 
@@ -181,19 +182,24 @@ export async function createPDF(data) {
 
     drawText("Height:", fontSize, true); drawText(`${data["Height"]} `);
     drawText("Weight:", fontSize, true); drawText(`${data["Weight"]} `);
+    drawText("BMI:", fontSize, true); drawText(`${data["bmi"]} `);
     drawText("Nutrition:", fontSize, true); drawText(`${data["Nutrition"]} `);
+    drawText("Anaemia:", fontSize, true); drawText(`${data["Anaemia"]} `);
+    drawText("Jaundice:", fontSize, true); drawText(`${data["Jaundice"]} `);
+    drawText("Oedema:", fontSize, true); drawText(`${data["Oedema"]} `);
+    drawText("Cyanosis:", fontSize, true); drawText(`${data["Cyanosis"]} `);
+    drawText("Dehydration:", fontSize, true); drawText(`${data["Dehydration"]} `);
     drawText("Temperature:", fontSize, true); drawText(`${data["Temperature"]} `);
     drawText("Pulse:", fontSize, true); drawText(`${data["Pulse"]} `);
     drawText("Blood Pressure:", fontSize, true); drawText(`${data["BloodPressure"]} `);
-    drawText("Oedema:", fontSize, true); drawText(`${data["Oedema"]} `);
+    drawText("Respiratory Rate:", fontSize, true); drawText(`${data["RespiratoryRate"]} `);
     drawText("Clubbing:", fontSize, true); drawText(`${data["Clubbing"]} `);
-    drawText("Skin:", fontSize, true); drawText(`${data["Skin"]} `);
     drawText("Neckvein:", fontSize, true); drawText(`${data["Neckvein"]} `);
-    drawText("Anaemia:", fontSize, true); drawText(`${data["Anaemia"]} `);
+    drawText("L. Nodes:", fontSize, true); drawText(`${data["Lnodes"]} `);
     drawText("Thyroid:", fontSize, true); drawText(`${data["Thyroid"]} `);
-    drawText("Cyanosis:", fontSize, true); drawText(`${data["Cyanosis"]} `);
-    drawText("Jaundice:", fontSize, true); drawText(`${data["Jaundice"]} `);
-    drawText("Dehydration:", fontSize, true); drawText(`${data["Dehydration"]} `);
+    drawText("Koilonychia:", fontSize, true); drawText(`${data["koilonychia"]} `);
+    drawText("Leukonychia:", fontSize, true); drawText(`${data["Leukonychia"]} `);
+    drawText("Skin:", fontSize, true); drawText(`${data["Skin"]} `);
     drawText("Others:", fontSize, true); drawText(`${data["Others"]} `);
     endFieldset(startInitialInfoY33);
 
@@ -207,32 +213,40 @@ export async function createPDF(data) {
     drawText("Nervous System:", fontSize, true); drawText(`${data["NervousSystem"]} `);
     endFieldset(startInitialInfoY3);
 
+    const startInitialInfoY373 = drawFieldset("Abdomen");
 
-    const startInitialInfoY4 = drawFieldset("Provisional Stage");
-    drawText("Working Diagnosis:", fontSize, true); drawText(`${data["workupDiagnosis"]} `);
+    drawText("Inspection:", fontSize, true); drawText(`${data["Inspection"]} `);
+    drawText("Palpation:", fontSize, true); drawText(`${data["Palpation"]} `);
+    drawText("Percussion:", fontSize, true); drawText(`${data["Percussion"]} `);
+    drawText("Auscultation:", fontSize, true); drawText(`${data["Auscultation"]} `);
+    //drawText("Nervous System:", fontSize, true); drawText(`${data["NervousSystem"]} `);
+    endFieldset(startInitialInfoY373);
+
+
+    const startInitialInfoY4 = drawFieldset("");
+    drawText("Provisional Diagnosis:", fontSize, true); drawText(`${data["workupDiagnosis"]} `);
     drawText("Differential Diagnosis:", fontSize, true); drawText(`${data["DifferentialDiagnosis"]} `);
     endFieldset(startInitialInfoY4);
 
-    const startInitialInfoY55 = drawFieldset("Investigations & Summary");
+    const startInitialInfoY55 = drawFieldset("");
     drawText("Relative-Investigation Findings:", fontSize, true); drawText(`${data["RelativeInvestigationFindings"]} `);
     drawText("Salient Features:", fontSize, true); drawText(`${data["SalientFeature"]} `);
     endFieldset(startInitialInfoY55);
 
-    const startInitialInfoY5 = drawFieldset("Final Diagnosis");
+    const startInitialInfoY5 = drawFieldset("");
 
     drawText("Confirmatory Diagnosis:", fontSize, true); drawText(`${data["ConfirmatoryDiagnosis"]} `);
     endFieldset(startInitialInfoY5);
 
 
-    const startInitialInfoY6 = drawFieldset("Treatment");
+    const startInitialInfoY6 = drawFieldset("");
     drawText("Treatment:", fontSize, true); drawText(`${data["Treatment"]} `);
-    drawText("Follow-Up Advice:", fontSize, true); drawText(`${data["FollowUpAdvice"]} `);
+    drawText("Advice:", fontSize, true); drawText(`${data["FollowUpAdvice"]} `);
+    drawText("Follow-Up After:", fontSize, true); drawText(`${data["FollowUpDuration"]} `);
     endFieldset(startInitialInfoY6);
 
 
-    const startInitialInfoY7 = drawFieldset("Discharge");
-    drawText("Final remarks:", fontSize, true); drawText(`${data["remarks"]} `);
-    endFieldset(startInitialInfoY7);
+
 
     // Add other fieldsets in a similar manner
     // For example:

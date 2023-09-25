@@ -75,50 +75,61 @@
     let showModal = false;
 
     let newMedication = getFormData("newMedication") || {
-        Address: "Dhaka",
-        Contact: "+880",
-        Occupation: "Student",
-        MaritalStatus: "Married",
-        ChiefComplaints: "Headache",
-        HOillness: "Growth of headache",
-        PastHistory: "Migrane",
-        TreatmentHistory: "Paracetamol",
-        OccupationalHistory: "Tution",
-        SocioEconomicCondition: "Rich",
-        FamilyHistory: "Normal",
-        PersonalHistory: "Ganja khay",
-        Vaccinationhistory: "vaccinated properly",
-        MenstrualHistory: "nil",
-        Height: "normal",
-        Nutrition: "normal",
-        Oedema: "normal",
-        Clubbing: "normal",
-        Thyroid: "normal",
-        Skin: "normal",
-        Weight: "normal",
-        Anaemia: "normal",
-        Cyanosis: "normal",
-        Neckvein: "normal",
+        Address: "",
+        Contact: "",
+        Occupation: "",
+        MaritalStatus: "",
+        ChiefComplaints: "",
+        HOillness: "",
+        bmi: "",
+        PastHistoryMedical: "",
+        PastHistorySurgical: "",
+        TreatmentHistory: "",
+        OccupationalHistory: "",
+        SocioEconomicCondition: "",
+        FamilyHistory: "",
+        PersonalHistory: "",
+        Inspection: "",
+        Palpation: "",
+        Percussion: "",
+        Auscultation: "",
+        Vaccinationhistory: "",
+        MenstrualHistory: "",
+        Height: "",
+        Nutrition: "",
+        Oedema: "",
+        Clubbing: "",
+        Thyroid: "",
+        Skin: "",
+        Weight: "",
+        Anaemia: "",
+        Lnodes: "",
+        Cyanosis: "",
+        Neckvein: "",
         Others: "",
-        Temperature: "normal",
-        Pulse: "70/min",
-        BloodPressure: "150/100",
-        Jaundice: "normal",
-        Dehydration: "normal",
-        CardioVascularSystem: "Normal",
-        RespiratorySystemm: "Normal",
-        GastroIntestinalSystem: "Normal",
-        MusculoSkeletalSystem: "Normal",
-        NervousSystem: "Normal",
-        workupDiagnosis: "Tumour",
-        DifferentialDiagnosis: "Tumour, cancer",
-        RelativeInvestigationFindings: "Cancer",
-        SalientFeature: "null",
-        ConfirmatoryDiagnosis: "Cancer",
-        Treatment: "Inevitable death",
-        FollowUpAdvice: "RIP",
-        DischargePrescription: "discharged",
-        remarks: "pialBoksod",
+        Temperature: "",
+        koilonychia: "",
+        Leukonychia: "",
+        Pulse: "",
+        BloodPressure: "",
+        RespiratoryRate: "",
+        Jaundice: "",
+        Dehydration: "",
+        CardioVascularSystem: "",
+        RespiratorySystemm: "",
+        GastroIntestinalSystem: "",
+        MusculoSkeletalSystem: "",
+        NervousSystem: "",
+        workupDiagnosis: "",
+        DifferentialDiagnosis: "",
+        RelativeInvestigationFindings: "",
+        SalientFeature: "",
+        ConfirmatoryDiagnosis: "",
+        Treatment: "",
+        FollowUpAdvice: "",
+        FollowUpDuration: "",
+        DischargePrescription: "",
+        remarks: "",
     };
 
     function handleEdit() {
@@ -206,7 +217,7 @@
             MaritalStatus: "",
             ChiefComplaints: "",
             HOillness: "",
-            PastHistory: "",
+            PastHistoryMedical: "",
             TreatmentHistory: "",
             OccupationalHistory: "",
             SocioEconomicCondition: "",
@@ -374,30 +385,34 @@
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Address</span
+                                        >Address*</span
                                     >
+
                                     <input
                                         bind:value={newMedication.Address}
+                                        placeholder="Write Your Address"
                                         class="w-full p-2 border rounded-md"
                                         required
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Contact</span
+                                        >Contact*</span
                                     >
                                     <input
                                         bind:value={newMedication.Contact}
+                                        placeholder="Write Phone Number"
                                         class="w-full p-2 border rounded-md"
                                         required
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Occupation</span
+                                        >Occupation*</span
                                     >
                                     <input
                                         bind:value={newMedication.Occupation}
+                                        placeholder="Write Your Current Occupation"
                                         class="w-full p-2 border rounded-md"
                                         required
                                     />
@@ -409,7 +424,7 @@
                                     <input
                                         bind:value={newMedication.MaritalStatus}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Unmarried/Married"
                                     />
                                 </label>
                                 <!-- ... Continue with the rest ... -->
@@ -461,11 +476,24 @@
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >History of Past Illness</span
+                                        >History of Past Illness (Medical
+                                        History)</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
-                                        bind:value={newMedication.PastHistory}
+                                        bind:value={newMedication.PastHistoryMedical}
+                                        placeholder="Medical History"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >History of Past Illness (Surgical
+                                        History)</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.PastHistorySurgical}
+                                        placeholder="Surgical History"
                                     />
                                 </label>
                                 <label class="block">
@@ -475,6 +503,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.TreatmentHistory}
+                                        placeholder="History of Treatment / Drug History"
                                     />
                                 </label>
                                 <label class="block">
@@ -484,6 +513,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.FamilyHistory}
+                                        placeholder="Family History"
                                     />
                                 </label>
                                 <label class="block">
@@ -493,6 +523,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.PersonalHistory}
+                                        placeholder="Personal History"
                                     />
                                 </label>
                                 <label class="block">
@@ -502,6 +533,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.OccupationalHistory}
+                                        placeholder="Occupational History"
                                     />
                                 </label>
                                 <label class="block">
@@ -511,15 +543,17 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.SocioEconomicCondition}
+                                        placeholder="Socio-Economic Condition"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Status of Vaccination</span
+                                        >Immunizations History</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Vaccinationhistory}
+                                        placeholder="Immunizations History"
                                     />
                                 </label>
 
@@ -530,6 +564,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.MenstrualHistory}
+                                        placeholder="Menstrual History"
                                     />
                                 </label>
 
@@ -553,7 +588,7 @@
                                     <input
                                         bind:value={newMedication.Height}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Patient Height"
                                     />
                                 </label>
                                 <label class="block">
@@ -563,7 +598,17 @@
                                     <input
                                         bind:value={newMedication.Weight}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Patient Weight"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >BMI</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.bmi}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Approx BMI"
                                     />
                                 </label>
                                 <label class="block">
@@ -573,37 +618,27 @@
                                     <input
                                         bind:value={newMedication.Nutrition}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Nutrition Condition"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Temperature</span
+                                        >Anaemia</span
                                     >
                                     <input
-                                        bind:value={newMedication.Temperature}
+                                        bind:value={newMedication.Anaemia}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Anaemia"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Pulse</span
+                                        >Jaundice</span
                                     >
                                     <input
-                                        bind:value={newMedication.Pulse}
+                                        bind:value={newMedication.Jaundice}
                                         class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Blood Pressure</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.BloodPressure}
-                                        class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Jaundice"
                                     />
                                 </label>
                                 <label class="block">
@@ -613,9 +648,70 @@
                                     <input
                                         bind:value={newMedication.Oedema}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Oedema"
                                     />
                                 </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Cyanosis</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Cyanosis}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Cyanosis"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Dehydration</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Dehydration}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Dehydration"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Temperature</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Temperature}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="°F"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Pulse</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Pulse}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Pulse"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Blood Pressure</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.BloodPressure}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="___ mmHg / __mmHg "
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Respiratory Rate</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.RespiratoryRate}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="___/min "
+                                    />
+                                </label>
+
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
                                         >Clubbing</span
@@ -623,7 +719,58 @@
                                     <input
                                         bind:value={newMedication.Clubbing}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Clubbing"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Neckvein</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Neckvein}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Neckvein"
+                                    />
+                                </label>
+
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >L. Nodes</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Lnodes}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="L. Nodes"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Thyroid</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Thyroid}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Thyroid"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Koilonychia</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.koilonychia}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Koilonychia"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Leukonychia</span
+                                    >
+                                    <input
+                                        bind:value={newMedication.Leukonychia}
+                                        class="w-full p-2 border rounded-md"
+                                        placeholder="Leukonychia"
                                     />
                                 </label>
 
@@ -634,69 +781,10 @@
                                     <input
                                         bind:value={newMedication.Skin}
                                         class="w-full p-2 border rounded-md"
-                                        required
+                                        placeholder="Skin"
                                     />
                                 </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Neckvein</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Neckvein}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Anaemia</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Anaemia}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Thyroid</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Thyroid}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Cyanosis</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Cyanosis}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Jaundice</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Jaundice}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Dehydration</span
-                                    >
-                                    <input
-                                        bind:value={newMedication.Dehydration}
-                                        class="w-full p-2 border rounded-md"
-                                        required
-                                    />
-                                </label>
+
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
                                         >Others</span
@@ -704,6 +792,7 @@
                                     <input
                                         bind:value={newMedication.Others}
                                         class="w-full p-2 border rounded-md"
+                                        placeholder="Something Else to Add"
                                     />
                                 </label>
                             </div>
@@ -725,6 +814,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.CardioVascularSystem}
+                                        placeholder="Cardio Vascular System Examination Finding"
                                     />
                                 </label>
                                 <label class="block">
@@ -734,6 +824,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.RespiratorySystemm}
+                                        placeholder="Respiratory System Examination Finding"
                                     />
                                 </label>
                                 <label class="block">
@@ -743,6 +834,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.GastroIntestinalSystem}
+                                        placeholder="Gastro-Intestinal System Examination Finding"
                                     />
                                 </label>
                                 <label class="block">
@@ -752,6 +844,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.MusculoSkeletalSystem}
+                                        placeholder="Musculo-Skeletal System Examination Finding"
                                     />
                                 </label>
                                 <label class="block">
@@ -761,30 +854,77 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.NervousSystem}
+                                        placeholder="Nervous System Examination Finding"
                                     />
                                 </label>
 
                                 <!-- ... Continue with the rest ... -->
                             </div>
-                            <!-- Fields: GeneralExamination, CardioVascularSystem, RespiratorySystem, GastroIntestinalSystem, MusculoSkeletalSystem, NervousSystem -->
-                            <!-- ... Add your fields here ... -->
                         </fieldset>
 
-                        <!-- ProvationalStage -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
-                                >Provisional Stage</legend
+                                >Abdomen</legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Working Diagnosis</span
+                                        >Inspection</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.Inspection}
+                                        placeholder="Inspection"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Palpation</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.Palpation}
+                                        placeholder="Palpation"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Percussion</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.Percussion}
+                                        placeholder="Percussion"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Auscultation</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.Auscultation}
+                                        placeholder="Auscultation"
+                                    />
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <!-- ProvationalStage -->
+                        <fieldset class="p-4 border rounded-md shadow-lg">
+                            <div>
+                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
+                                <!-- ... Add your fields in the same format as below ... -->
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Provisional Diagnosis</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.workupDiagnosis}
+                                        placeholder="Provisional Diagnosis (Separate multiple by comma)"
                                     />
                                 </label>
                                 <label class="block">
@@ -794,6 +934,7 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.DifferentialDiagnosis}
+                                        placeholder="Differential Diagnosis (Separate multiple by comma)"
                                     />
                                 </label>
 
@@ -804,9 +945,6 @@
                         </fieldset>
 
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Investigations & Summary
-                            </legend>
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
@@ -817,15 +955,18 @@
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.RelativeInvestigationFindings}
+                                        placeholder="Findings of Investigations"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Salient Features</span
+                                        >Salient Features*</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.SalientFeature}
+                                        required
+                                        placeholder="Salient Feature"
                                     />
                                 </label>
 
@@ -837,19 +978,18 @@
 
                         <!-- FinalDiagnosis -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Final Diagnosis</legend
-                            >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Confirmatory Diagnosis</span
+                                        >Confirmatory Diagnosis*</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.ConfirmatoryDiagnosis}
+                                        required
+                                        placeholder="Confirmatory Diagnosis"
                                     />
                                 </label>
 
@@ -861,58 +1001,44 @@
 
                         <!-- Treatment -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Treatment</legend
-                            >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Treatment</span
+                                        >Treatment*</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Treatment}
+                                        required
+                                        placeholder="Treatments"
                                     />
                                 </label>
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
-                                        >Follow up Advice</span
+                                        >Advice</span
                                     >
                                     <textarea
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.FollowUpAdvice}
+                                        placeholder="Advices"
+                                    />
+                                </label>
+                                <label class="block">
+                                    <span class="block font-semibold mb-2"
+                                        >Follow-Up After</span
+                                    >
+                                    <textarea
+                                        class="w-full textarea textarea-bordered"
+                                        bind:value={newMedication.FollowUpDuration}
+                                        placeholder="__ weeks"
                                     />
                                 </label>
 
                                 <!-- ... Continue with the rest ... -->
                             </div>
                             <!-- Fields: Treatment, FollowUpAdvice -->
-                            <!-- ... Add your fields here ... -->
-                        </fieldset>
-
-                        <!-- Discharge -->
-                        <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Discharge</legend
-                            >
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
-                                <!-- ... Add your fields in the same format as below ... -->
-                                <label class="block">
-                                    <span class="block font-semibold mb-2"
-                                        >Final Remarks</span
-                                    >
-                                    <textarea
-                                        class="w-full textarea textarea-bordered"
-                                        bind:value={newMedication.remarks}
-                                    />
-                                </label>
-
-                                <!-- ... Continue with the rest ... -->
-                            </div>
-                            <!-- Fields: Remarks -->
                             <!-- ... Add your fields here ... -->
                         </fieldset>
 
