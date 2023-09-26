@@ -41,21 +41,39 @@
 
 <main class="bg-gray-100 min-h-screen">
     <!-- Navbar -->
+    <nav class="bg-white shadow-sm z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                        alt="Company Logo"
+                        width={125}
+                        height={30}
+                        class="mx-2 my-0"
+                    />
+                </div>
+
+                <!-- Notification and Logout Section -->
+                <div class="flex items-center space-x-4">
+                    <!-- Message Notification -->
+
+                    <!-- Logout Button -->
+                    <button
+                        class="btn btn-outline btn-error"
+                        on:click={navigateToLogin}>Logout</button
+                    >
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white fixed z-0 py-4">
-            <!-- Company Logo -->
-            <div class="text-center mb-10 mt-4">
-                <img
-                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
-                    alt="Company Logo"
-                    class="w-32 mx-auto"
-                />
-            </div>
-
+        <div class="w-64 h-screen bg-white fixed z-0 py-4 mt-3">
             <!-- Menu Items -->
-            <ul class="text-base font-semibold">
+            <ul class="text-base font-semibold mt-1 ml-1">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <li
@@ -117,34 +135,11 @@
         </div>
 
         <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white">
-            <nav class="bg-white shadow-md mb-8 z-10">
-                <div class="container mx-auto px-4">
-                    <div class="flex justify-between items-center py-4">
-                        <!-- Logo Section -->
-                        <div class="flex items-center">
-                            <img
-                                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
-                                alt="Company Logo"
-                                width={125}
-                                height={25}
-                                class="mx-0 my-0"
-                            />
-                        </div>
-
-                        <!-- Notification and Logout Section -->
-                        <div class="flex items-center space-x-4">
-                            <!-- Logout Button -->
-                            <button
-                                class="btn btn-outline btn-error"
-                                on:click={navigateToLogin}>Logout</button
-                            >
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div class="p-4">
-                <label for="hospitalCode" class="text-lg font-bold mb-2"
+        <div class="ml-64 w-full bg-white mt-3">
+            <div class="p-4 mt-10 ml-10">
+                <label
+                    for="hospitalCode"
+                    class="text-2xl text-rose-700 font-bold mb-2"
                     >Enter 8-digit Hospital Code:</label
                 >
                 <input
@@ -157,18 +152,18 @@
                 />
                 <button
                     on:click={handleHospitalCodeSubmit}
-                    class="ml-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                    class="ml-4 bg-rose-500 text-white p-2 rounded hover:bg-rose-700"
                 >
                     Submit
                 </button>
             </div>
-            <div class="mb-4 p-4">
-                <h2 class="text-3xl text-green-500 font-bold">
+            <div class="mb-4 p-4 mt-5 ml-10">
+                <h2 class="text-4xl text-rose-700 font-bold mb-4">
                     Current Hospitals
                 </h2>
-                <ul class="list-decimal list-inside bg-white rounded p-4">
+                <ul class="list-decimal list-inside bg-white rounded">
                     {#each currenthospitals as hospital}
-                        <li class="border rounded my-2 hover:shadow-lg">
+                        <li class="border rounded-lg my-2 hover:shadow-lg p-4">
                             <span class="text-md font-medium"
                                 >{hospital.name}</span
                             ><br />

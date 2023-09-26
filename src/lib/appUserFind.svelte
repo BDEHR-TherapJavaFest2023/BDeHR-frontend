@@ -219,21 +219,38 @@
 
 <main class="bg-gray-100 min-h-screen">
     <!-- Navbar -->
+    <nav class="bg-white shadow-sm z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                        alt="Company Logo"
+                        width={125}
+                        height={30}
+                        class="mx-2 my-0"
+                    />
+                </div>
+
+                <!-- Notification and Logout Section -->
+                <div class="flex items-center space-x-4">
+                    <!-- Message Notification -->
+
+                    <!-- Logout Button -->
+                    <button
+                        class="btn btn-outline btn-error"
+                        on:click={navigateToLogin}>Logout</button
+                    >
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white fixed z-0 py-4">
-            <!-- Company Logo -->
-            <div class="text-center mb-10 mt-4">
-                <img
-                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
-                    alt="Company Logo"
-                    class="w-32 mx-auto"
-                />
-            </div>
-
-            <!-- Menu Items -->
-            <ul class="text-base font-semibold">
+        <div class="w-64 h-screen bg-white fixed z-0 py-4 mt-3">
+            <ul class="text-base font-semibold mt-1 ml-1">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <li
@@ -295,40 +312,22 @@
         </div>
 
         <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white">
-            <nav class="bg-white shadow-md mb-8 z-10">
-                <div class="container mx-auto px-4">
-                    <div class="flex justify-between items-center py-4">
-                        <!-- Logo Section -->
-                        <div class="flex items-center">
-                            <img
-                                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
-                                alt="Company Logo"
-                                width={125}
-                                height={25}
-                                class="mx-0 my-0"
-                            />
-                        </div>
-
-                        <!-- Notification and Logout Section -->
-                        <div class="flex items-center space-x-4">
-                            <!-- Logout Button -->
-                            <button
-                                class="btn btn-outline btn-error"
-                                on:click={navigateToLogin}>Logout</button
-                            >
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <div id="map" style="height: 400px;" />
+        <div class="ml-64 w-full bg-white mt-3">
+            <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">
+                Map
+            </h1>
+            <div
+                id="map"
+                style="height: 430px;"
+                class="mt-2 ml-10 mr-6 outline-double rounded-lg"
+            />
             {#if hasSubmitted}
-                <p class="text-3xl text-green-600 font-bold">
+                <p class="text-3xl text-rose-700 font-bold mt-4 ml-10">
                     Nearest Hospital: {nearestHospital.name}
                 </p>
             {:else}
                 <button
-                    class="btn btn-outline hover:bg-green-500"
+                    class="btn btn-outline rounded-lg hover:bg-rose-700 mt-4 ml-10"
                     on:click={findNearestHospital}>Find Nearest Hospital</button
                 >
             {/if}

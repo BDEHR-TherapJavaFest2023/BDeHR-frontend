@@ -73,21 +73,41 @@
 
 <main class="bg-gray-100 min-h-screen">
     <!-- Navbar -->
+    <nav class="bg-white shadow-sm z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                        alt="Company Logo"
+                        width={125}
+                        height={30}
+                        class="mx-2 my-0"
+                    />
+                </div>
+
+                <!-- Notification and Logout Section -->
+                <div class="flex items-center space-x-4">
+                    <!-- Message Notification -->
+
+                    <!-- Logout Button -->
+                    <button
+                        class="btn btn-outline btn-error"
+                        on:click={navigateToLogin}>Logout</button
+                    >
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white fixed z-0 py-4">
+        <div class="w-64 min-h-screen bg-white fixed py-4 mt-3">
             <!-- Company Logo -->
-            <div class="text-center mb-10 mt-4">
-                <img
-                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
-                    alt="Company Logo"
-                    class="w-32 mx-auto"
-                />
-            </div>
 
             <!-- Menu Items -->
-            <ul class="text-base font-semibold">
+            <ul class="text-base font-semibold mt-2 ml-1">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
                 <li
@@ -149,37 +169,9 @@
         </div>
 
         <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white">
-            <nav class="bg-white shadow-md mb-8 z-10">
-                <div class="container mx-auto px-4">
-                    <div class="flex justify-between items-center py-4">
-                        <!-- Logo Section -->
-                        <div class="flex items-center">
-                            <img
-                                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
-                                alt="Company Logo"
-                                width={125}
-                                height={25}
-                                class="mx-0 my-0"
-                            />
-                        </div>
-
-                        <!-- Notification and Logout Section -->
-                        <div class="flex items-center space-x-4">
-                            <!-- Message Notification -->
-
-                            <!-- Logout Button -->
-                            <button
-                                class="btn btn-outline btn-error"
-                                on:click={navigateToLogin}>Logout</button
-                            >
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
+        <div class="ml-64 w-full bg-white mt-3">
             <div
-                class="container mx-auto my-12 p-8 md:p-16 bg-white rounded-lg shadow-md"
+                class="container mx-auto p-8 md:p-16 bg-white rounded-lg shadow-md"
             >
                 <div
                     class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12"
@@ -208,26 +200,17 @@
                     </div>
                     <!-- User Info Section -->
                     <div class="flex-1 space-y-4">
-                        <h1 class="text-4xl font-bold text-green-600">
-                            Profile Information
-                        </h1>
-                        <div class="space-y-2">
+                        <div class="space-y-1">
                             <!-- Add fields here. For example: -->
                             <div>
-                                <label class="block text-sm font-medium"
-                                    >Name</label
-                                >
                                 <input
                                     type="text"
-                                    class="form-input"
+                                    class="form-input text-6xl text-rose-700 font-bold"
                                     bind:value={userData.name}
                                     readonly={!editMode}
                                 />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium"
-                                    >{editMode ? "Date of Birth" : "Age"}</label
-                                >
                                 {#if editMode}
                                     <input
                                         type="date"
@@ -235,56 +218,63 @@
                                         bind:value={userData.dob}
                                     />
                                 {:else}
-                                    <span>{calculateAge(userData.dob)}</span>
+                                    <span
+                                        class="text-3xl text-rose-700 font-semibold"
+                                        >{calculateAge(userData.dob)} years old</span
+                                    >
                                 {/if}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium"
-                                    >Gender</label
+
+                                <span
+                                    class="text-3xl text-rose-700 font-semibold"
+                                    >| {userData.gender}</span
                                 >
-                                <span>{userData.gender}</span>
                             </div>
+
                             <div>
-                                <label class="block text-sm font-medium"
+                                <label class="block text-sm font-medium mt-8"
                                     >User ID</label
                                 >
-                                <span>{userData.user_id}</span>
+                                <span class="text-2xl font-semibold"
+                                    >{userData.user_id}</span
+                                >
                             </div>
                             <div>
-                                <label class="block text-sm font-medium"
+                                <label class="block text-sm font-medium mt-2"
                                     >User NID</label
                                 >
-                                <span>{userData.nid}</span>
+                                <span class="text-2xl font-semibold"
+                                    >{userData.nid}</span
+                                >
                             </div>
                             <div>
-                                <label class="block text-sm font-medium"
+                                <label class="block text-sm font-medium mt-2"
                                     >Address</label
                                 >
                                 <input
                                     type="text"
-                                    class="form-input"
+                                    class="form-input text-2xl font-semibold"
                                     bind:value={userData.address}
                                     readonly={!editMode}
                                 />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium"
+                                <label class="block text-sm font-medium mt-2"
                                     >Phone</label
                                 >
                                 <input
                                     type="text"
-                                    class="form-input"
+                                    class="form-input text-2xl font-semibold"
                                     bind:value={userData.phone}
                                     readonly={!editMode}
                                 />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium"
+                                <label class="block text-sm font-medium mt-2"
                                     >Email</label
                                 >
                                 <input
                                     type="text"
-                                    class="form-input"
+                                    class="form-input text-2xl font-semibold"
                                     bind:value={userData.email}
                                     readonly={!editMode}
                                 />
@@ -310,4 +300,10 @@
 
 <style>
     /* Assuming you've already set up Tailwind CSS in your project */
+    main {
+        font-family: "Helvetica Neue", ui-sans-serif, system-ui, -apple-system,
+            BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, "Noto Sans",
+            sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+            "Noto Color Emoji";
+    }
 </style>
