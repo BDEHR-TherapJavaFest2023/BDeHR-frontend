@@ -7,12 +7,21 @@
         event.preventDefault();
         window.location.href = `#/hospitalhome`;
     }
+    function navigateHome() {
+        window.location.hash = `#/`;
+    }
 </script>
 
 <div
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
+    <img
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.svg"
+        alt="Notification Icon"
+        class="absolute top-4 left-4 h-10 w-10 transition-transform transform hover:scale-150"
+        on:click={navigateHome}
+    />
     <div class="card lg:card-side bg-ash shadow-xl z-50">
         <figure>
             <img

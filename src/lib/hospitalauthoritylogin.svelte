@@ -1,9 +1,12 @@
 <script>
     import { get } from "svelte/store";
-    import { hospitalInfo} from "./store";
+    import { hospitalInfo } from "./store";
     let password = "";
     function handleLogin() {
         window.location.hash = "#/doctorhome/Authority";
+    }
+    function navigateHome() {
+        window.location.hash = `#/hospitalhome`;
     }
 </script>
 
@@ -11,6 +14,12 @@
     class="min-h-screen bg-gray-100 flex items-center justify-center p-5"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/greyBlur.jpg'); background-size: cover; backdrop-filter: blur(0px);"
 >
+    <img
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.svg"
+        alt="Notification Icon"
+        class="absolute top-4 left-4 h-10 w-10 transition-transform transform hover:scale-150"
+        on:click={navigateHome}
+    />
     <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md">
         <!-- Hospital and Company Logos -->
         <div class="flex justify-center items-center mb-2">
@@ -31,7 +40,9 @@
 
         <!-- Hospital Name -->
         <div class="text-center mb-2">
-            <h2 class="text-2xl font-bold text-gray-700">{get(hospitalInfo).hospitalName}</h2>
+            <h2 class="text-2xl font-bold text-gray-700">
+                {get(hospitalInfo).hospitalName}
+            </h2>
         </div>
         <div class="text-center mb-6">
             <h2 class="font-semibold text-gray-700">Authority</h2>

@@ -44,13 +44,24 @@
         //     });
         // form.reset();
     }
+    function navigateHome() {
+        window.location.hash = `#/`;
+    }
 </script>
 
 <Toaster />
+
 <section
     class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/greyBlur.jpg'); background-size: cover; backdrop-filter: blur(10px);"
 >
+    <img
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.svg"
+        alt="Notification Icon"
+        class="absolute top-4 left-4 h-10 w-10 transition-transform transform hover:scale-150"
+        on:click={navigateHome}
+    />
+
     <div class="flex bg-white shadow-2xl rounded-xl overflow-hidden max-w-4xl">
         <!-- Photo on the left side of the card -->
         <div

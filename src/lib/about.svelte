@@ -1,10 +1,18 @@
 <script>
     import Footer from "./footer.svelte";
+    function navigateBack() {
+        window.location.hash = `#/`;
+    }
 </script>
 
 <body class="bg-gray-100">
-    <header class="bg-blue-500 p-4">
-        <div class="container mx-auto text-white">
+    <header class="bg-blue-500 p-4 flex justify-between items-center">
+        <img
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
+            class="h-10 w-12 transition-transform transform hover:scale-125"
+            on:click={navigateBack}
+        />
+        <div class="text-white">
             <h1 class="text-2xl font-semibold">About Us</h1>
         </div>
     </header>
@@ -136,5 +144,5 @@
         </section>
     </main>
 
-<Footer/>
+    <Footer />
 </body>
