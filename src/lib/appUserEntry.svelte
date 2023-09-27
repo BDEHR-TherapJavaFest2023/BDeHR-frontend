@@ -39,140 +39,138 @@
     }
 </script>
 
-<main class="bg-gray-100 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm z-10">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo Section -->
-                <div class="flex items-center">
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
-                        alt="Company Logo"
-                        width={125}
-                        height={30}
-                        class="mx-2 my-0"
-                    />
-                </div>
-
-                <!-- Notification and Logout Section -->
-                <div class="flex items-center space-x-4">
-                    <!-- Message Notification -->
-
-                    <!-- Logout Button -->
-                    <button
-                        class="btn btn-outline btn-error"
-                        on:click={navigateToLogin}>Logout</button
-                    >
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white fixed z-0 py-4 mt-3">
-            <!-- Menu Items -->
-            <ul class="text-base font-semibold mt-1 ml-1">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToProfile}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
-                        alt="Dashboard Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Profile
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToMedications}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
-                        alt="Query Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Medications
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToReports}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
-                        alt="Add New Hospital Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Test Reports
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToFind}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Find Hospital
-                </li>
-                <li
-                    class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
-                    on:click={navigateToEntry}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Hospital Entry
-                </li>
-            </ul>
-        </div>
-
-        <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white mt-3">
-            <div class="p-4 mt-10 ml-10">
-                <label
-                    for="hospitalCode"
-                    class="text-2xl text-rose-700 font-bold mb-2"
-                    >Enter 8-digit Hospital Code:</label
-                >
-                <input
-                    type="text"
-                    id="hospitalCode"
-                    placeholder="Enter code"
-                    bind:value={hospitalCode}
-                    class="border rounded p-2 w-1/2"
-                    maxlength="8"
+<nav class="bg-white shadow-lg z-10 mb-4">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo Section -->
+            <div class="flex items-center">
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                    alt="Company Logo"
+                    width={125}
+                    height={30}
+                    class="mx-2 my-0"
                 />
+            </div>
+
+            <!-- Notification and Logout Section -->
+            <div class="flex items-center space-x-4">
+                <!-- Message Notification -->
+
+                <!-- Logout Button -->
                 <button
-                    on:click={handleHospitalCodeSubmit}
-                    class="ml-4 bg-rose-500 text-white p-2 rounded hover:bg-rose-700"
+                    class="btn btn-outline btn-error"
+                    on:click={navigateToLogin}>Logout</button
                 >
-                    Submit
-                </button>
             </div>
-            <div class="mb-4 p-4 mt-5 ml-10">
-                <h2 class="text-4xl text-rose-700 font-bold mb-4">
-                    Current Hospitals
-                </h2>
-                <ul class="list-decimal list-inside bg-white rounded">
-                    {#each currenthospitals as hospital}
-                        <li class="border rounded-lg my-2 hover:shadow-lg p-4">
-                            <span class="text-md font-medium"
-                                >{hospital.name}</span
-                            ><br />
-                            <span>Date: {hospital.date}</span><br />
-                            <span>Patient ID: {hospital.PatientID}</span>
-                        </li>
-                    {/each}
-                </ul>
-            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="bg-white min-h-screen flex overflow-auto">
+    <!-- Navbar -->
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-white relative shadow-lg py-4">
+        <!-- Menu Items -->
+        <ul class="text-base font-semibold mt-1 ml-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToProfile}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
+                    alt="Dashboard Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Profile
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToMedications}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
+                    alt="Query Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Medications
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToReports}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
+                    alt="Add New Hospital Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Test Reports
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToFind}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Find Hospital
+            </li>
+            <li
+                class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
+                on:click={navigateToEntry}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Hospital Entry
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="flex-1 bg-white p-2 h-full flex-grow">
+        <div class="p-4 mt-10 ml-10">
+            <label
+                for="hospitalCode"
+                class="text-2xl text-rose-700 font-bold mb-2"
+                >Enter 8-digit Hospital Code:</label
+            >
+            <input
+                type="text"
+                id="hospitalCode"
+                placeholder="Enter code"
+                bind:value={hospitalCode}
+                class="border rounded p-2 w-1/2"
+                maxlength="8"
+            />
+            <button
+                on:click={handleHospitalCodeSubmit}
+                class="ml-4 bg-rose-500 text-white p-2 rounded hover:bg-rose-700"
+            >
+                Submit
+            </button>
+        </div>
+        <div class="mb-4 p-4 mt-5 ml-10">
+            <h2 class="text-4xl text-rose-700 font-bold mb-4">
+                Current Hospitals
+            </h2>
+            <ul class="list-decimal list-inside bg-white rounded">
+                {#each currenthospitals as hospital}
+                    <li class="border rounded-lg my-2 hover:shadow-lg p-4">
+                        <span class="text-md font-medium">{hospital.name}</span
+                        ><br />
+                        <span>Date: {hospital.date}</span><br />
+                        <span>Patient ID: {hospital.PatientID}</span>
+                    </li>
+                {/each}
+            </ul>
         </div>
     </div>
 </main>

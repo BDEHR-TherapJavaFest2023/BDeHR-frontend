@@ -71,226 +71,219 @@
     }
 </script>
 
-<main class="bg-gray-100 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm z-10">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo Section -->
-                <div class="flex items-center">
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
-                        alt="Company Logo"
-                        width={125}
-                        height={30}
-                        class="mx-2 my-0"
-                    />
-                </div>
+<nav class="bg-white shadow-lg z-10 mb-4">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo Section -->
+            <div class="flex items-center">
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                    alt="Company Logo"
+                    width={125}
+                    height={30}
+                    class="mx-2 my-0"
+                />
+            </div>
 
-                <!-- Notification and Logout Section -->
-                <div class="flex items-center space-x-4">
-                    <!-- Message Notification -->
+            <!-- Notification and Logout Section -->
+            <div class="flex items-center space-x-4">
+                <!-- Message Notification -->
 
-                    <!-- Logout Button -->
-                    <button
-                        class="btn btn-outline btn-error"
-                        on:click={navigateToLogin}>Logout</button
-                    >
-                </div>
+                <!-- Logout Button -->
+                <button
+                    class="btn btn-outline btn-error"
+                    on:click={navigateToLogin}>Logout</button
+                >
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 min-h-screen bg-white fixed py-4 mt-3">
-            <!-- Company Logo -->
+<main class="bg-white min-h-screen flex overflow-auto">
+    <!-- Navbar -->
 
-            <!-- Menu Items -->
-            <ul class="text-base font-semibold mt-2 ml-1">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <li
-                    class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
-                    on:click={navigateToProfile}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
-                        alt="Dashboard Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Profile
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToMedications}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
-                        alt="Query Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Medications
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToReports}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
-                        alt="Add New Hospital Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Test Reports
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToFind}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Find Hospital
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToEntry}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Hospital Entry
-                </li>
-            </ul>
-        </div>
+    <!-- Sidebar -->
+    <div class="w-64 bg-white relative shadow-lg py-4">
+        <!-- Company Logo -->
 
-        <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white mt-3">
-            <div
-                class="container mx-auto p-8 md:p-16 bg-white rounded-lg shadow-md"
+        <!-- Menu Items -->
+        <ul class="text-base font-semibold mt-2 ml-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <li
+                class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
+                on:click={navigateToProfile}
             >
-                <div
-                    class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12"
-                >
-                    <!-- Image Upload Section -->
-                    <div class="flex-none md:w-1/4 text-center">
-                        <img
-                            src={userData.userImage}
-                            alt="User Image"
-                            class="rounded-full w-40 h-40 mx-auto mb-4 object-cover"
-                        />
-                        {#if editMode}
-                            <label
-                                for="file-upload"
-                                class="cursor-pointer underline"
-                                >Change Photo</label
-                            >
-                            <input
-                                id="file-upload"
-                                type="file"
-                                class="hidden"
-                                accept="image/*"
-                                on:change={handleFileChange}
-                            />
-                        {/if}
-                    </div>
-                    <!-- User Info Section -->
-                    <div class="flex-1 space-y-4">
-                        <div class="space-y-1">
-                            <!-- Add fields here. For example: -->
-                            <div>
-                                <input
-                                    type="text"
-                                    class="form-input text-6xl text-rose-700 font-bold"
-                                    bind:value={userData.name}
-                                    readonly={!editMode}
-                                />
-                            </div>
-                            <div>
-                                {#if editMode}
-                                    <input
-                                        type="date"
-                                        class="form-input"
-                                        bind:value={userData.dob}
-                                    />
-                                {:else}
-                                    <span
-                                        class="text-3xl text-rose-700 font-semibold"
-                                        >{calculateAge(userData.dob)} years old</span
-                                    >
-                                {/if}
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
+                    alt="Dashboard Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Profile
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToMedications}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
+                    alt="Query Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Medications
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToReports}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
+                    alt="Add New Hospital Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Test Reports
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToFind}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Find Hospital
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToEntry}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Hospital Entry
+            </li>
+        </ul>
+    </div>
 
+    <!-- Main Dashboard Content -->
+    <div class="flex-1 bg-white p-2 h-full flex-grow">
+        <div class="container mx-auto p-8 md:p-16 bg-white rounded-lg">
+            <div
+                class="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12"
+            >
+                <!-- Image Upload Section -->
+                <div class="flex-none md:w-1/4 text-center">
+                    <img
+                        src={userData.userImage}
+                        alt="User Image"
+                        class="rounded-full w-50 h-50 mx-auto mb-4 object-cover"
+                    />
+                    {#if editMode}
+                        <label
+                            for="file-upload"
+                            class="cursor-pointer underline">Change Photo</label
+                        >
+                        <input
+                            id="file-upload"
+                            type="file"
+                            class="hidden"
+                            accept="image/*"
+                            on:change={handleFileChange}
+                        />
+                    {/if}
+                </div>
+                <!-- User Info Section -->
+                <div class="flex-1 space-y-4">
+                    <div class="space-y-1">
+                        <!-- Add fields here. For example: -->
+                        <div>
+                            <input
+                                type="text"
+                                class="form-input text-6xl text-rose-700 font-bold"
+                                bind:value={userData.name}
+                                readonly={!editMode}
+                            />
+                        </div>
+                        <div>
+                            {#if editMode}
+                                <input
+                                    type="date"
+                                    class="form-input"
+                                    bind:value={userData.dob}
+                                />
+                            {:else}
                                 <span
                                     class="text-3xl text-rose-700 font-semibold"
-                                    >| {userData.gender}</span
+                                    >{calculateAge(userData.dob)} years old</span
                                 >
-                            </div>
+                            {/if}
 
-                            <div>
-                                <label class="block text-sm font-medium mt-8"
-                                    >User ID</label
-                                >
-                                <span class="text-2xl font-semibold"
-                                    >{userData.user_id}</span
-                                >
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mt-2"
-                                    >User NID</label
-                                >
-                                <span class="text-2xl font-semibold"
-                                    >{userData.nid}</span
-                                >
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mt-2"
-                                    >Address</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-input text-2xl font-semibold"
-                                    bind:value={userData.address}
-                                    readonly={!editMode}
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mt-2"
-                                    >Phone</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-input text-2xl font-semibold"
-                                    bind:value={userData.phone}
-                                    readonly={!editMode}
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mt-2"
-                                    >Email</label
-                                >
-                                <input
-                                    type="text"
-                                    class="form-input text-2xl font-semibold"
-                                    bind:value={userData.email}
-                                    readonly={!editMode}
-                                />
-                            </div>
-                            <!-- Add other fields similarly -->
-                        </div>
-                        <div class="flex justify-end">
-                            <button
-                                class="btn btn-outline hover:bg-green-600"
-                                on:click={editMode
-                                    ? saveChanges
-                                    : toggleEditMode}
+                            <span class="text-3xl text-rose-700 font-semibold"
+                                >| {userData.gender}</span
                             >
-                                {editMode ? "Save" : "Edit"}
-                            </button>
                         </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mt-8"
+                                >User ID</label
+                            >
+                            <span class="text-2xl font-semibold"
+                                >{userData.user_id}</span
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mt-2"
+                                >User NID</label
+                            >
+                            <span class="text-2xl font-semibold"
+                                >{userData.nid}</span
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mt-2"
+                                >Address</label
+                            >
+                            <input
+                                type="text"
+                                class="form-input text-2xl font-semibold"
+                                bind:value={userData.address}
+                                readonly={!editMode}
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mt-2"
+                                >Phone</label
+                            >
+                            <input
+                                type="text"
+                                class="form-input text-2xl font-semibold"
+                                bind:value={userData.phone}
+                                readonly={!editMode}
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mt-2"
+                                >Email</label
+                            >
+                            <input
+                                type="text"
+                                class="form-input text-2xl font-semibold"
+                                bind:value={userData.email}
+                                readonly={!editMode}
+                            />
+                        </div>
+                        <!-- Add other fields similarly -->
+                    </div>
+                    <div class="flex justify-end">
+                        <button
+                            class="btn btn-outline hover:bg-green-600"
+                            on:click={editMode ? saveChanges : toggleEditMode}
+                        >
+                            {editMode ? "Save" : "Edit"}
+                        </button>
                     </div>
                 </div>
             </div>

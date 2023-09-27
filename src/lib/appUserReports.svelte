@@ -36,135 +36,131 @@
     }
 </script>
 
-<main class="bg-gray-100 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm z-10">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <!-- Logo Section -->
-                <div class="flex items-center">
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
-                        alt="Company Logo"
-                        width={125}
-                        height={30}
-                        class="mx-2 my-0"
-                    />
-                </div>
+<nav class="bg-white shadow-lg z-10 mb-4">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <!-- Logo Section -->
+            <div class="flex items-center">
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
+                    alt="Company Logo"
+                    width={125}
+                    height={30}
+                    class="mx-2 my-0"
+                />
+            </div>
 
-                <!-- Notification and Logout Section -->
-                <div class="flex items-center space-x-4">
-                    <!-- Message Notification -->
+            <!-- Notification and Logout Section -->
+            <div class="flex items-center space-x-4">
+                <!-- Message Notification -->
 
-                    <!-- Logout Button -->
-                    <button
-                        class="btn btn-outline btn-error"
-                        on:click={navigateToLogin}>Logout</button
-                    >
-                </div>
+                <!-- Logout Button -->
+                <button
+                    class="btn btn-outline btn-error"
+                    on:click={navigateToLogin}>Logout</button
+                >
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+<main class="bg-white min-h-screen flex overflow-auto">
+    <!-- Navbar -->
 
-    <div class="flex">
-        <!-- Sidebar -->
-        <div class="w-64 h-screen bg-white fixed z-0 py-4 mt-3">
-            <!-- Company Logo -->
+    <!-- Sidebar -->
+    <div class="w-64 bg-white relative shadow-lg py-4">
+        <!-- Company Logo -->
 
-            <!-- Menu Items -->
-            <ul class="text-base font-semibold mt-1 ml-1">
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToProfile}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
-                        alt="Dashboard Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Profile
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToMedications}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
-                        alt="Query Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Medications
-                </li>
-                <li
-                    class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
-                    on:click={navigateToReports}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
-                        alt="Add New Hospital Icon"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Test Reports
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToFind}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Find Hospital
-                </li>
-                <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
-                    on:click={navigateToEntry}
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
-                        alt="Find a Hospital"
-                        class="w-6 h-6 mr-2"
-                    />
-                    Hospital Entry
-                </li>
-            </ul>
-        </div>
-
-        <!-- Main Dashboard Content -->
-        <div class="ml-64 w-full bg-white mt-3">
-            <h1 class="text-4xl text-rose-700 font-bold mb-6 ml-10 mt-10">
+        <!-- Menu Items -->
+        <ul class="text-base font-semibold mt-1 ml-1">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToProfile}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
+                    alt="Dashboard Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Profile
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToMedications}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pharmacy-prescription-icon.svg"
+                    alt="Query Icon"
+                    class="w-6 h-6 mr-2"
+                />
+                Medications
+            </li>
+            <li
+                class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
+                on:click={navigateToReports}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/medical-report-icon.svg"
+                    alt="Add New Hospital Icon"
+                    class="w-6 h-6 mr-2"
+                />
                 Test Reports
-            </h1>
-            <div class="space-y-6 ml-10 mr-4">
-                {#each Reports as medication}
-                    <div
-                        class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg"
-                    >
-                        <div class="flex justify-between items-center">
-                            <div class="flex-1">
-                                <h2 class="text-xl font-semibold">
-                                    {medication.name}
-                                </h2>
-                                <p class="text-gray-600 text-sm">
-                                    Date: {medication.date}
-                                </p>
-                            </div>
-                            <div class="flex-initial">
-                                <a
-                                    href={medication.fileUrl}
-                                    target="_blank"
-                                    class="btn btn-outline hover:bg-rose-700"
-                                >
-                                    View Report
-                                </a>
-                            </div>
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToFind}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location-sign.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Find Hospital
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToEntry}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital.svg"
+                    alt="Find a Hospital"
+                    class="w-6 h-6 mr-2"
+                />
+                Hospital Entry
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="flex-1 bg-white p-2 h-full flex-grow">
+        <h1 class="text-4xl text-rose-700 font-bold mb-6 ml-10 mt-10">
+            Test Reports
+        </h1>
+        <div class="space-y-6 ml-10 mr-4">
+            {#each Reports as medication}
+                <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <div class="flex-1">
+                            <h2 class="text-xl font-semibold">
+                                {medication.name}
+                            </h2>
+                            <p class="text-gray-600 text-sm">
+                                Date: {medication.date}
+                            </p>
+                        </div>
+                        <div class="flex-initial">
+                            <a
+                                href={medication.fileUrl}
+                                target="_blank"
+                                class="btn btn-outline hover:bg-rose-700"
+                            >
+                                View Report
+                            </a>
                         </div>
                     </div>
-                {/each}
-            </div>
+                </div>
+            {/each}
         </div>
     </div>
 </main>

@@ -82,7 +82,7 @@
         </svg>
     </button>
     <img
-        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogo.png"
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoshrt.png"
         alt="pial Logo"
         width={125}
         height={25}
