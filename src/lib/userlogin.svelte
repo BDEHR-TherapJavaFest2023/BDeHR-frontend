@@ -7,7 +7,7 @@
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        window.location.hash = `#/appuser/home`;
+        // window.location.hash = `#/appuser/home`;
 
         const form = event.target;
         const data = new FormData(form);
@@ -99,7 +99,7 @@
                         <input
                             required
                             bind:value={id}
-                            type="number"
+                            type="text"
                             name="id"
                             placeholder="Enter ID"
                             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"

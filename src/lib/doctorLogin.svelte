@@ -7,7 +7,7 @@
 
     async function handleSubmit(event) {
         //Testing Direct Login
-        window.location.hash = `#/doctorhome`;
+        // window.location.hash = `#/doctorhome`;
 
         const form = event.target;
         const data = new FormData(form);
@@ -83,7 +83,7 @@
                     <input
                         required
                         bind:value={doctorID}
-                        type="number"
+                        type="text"
                         name="id"
                         placeholder="Enter Doctor ID"
                         class="input input-bordered w-full max-w-xs"
@@ -93,7 +93,7 @@
                     <input
                         required
                         bind:value={doctorPass}
-                        type="text"
+                        type="password"
                         name="password"
                         placeholder="Enter Password"
                         class="w-full input input-bordered max-w-xs"

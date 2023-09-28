@@ -2,6 +2,8 @@
     import { onMount } from "svelte";
     import { hospitalDoctorList, hospitalInfo } from "./store";
     import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
+    import toast, { Toaster } from "svelte-french-toast";
     let DoctorDatas = [];
 
     let showModal = false;
@@ -13,11 +15,6 @@
     let degrees = [];
     let activeTab = "Doctors";
     let showModalLab = false;
-    let labs = [
-        {
-            labID: "DJ13KFOS",
-        },
-    ];
 
     let labIDInput = "";
 
@@ -57,28 +54,20 @@
         }
     }
 
-    function addDoctor(event) {
-        event.preventDefault();
+    async function addDoctor(event) {
+        const form = event.target;
+        const formData = new FormData(form);
 
-        const newDoctor = {
-            doctorName,
-            doctorID,
-            speciality,
-            degrees,
-            imageURL:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-        };
-
-        DoctorDatas = [...DoctorDatas, newDoctor];
-        hospitalDoctorList.set({ doctorList: DoctorDatas });
-        //console.log(DoctorDatas);
-
-        // Reset form values
-        doctorName = "";
-        doctorID = "";
-        speciality = "";
-        degrees = [];
-        degreeInput = "";
+        await fetch(serverUrl + "hospital-request/request", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+            })
 
         // Optionally close the modal
         showModal = false;
@@ -89,27 +78,64 @@
         console.log({ doctorName, doctorID, speciality, degrees });
     }
 
+    $: labList = [];
+    $: doctorList = [];
+
+    async function getLabList() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        await fetch(serverUrl + "lab/get-lab-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                labList = data;
+            });
+    }
+
+    async function getDoctorList() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        await fetch(serverUrl + "h2d/get-doctor-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                doctorList = data;
+            });
+    }
+ 
     onMount(() => {
         //console.log(get(hospitalDoctorList).doctorList);
         DoctorDatas = get(hospitalDoctorList).doctorList;
         uniqueSpecialities = [
             ...new Set(DoctorDatas.map((doctor) => doctor.speciality)),
         ];
+
+        getLabList();
+        getDoctorList();
     });
 </script>
 
+<Toaster />
 <main>
     <!-- Navbar -->
     <nav class="bg-cyan-200 shadow-md mb-8 p-4 rounded-lg">
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
-                alt={get(hospitalInfo).hospitalName + " Logo"}
+                alt={get(hospitalInfo).hospitalInfo["name"] + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{get(hospitalInfo).hospitalName} Authority</span
+                >{get(hospitalInfo).hospitalInfo["name"]} Authority</span
             >
             <span>
                 <a href="#/hospitalhome" class="btn btn-outline ml-auto mr-2"
@@ -178,12 +204,16 @@
                 Laboratories
             </h2>
             <div class="flex flex-col space-y-2">
-                {#each labs as lab}
+                {#each labList as lab}
                     <div
                         class="bg-gray-200 text-black rounded-lg m-1 px-4 py-2 hover:bg-gray-300 cursor-pointer"
-                        on:click={() => handleLabClick(lab.labID)}
                     >
-                        {lab.labID}
+                        <div>
+                            Lab ID: {lab["id"]}
+                        </div>
+                        <div>
+                            Lab Name: {lab["name"]}
+                        </div>
                     </div>
                 {/each}
             </div>
@@ -218,9 +248,9 @@
                     class="container mx-auto mt-10 p-6 bg-white rounded shadow-md max-w-md"
                 >
                     <!-- Form -->
-                    <form on:submit={addDoctor}>
+                    <form on:submit|preventDefault={addDoctor}>
                         <!-- Doctor Name -->
-                        <div class="mb-4">
+                        <!-- <div class="mb-4">
                             <label
                                 for="doctorName"
                                 class="block text-gray-700 font-medium mb-2"
@@ -228,14 +258,19 @@
                             >
                             <input
                                 type="text"
-                                id="doctorName"
+                                name="name"
                                 bind:value={doctorName}
                                 class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                             />
-                        </div>
+                        </div> -->
 
                         <!-- Doctor ID -->
+                        <input
+                            type="hidden"
+                            name="hospitalId"
+                            value={get(hospitalInfo).hospitalInfo["id"]}
+                        />
                         <div class="mb-4">
                             <label
                                 for="doctorID"
@@ -244,7 +279,7 @@
                             >
                             <input
                                 type="text"
-                                id="doctorID"
+                                name="doctorId"
                                 bind:value={doctorID}
                                 class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
@@ -260,7 +295,7 @@
                             >
                             <input
                                 type="text"
-                                id="speciality"
+                                name="speciality"
                                 bind:value={speciality}
                                 class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
@@ -274,7 +309,7 @@
                             >
                             <input
                                 type="text"
-                                id="degrees"
+                                name="degree"
                                 bind:value={degreeInput}
                                 on:keydown={handleDegreeInput}
                                 placeholder="Enter degree and press Enter"

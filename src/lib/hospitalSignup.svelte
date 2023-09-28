@@ -2,6 +2,7 @@
     import toast, { Toaster } from "svelte-french-toast";
     import { supabase } from "./supabaseClient";
     import { serverUrl } from "./constants";
+    import { onMount } from "svelte";
     let hospitalName = "";
     let hospitalid = "";
     let established = "";
@@ -13,6 +14,7 @@
     let address = "";
     let phoneNumber = "";
     let password = "";
+    let authPassword = "";
     let mail = "";
     let hospitalPicture = "";
     let hospitalLogo = "";
@@ -21,6 +23,63 @@
 
     let tempValue = "";
     let tempValue2 = "";
+
+    // $:{console.log(departments);console.log(labInstruments)}
+
+    async function setCustomPhoto(id, photo) {
+        let { data: res1 } = await supabase.storage
+            .from("hospitalPhoto")
+            .upload(id, photo, {
+                cacheControl: "0",
+                upsert: true,
+            });
+
+        let { data: res2 } = await supabase.storage
+            .from("hospitalPhoto")
+            .getPublicUrl(id);
+
+        return res2;
+    }
+
+    async function uploadPhotoAndLogo(id, photo, logo) {
+        await setCustomPhoto(id, photo).then((response) => {
+            uploadCustomLogo(id, logo, response);
+        });
+    }
+
+    async function setCustomLogo(id, logo) {
+        let { data: res1 } = await supabase.storage
+            .from("hospitalLogo")
+            .upload(id, logo, {
+                cacheControl: "0",
+                upsert: true,
+            });
+
+        let { data: res2 } = await supabase.storage
+            .from("hospitalLogo")
+            .getPublicUrl(id);
+
+        return res2;
+    }
+
+    async function uploadCustomLogo(id, logo, response1) {
+        await setCustomLogo(id, logo).then((response2) => {
+            let payload = { id: id, urlPhoto: response1["publicUrl"],urlLogo: response2["publicUrl"] };
+
+            fetch(serverUrl + "hospital-request/change-photo-logo", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+        });
+    }
+
+    async function addLab(name, hospitalId, password){
+        let payload = {name: name, hospitalId: hospitalId, password: password}
+        await fetch(serverUrl + "lab/add-lab", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+    }
 
     async function copyToClipboard() {
         try {
@@ -81,11 +140,50 @@
             toast.error("Please at least add 1 instrument");
             return;
         }
-        showModal = true;
-        //eita id banaisi
-        hospitalid = "HSO224NDO90";
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        formData.append("deptList", departments.toString());
+        formData.append("labList", labInstruments.toString());
+
+        // console.log(formData.get("deptList"));
+        let labList = formData.get("labList").split(",");
+
+        await fetch(serverUrl + "hospital-request/request", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+
+                //Signup Failed
+                if (data === "0") {
+                    toast.error("Signup Failed 🙁");
+                }
+                //Signup Successful
+                else {
+                    uploadPhotoAndLogo(data, formData.get("photo"),formData.get("logo"));
+
+                    for(let i=0;i<labList.length;i++){
+                        addLab(labList[i],data,formData.get("password"))
+                    }
+
+                    hospitalid = data;
+                    showModal = true;
+                    // window.location.hash = `#/doctorlogin`;
+                }
+            });
+
+        form.reset();
+        //Fetch from db
+
         //window.location.hash = `#/userlogin`;
     }
+
 </script>
 
 <Toaster />
@@ -117,7 +215,7 @@
                 <input
                     required
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="hospitalName"
+                    name="name"
                     type="text"
                     placeholder="Enter Hospital's Name"
                     bind:value={hospitalName}
@@ -133,7 +231,7 @@
                 <input
                     required
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="hospitalName"
+                    name="dob"
                     type="text"
                     placeholder="Enter Year of Establishment"
                     bind:value={established}
@@ -149,7 +247,7 @@
                 <input
                     required
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="numDepartments"
+                    name="numDept"
                     type="number"
                     placeholder="How many departments in your hospital?"
                     bind:value={numDepartments}
@@ -164,7 +262,6 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="departments"
                     placeholder="Enter Departments(Press Enter for multiple)"
                     bind:value={tempValue}
                     on:keydown={(e) => handleEnterKey(e, "dept")}
@@ -195,7 +292,6 @@
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="labInstruments"
                     placeholder="Enter Lab Machinaries(Press Enter for multiple)"
                     bind:value={tempValue2}
                     on:keydown={(e) => handleEnterKey2(e, "instr")}
@@ -287,7 +383,7 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="mail"
                 >
-                    Email
+                    Email<span class="text-red-600">*</span>
                 </label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -318,13 +414,30 @@
             <div class="mb-4">
                 <label
                     class="block text-gray-700 text-sm font-bold mb-2"
-                    for="hospitalPicture"
+                    for="authPassword"
                 >
-                    Hospital Picture
+                    Authority Password<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
+                    class="shadow appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    name="authPassword"
+                    type="authPassword"
+                    placeholder="Authority Password"
+                    bind:value={authPassword}
+                />
+            </div>
+            <div class="mb-4">
+                <label
+                    class="block text-gray-700 text-sm font-bold mb-2"
+                    for="hospitalPicture"
+                >
+                    Hospital Picture<span class="text-red-600">*</span>
+                </label>
+                <input
+                    required
                     class="appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="hospitalPicture"
+                    name="photo"
                     type="file"
                     accept="image/*"
                     bind:value={hospitalPicture}
@@ -336,11 +449,12 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="hospitalLogo"
                 >
-                    Hospital Logo
+                    Hospital Logo<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="appearance-none border rounded w-full py-2 px-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    name="hospitalLogo"
+                    name="logo"
                     type="file"
                     accept="image/*"
                     bind:value={hospitalLogo}

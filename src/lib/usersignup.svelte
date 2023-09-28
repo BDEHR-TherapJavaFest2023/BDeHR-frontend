@@ -106,9 +106,10 @@
                     } else {
                         uploadCustomPhoto(data, formData.get("photo"));
                     }
+
+                    userID = ret;
                     showModal = true;
-                    //eita id banaisi
-                    userID = "HSO224NDO90";
+                    
                     //window.location.hash = `#/userlogin`;
                 }
             });

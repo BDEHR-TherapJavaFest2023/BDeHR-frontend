@@ -1,15 +1,47 @@
 <script>
     import { get } from "svelte/store";
     import { hospitalInfo } from "./store";
+    import toast, { Toaster } from "svelte-french-toast";
+    import { serverUrl } from "./constants";
     let password = "";
-    function handleLogin() {
-        window.location.hash = "#/doctorhome/Authority";
+
+    async function handleLogin(event) {
+        const form = event.target;
+        const data = new FormData(form);
+
+        console.log(data.get("id"));
+        console.log(data.get("authPassword"));
+
+        await fetch(serverUrl + "hospital/auth-login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .catch(() => null)
+            .then((data) => {
+                // let ret = +data;
+                console.log(data);
+
+                //Login Failed
+                if (!data) {
+                    toast.error("Login Failed 🙁");
+                }
+                //Login Success
+                else {
+                    window.location.hash = "#/doctorhome/Authority";
+                }
+            });
+
+        form.reset();
     }
     function navigateHome() {
         window.location.hash = `#/hospitalhome`;
     }
 </script>
 
+<Toaster/>
 <main
     class="min-h-screen bg-gray-100 flex items-center justify-center p-5"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/greyBlur.jpg'); background-size: cover; backdrop-filter: blur(0px);"
@@ -25,7 +57,7 @@
         <div class="flex justify-center items-center mb-2">
             <!-- Hospital Logo -->
             <img
-                src={get(hospitalInfo).hospitalLogo}
+                src={get(hospitalInfo).hospitalInfo["logo"]}
                 alt="Hospital Logo"
                 class="w-24 h-24 mr-6"
             />
@@ -41,7 +73,7 @@
         <!-- Hospital Name -->
         <div class="text-center mb-2">
             <h2 class="text-2xl font-bold text-gray-700">
-                {get(hospitalInfo).hospitalName}
+                {get(hospitalInfo).hospitalInfo["name"]}
             </h2>
         </div>
         <div class="text-center mb-6">
@@ -51,6 +83,7 @@
         <!-- Login Form -->
         <form on:submit|preventDefault={handleLogin}>
             <div class="mb-6">
+                <input type="hidden" name="id" value={get(hospitalInfo).hospitalInfo["id"]}>
                 <label
                     for="password"
                     class="block mb-2 text-sm font-medium text-gray-600"
@@ -58,7 +91,7 @@
                 >
                 <input
                     type="password"
-                    id="password"
+                    name="authPassword"
                     bind:value={password}
                     required
                     class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"

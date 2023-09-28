@@ -78,7 +78,7 @@
             });
 
             doctorData = {
-                doctor_id: get(doctorInfo).doctorId,
+                user_id: get(doctorInfo).doctorId,
                 name: get(doctorInfo).doctorName,
                 dob: get(doctorInfo).doctorDob,
                 gender: get(doctorInfo).doctorGender,
@@ -106,7 +106,7 @@
                     });
 
                     doctorData = {
-                        doctor_id: get(doctorInfo).doctorId,
+                        user_id: get(doctorInfo).doctorId,
                         name: get(doctorInfo).doctorName,
                         dob: get(doctorInfo).doctorDob,
                         gender: get(doctorInfo).doctorGender,
@@ -175,7 +175,7 @@
         {:else}
             <div class="space-y-4">
                 <p><strong>Name:</strong> {doctorData.name}</p>
-                <p><strong>Doctor ID:</strong> {doctorData.doctor_id}</p>
+                <p><strong>Doctor ID:</strong> {doctorData.user_id}</p>
                 <p><strong>BMDC ID:</strong> {doctorData.bmdc}</p>
 
                 <p><strong>Age:</strong> {calculateAge(doctorData.dob)}</p>

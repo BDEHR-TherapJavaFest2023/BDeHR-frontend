@@ -86,7 +86,7 @@
             })
             .then((data) => {
                 let ret = +data;
-                returnId = ret;
+                returnId = data;
                 console.log(ret);
 
                 //Signup Failed

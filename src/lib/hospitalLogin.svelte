@@ -1,17 +1,48 @@
 <script>
     let hospitalId = "";
     let hospitalPass = "";
+    import { hospitalInfo } from "./store";
+    import { serverUrl } from "./constants";
+    import toast, { Toaster } from "svelte-french-toast";
 
-    function handleSubmit(event) {
-        //Testing
-        event.preventDefault();
-        window.location.href = `#/hospitalhome`;
+    async function handleSubmit(event) {
+        const form = event.target;
+        const data = new FormData(form);
+
+        console.log(data.get("id"));
+        console.log(data.get("password"));
+
+        await fetch(serverUrl + "hospital/login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .catch(() => null)
+            .then((data) => {
+                // let ret = +data;
+                console.log(data);
+
+                //Login Failed
+                if (!data) {
+                    toast.error("Login Failed 🙁");
+                }
+                //Login Success
+                else {
+                    hospitalInfo.set({hospitalInfo:data});
+                    console.log(hospitalInfo);
+                    window.location.hash = `#/hospitalhome`;
+                }
+            });
+
+        form.reset();
     }
     function navigateHome() {
         window.location.hash = `#/`;
     }
 </script>
-
+<Toaster/>
 <div
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
@@ -40,12 +71,12 @@
             <h5 class="text-3xl font-bold" style="color: #000000;">
                 Sign In to Hospital's Account
             </h5>
-            <form on:submit={handleSubmit}>
+            <form on:submit|preventDefault={handleSubmit}>
                 <div class="mb-2">
                     <input
                         required
                         bind:value={hospitalId}
-                        type="id"
+                        type="text"
                         name="id"
                         placeholder="Enter Hospital ID"
                         class="input input-bordered w-full max-w-xs"

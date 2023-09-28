@@ -1,28 +1,30 @@
 <script>
     import { onMount } from "svelte";
+    import { serverUrl } from "./constants";
+    import { supabase } from "./supabaseClient";
 
-    let hospitals = [
-        {
-            name: "United Hospitals Dhaka",
-            date: "2023-09-20",
-            Address: "Gulshan-2, Dhaka",
-        },
-        {
-            name: "Popular Hospitals Dhaka",
-            date: "2023-09-17",
-            Address: "Dhanmondi, Dhaka",
-        },
-        {
-            name: "Cumilla Tower Hospital",
-            date: "2023-09-19",
-            Address: "Ramghat, Cumilla",
-        },
-        {
-            name: "Al Haramain Hospital Private Limited",
-            date: "2023-09-15",
-            Address: "Sylhet",
-        },
-    ];
+    // let hospitals = [
+    //     {
+    //         name: "United Hospitals Dhaka",
+    //         date: "2023-09-20",
+    //         Address: "Gulshan-2, Dhaka",
+    //     },
+    //     {
+    //         name: "Popular Hospitals Dhaka",
+    //         date: "2023-09-17",
+    //         Address: "Dhanmondi, Dhaka",
+    //     },
+    //     {
+    //         name: "Cumilla Tower Hospital",
+    //         date: "2023-09-19",
+    //         Address: "Ramghat, Cumilla",
+    //     },
+    //     {
+    //         name: "Al Haramain Hospital Private Limited",
+    //         date: "2023-09-15",
+    //         Address: "Sylhet",
+    //     },
+    // ];
 
     function navigateToDashboard() {
         window.location.hash = `#/adminhome`;
@@ -39,6 +41,58 @@
     function navigateToLogin() {
         window.location.hash = `#/adminlogin`;
     }
+
+    async function removePhoto(id) {
+        let { data: res } = await supabase.storage
+            .from("hospitalPhoto")
+            .remove([id]);
+    }
+
+    async function removeLogo(id) {
+        let { data: res } = await supabase.storage
+            .from("hospitalLogo")
+            .remove([id]);
+    }
+
+    async function acceptRequest(id) {
+        let payload = { id: id };
+        await fetch(serverUrl + "hospital-request/accept", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        }).then((response) => {
+            getRequestList();
+        });
+    }
+
+    async function declineRequest(id) {
+        console.log(id);
+        let payload = { id: id };
+        await fetch(serverUrl + "hospital-request/decline", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        }).then((response) => {
+            getRequestList();
+        });
+        removePhoto(id);
+        removeLogo(id);
+    }
+
+    $: requestList = [];
+
+    async function getRequestList() {
+        await fetch(serverUrl + "hospital-request/get-request-list")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                requestList = data;
+            });
+    }
+
+    onMount(() => {
+        getRequestList();
+    });
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -168,7 +222,7 @@
             </h1>
             <div class="container mx-auto px-4 mt-8">
                 <ul>
-                    {#each hospitals as hospital}
+                    {#each requestList as request}
                         <li
                             class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg mb-4"
                         >
@@ -176,23 +230,25 @@
                                 <!-- Hospital Information -->
                                 <div>
                                     <h2 class="text-xl font-semibold">
-                                        {hospital.name}
+                                        {request.name}
                                     </h2>
                                     <p class="text-gray-600 text-sm">
-                                        {hospital.date}
+                                        {request.phone}
                                     </p>
                                     <p class="text-gray-500 text-sm">
-                                        {hospital.Address}
+                                        {request.address}
                                     </p>
                                 </div>
                                 <!-- Action Buttons -->
                                 <div class="flex space-x-2">
                                     <button
+                                        on:click={acceptRequest(request.id)}
                                         class="bg-green-400 hover:bg-green-600 text-white px-4 py-2 rounded"
                                     >
                                         Approve
                                     </button>
                                     <button
+                                        on:click={declineRequest(request.id)}
                                         class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
                                     >
                                         Reject
