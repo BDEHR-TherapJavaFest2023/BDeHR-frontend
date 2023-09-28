@@ -10,6 +10,7 @@
     let isHoveredHospital = false;
     let isHoveredLab = false;
     let isHoveredAdmin = false;
+    let isHoveredResearch = false;
 
     function toggleHover() {
         isHovered = !isHovered;
@@ -26,6 +27,9 @@
     }
     function toggleHoverAdmin() {
         isHoveredAdmin = !isHoveredAdmin;
+    }
+    function toggleHoverResearch() {
+        isHoveredResearch = !isHoveredResearch;
     }
 
     // Function to handle intersection
@@ -61,17 +65,15 @@
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/admin__1_-removebg-preview.png",
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userBegin-transformed-removebg%20(1).png",
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Doctor_module.png",
-        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospital-removebg-preview.png",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/istockphoto-1319979886-612x612-remove1bg.png",
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/labbegin-removebg-preview.png",
     ];
 
     function nextSlide() {
-        console.log("Next Slide function called");
         activeSlide = (activeSlide + 1) % images.length;
     }
 
     function prevSlide() {
-        console.log("Prev Slide function called");
         activeSlide = (activeSlide - 1 + images.length) % images.length;
     }
 
@@ -92,6 +94,11 @@
         //console.log("Here");
         initIntersectionObserver();
         test();
+        const interval = setInterval(() => {
+            nextSlide();
+        }, 3000); // 3 seconds
+
+        return () => clearInterval(interval);
     });
 </script>
 
@@ -145,88 +152,93 @@
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="card lg:card-side bg-[#F4F4F4] p-4 flex">
         <div class="w-1/2 card-body" style="background-color: #F4F4F4;">
-            <h1 class="text-4xl font-bold font-heading">Our Services</h1>
+            <h1 class="text-5xl font-bold font-heading">Our Services</h1>
             <p class="text-2xl font-semibold mb-2">
-                You take care of your health and let us take care of everything
-                else
+                You just take care of your health & let us take care of
+                everything else
             </p>
-            <div class="flex mt-4 mb-2 space-x-3">
-                <!-- Adjust the margin-top here -->
-                <a
-                    href="#/adminlogin"
-                    class="w-2/3 flex items-center btn btn-outline text-2xl font-bold hover:bg-slate-400 h-16"
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/2942813.png"
-                        alt="Admin"
-                        class="mr-2"
-                        height={50}
-                        width={50}
-                    /> Administrator
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <a class="module-item" href="#/adminlogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/2942813.png"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">
+                            Administrator
+                        </h5>
+                    </div>
                 </a>
-            </div>
-            <div class="flex mt-4 mb-2 space-x-3">
-                <!-- Adjust the margin-top here -->
-                <a
-                    href="#/userlogin"
-                    class="w-2/3 flex items-center btn btn-outline text-2xl font-bold hover:bg-slate-400 h-16"
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
-                        alt="Admin"
-                        class="mr-2"
-                        height={50}
-                        width={50}
-                    /> User
+                <a class="module-item" href="#/userlogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userLogo.svg"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">User</h5>
+                    </div>
                 </a>
-            </div>
-            <div class="flex mt-4 mb-2 space-x-3">
-                <!-- Adjust the margin-top here -->
-                <a
-                    href="#/doctorlogin"
-                    class="w-2/3 flex items-center btn btn-outline text-2xl font-bold hover:bg-slate-400 h-16"
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/3481061.png"
-                        alt="Admin"
-                        class="mr-2"
-                        height={50}
-                        width={50}
-                    />
+                <a class="module-item" href="#/doctorlogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/3481061.png"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">Doctor</h5>
+                    </div>
+                </a>
 
-                    Doctor</a
-                >
-            </div>
-            <div class="flex mt-4 mb-2 space-x-3">
-                <!-- Adjust the margin-top here -->
-                <a
-                    href="#/hospitalogin"
-                    class="w-2/3 flex items-center btn btn-outline text-2xl font-bold hover:bg-slate-400 h-16"
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospitalManagement.png"
-                        alt="Admin"
-                        class="mr-2"
-                        height={50}
-                        width={50}
-                    />Hospital</a
-                >
-            </div>
-            <div class="flex mt-4 mb-2 space-x-3">
-                <!-- Adjust the margin-top here -->
-                <a
-                    href="#/lablogin"
-                    class="w-2/3 flex items-center btn btn-outline text-2xl font-bold hover:bg-slate-400 h-16"
-                >
-                    <img
-                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/lab.png"
-                        alt="Admin"
-                        class="mr-2"
-                        height={50}
-                        width={50}
-                    />
-                    Laboratory</a
-                >
+                <a class="module-item" href="#/hospitalogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/hospitalManagement.png"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">
+                            Hospital
+                        </h5>
+                    </div>
+                </a>
+                <a class="module-item" href="#/lablogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/microscope-svgrepo-com.svg"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">
+                            Laboratory
+                        </h5>
+                    </div>
+                </a>
+                <a class="module-item" href="#/researchlogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/research.svg"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">
+                            Research
+                        </h5>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -234,20 +246,15 @@
             {#each images as image, i (i)}
                 <div
                     id={"slide" + i}
-                    class="carousel-item w-full transition-opacity"
-                    class:active={i === activeSlide}
-                    in:fade={{ duration: 500 }}
-                    out:fade={{ duration: 500 }}
+                    class="carousel-item {i === activeSlide ? 'active' : ''}"
                 >
-                    <img src={image} class="w-full mt-14" alt="Slide Image" />
+                    <img
+                        src={image}
+                        alt="Slide Image"
+                        class="w-full h-full object-cover"
+                    />
                 </div>
             {/each}
-            <div
-                class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2"
-            >
-                <button class="btn btn-circle" on:click={prevSlide}>❮</button>
-                <button class="btn btn-circle" on:click={nextSlide}>❯</button>
-            </div>
         </div>
     </div>
 
@@ -389,7 +396,7 @@
             <h5 class="text-3xl font-bold" style="color: #8000FF;">
                 You are in Charge
             </h5>
-            <p class="text-2xl" style="color: #000000;">
+            <p class="text-2xl" style="color: #8000FF;">
                 You have your medical records all to yourself.
                 <br />
                 Access your health data instantly anytime, anywhere.
@@ -445,7 +452,7 @@
             <h5 class="text-3xl font-bold" style="color: #FF7903;">
                 Easily Ensure Effective Treatment
             </h5>
-            <p class="text-2xl" style="color: #000000;">
+            <p class="text-2xl" style="color: #FF7903;">
                 Access patient's medical records.
                 <br />
                 Give Proper investigations
@@ -476,15 +483,13 @@
             <h5 class="text-3xl font-bold" style="color: #00AFFF;">
                 Ensure one stop service point for patient
             </h5>
-            <p class="text-2xl" style="color: #000000;">
+            <p class="text-2xl" style="color: #00AFFF;">
                 Systematic flow of patient management
                 <br />
                 Synchronize activities between Admin, Doctors & Labs
                 <br />
                 From hospital door to getting clearnace, fulfill the requirements
                 of a patient.
-                <br />
-                Organize your files & authorize access to your files.
             </p>
             <a
                 href="#/hospitalogin"
@@ -592,12 +597,68 @@
             />
         </figure>
     </div>
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+        class="card lg:card-side bg-base-100 flex"
+        on:mouseenter={toggleHoverResearch}
+        on:mouseleave={toggleHoverResearch}
+    >
+        <figure
+            class="w-1/2 relative"
+            style="background: #dbfaff; height: 500px;"
+        >
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/istockphoto-1353442568-1024x1024-transformed-removebg-preview.png"
+                alt="User"
+                class="absolute top-0 left-0 w-full h-full object-contain object-center {isHoveredResearch
+                    ? 'animate-right-to-left'
+                    : ''}"
+            />
+        </figure>
+        <div
+            class="card-body flex flex-col justify-center w-1/2 {isHoveredResearch
+                ? 'animate-left-to-right'
+                : ''}"
+        >
+            <h5 class="text-6xl font-bold mt-20" style="color: #0051FF;">
+                Research Organizations
+            </h5>
+            <h5 class="text-3xl font-bold" style="color: #0051FF;">
+                Process the most up to date data
+            </h5>
+            <p class="text-2xl" style="color: #0051FF;">
+                Systematically request data from Administrator
+                <br />
+                Gain the most recent accurate data
+                <br />
+                Efficient research
+            </p>
+
+            <a
+                href="#/researchlogin"
+                class="w-2/3 btn btn-outline hover:bg-[#0051FF]">Get Started</a
+            >
+        </div>
+    </div>
 
     <Footer />
 </main>
 
 <style>
     /* Add your global styles here */
+
+    .module-item {
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .module-item:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
     @keyframes fade-left {
         0% {
@@ -629,11 +690,21 @@
         animation: fade-right 1s ease forwards;
     }
 
-    .carousel-item {
-        display: none;
+    .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
+    .carousel-item {
+        opacity: 0;
+        position: absolute;
 
+        transition: opacity 0.5s ease-in-out;
+        width: 100%;
+        height: 100%;
+    }
     .carousel-item.active {
-        display: block;
+        opacity: 1;
+        position: relative;
     }
 </style>

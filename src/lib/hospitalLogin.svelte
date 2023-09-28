@@ -6,6 +6,7 @@
     import toast, { Toaster } from "svelte-french-toast";
 
     async function handleSubmit(event) {
+        //window.location.hash = `#/hospitalhome`;
         const form = event.target;
         const data = new FormData(form);
 
@@ -30,7 +31,7 @@
                 }
                 //Login Success
                 else {
-                    hospitalInfo.set({hospitalInfo:data});
+                    hospitalInfo.set({ hospitalInfo: data });
                     console.log(hospitalInfo);
                     window.location.hash = `#/hospitalhome`;
                 }
@@ -42,7 +43,8 @@
         window.location.hash = `#/`;
     }
 </script>
-<Toaster/>
+
+<Toaster />
 <div
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"

@@ -32,6 +32,10 @@ import appUserReports from './lib/appUserReports.svelte';
 import User from './lib/user.svelte';
 import UserMedication from './lib/userMedication.svelte';
 import UserReport from './lib/userReport.svelte';
+import adminResearch from './lib/adminResearch.svelte';
+import ResearchLogin from './lib/researchLogin.svelte';
+import ResearchSignUp from './lib/researchSignUp.svelte'
+import ResearchHome from './lib/researchhome.svelte'
 
 export const routes = {
     // Define your routes here
@@ -54,6 +58,7 @@ export const routes = {
     '/hospitalhome/doctors': hospitalDoctors,
     '/adminhome': adminHome,
     '/adminhome/query': adminQuery,
+    '/adminhome/research': adminResearch,
     '/hospitalhome/authorityLogin': dospitalAuthorityLogin,
     '/doctorhome/Authority': HospitalAuthority,
     '/doctorhome/doctorPatient/:hospitalName': doctorPatient,
@@ -69,4 +74,7 @@ export const routes = {
     '/appuser/find': appUserFind,
     '/appuser/medications': appUserMedications,
     '/appuser/reports': appUserReports,
+    '/researchlogin': ResearchLogin,
+    '/researchsignup': ResearchSignUp,
+    '/researchOrg/home': ResearchHome,
 };

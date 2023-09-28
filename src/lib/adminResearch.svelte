@@ -3,28 +3,109 @@
 
     let Messages = [
         {
-            hospitalName: "Dhaka Medical College",
+            orgName: "ICDDR,B",
             dateTime: "2022-09-01T12:30:00Z",
-            MessageBody: "We need More Covid Vaccines",
+            MessageBody:
+                "We need data for cholera last months for different age people",
         },
         {
-            hospitalName: "Cumilla Medical College",
+            orgName: "Gonoshasthaya Kendra",
             dateTime: "2022-09-20T09:15:00Z",
-            MessageBody: "We need More Doctors",
+            MessageBody: "Please provide Dengue spread throughout country",
         },
         {
-            hospitalName: "Chittagong Medical College",
+            orgName: "Institute of Public Health",
             dateTime: "2022-09-20T12:35:00Z",
-            MessageBody: "The dengue cases are rising",
+            MessageBody: "Provide diabetes statistics with respect to age",
         },
         {
-            hospitalName: "Rangpur Medical College",
+            orgName: "Bangladesh Medical Research Council",
             dateTime: "2022-09-20T09:15:00Z",
-            MessageBody: "We need to organize a seminar",
+            MessageBody: "Provide stroke data among range of age",
         },
         // add more messages like this
     ];
     Messages.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+    // function handlePaste(event, index) {
+    //     event.preventDefault();
+    //     const clipboardData = event.clipboardData;
+    //     const items = clipboardData.items;
+    //     const responseBox = document.getElementById(`response-box-${index}`);
+
+    //     for (let i = 0; i < items.length; i++) {
+    //         if (items[i].type.indexOf("image") !== -1) {
+    //             const blob = items[i].getAsFile();
+    //             const reader = new FileReader();
+    //             reader.onload = function (event) {
+    //                 const img = document.createElement("img");
+    //                 img.src = event.target.result;
+    //                 responseBox.appendChild(img);
+    //             };
+    //             reader.readAsDataURL(blob);
+    //         } else if (items[i].type.indexOf("text/plain") !== -1) {
+    //             items[i].getAsString(function (str) {
+    //                 const textNode = document.createTextNode(str);
+    //                 responseBox.appendChild(textNode);
+    //             });
+    //         }
+    //     }
+    // }
+
+    function handlePaste(event, index) {
+        event.preventDefault();
+        const clipboardData = event.clipboardData;
+        const items = clipboardData.items;
+
+        // Select the contenteditable div within the specific response box
+        const responseBox = document.querySelector(
+            `#response-box-${index} .editable-content`
+        );
+
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") !== -1) {
+                const blob = items[i].getAsFile();
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const img = document.createElement("img");
+                    img.src = event.target.result;
+                    img.style.maxWidth = "100%";
+                    img.style.height = "auto";
+                    img.style.display = "block";
+                    responseBox.appendChild(img);
+                };
+                reader.readAsDataURL(blob);
+            } else if (items[i].type.indexOf("text/plain") !== -1) {
+                items[i].getAsString(function (str) {
+                    const textNode = document.createTextNode(str);
+                    responseBox.appendChild(textNode);
+                });
+            }
+        }
+    }
+
+    function sendMessage(messageId) {
+        Messages = Messages.filter((_, index) => index !== messageId);
+    }
+
+    // Additional function to show the respond box for a specific message
+
+    let showRespondBox = new Array(Messages.length).fill(null);
+
+    // Function to toggle the visibility of the response box for a specific message
+    function toggleResponseBox(index) {
+        showRespondBox[index] = !showRespondBox[index];
+    }
+
+    // Function to send a message and hide its response box
+    function sendMessageAndHideBox(index) {
+        sendMessage(index); // Your existing sendMessage function
+        toggleResponseBox(index);
+    }
+
+    // Function to show the response box for a specific message
+    function showResponseBoxForMessage(index) {
+        showRespondBox = showRespondBox === index ? -1 : index; // Toggle the response box
+    }
 
     function navigateToDashboard() {
         window.location.hash = `#/adminhome`;
@@ -98,7 +179,7 @@
                     Add New Hospital
                 </li>
                 <li
-                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    class="flex items-center p-4 bg-red-400 cursor-default"
                     on:click={navigateToResearch}
                 >
                     <img
@@ -109,7 +190,7 @@
                     Research Organizations
                 </li>
                 <li
-                    class="flex items-center p-4 bg-red-400 cursor-default"
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
                     on:click={navigateToMessages}
                 >
                     <img
@@ -180,14 +261,14 @@
                 </div>
             </nav>
             <h1 class="container mx-8 text-3xl font-extrabold text-blue-600">
-                Messages
+                Research Organization Requests
             </h1>
             <div class="container px-4 mt-8">
                 <div class="space-y-4 overflow-y-auto max-h-[70vh]">
-                    {#each Messages as { hospitalName, dateTime, MessageBody }}
-                        <div class="bg-white rounded-lg shadow-md p-4">
+                    {#each Messages as { orgName, dateTime, MessageBody }, index}
+                        <div class="bg-white rounded-lg shadow-md p-4 relative">
                             <h2 class="text-xl font-semibold text-blue-600">
-                                {hospitalName}
+                                {orgName}
                             </h2>
                             <p class="text-sm text-gray-500">
                                 {new Date(dateTime).toLocaleString()}
@@ -199,6 +280,36 @@
                                     {MessageBody}
                                 </p>
                             </div>
+                            <button
+                                class="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                on:click={() => toggleResponseBox(index)}
+                            >
+                                Respond
+                            </button>
+                            <div
+                                id={`response-box-${index}`}
+                                class={showRespondBox[index]
+                                    ? "mt-4 border rounded p-4"
+                                    : "hidden"}
+                            >
+                                <!-- Flex layout to keep contenteditable div above Send button -->
+                                <div class="flex flex-col">
+                                    <div
+                                        contenteditable="true"
+                                        class="border h-48 mb-2 p-2 editable-content scrollable-content"
+                                        placeholder="Paste your image here..."
+                                        on:paste={(event) =>
+                                            handlePaste(event, index)}
+                                    />
+                                    <button
+                                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                        on:click={() =>
+                                            sendMessageAndHideBox(index)}
+                                    >
+                                        Send
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     {/each}
                 </div>
@@ -208,5 +319,17 @@
 </main>
 
 <style>
-    /* Assuming you've already set up Tailwind CSS in your project */
+    .respond-box {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #ccc;
+        padding: 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+    }
+    .scrollable-content {
+        max-height: 400px; /* Or whatever maximum height you prefer */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Disables horizontal scrolling */
+    }
 </style>

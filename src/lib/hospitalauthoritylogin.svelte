@@ -6,6 +6,7 @@
     let password = "";
 
     async function handleLogin(event) {
+        //window.location.hash = "#/doctorhome/Authority";
         const form = event.target;
         const data = new FormData(form);
 
@@ -41,7 +42,7 @@
     }
 </script>
 
-<Toaster/>
+<Toaster />
 <main
     class="min-h-screen bg-gray-100 flex items-center justify-center p-5"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/greyBlur.jpg'); background-size: cover; backdrop-filter: blur(0px);"
@@ -83,7 +84,11 @@
         <!-- Login Form -->
         <form on:submit|preventDefault={handleLogin}>
             <div class="mb-6">
-                <input type="hidden" name="id" value={get(hospitalInfo).hospitalInfo["id"]}>
+                <input
+                    type="hidden"
+                    name="id"
+                    value={get(hospitalInfo).hospitalInfo["id"]}
+                />
                 <label
                     for="password"
                     class="block mb-2 text-sm font-medium text-gray-600"

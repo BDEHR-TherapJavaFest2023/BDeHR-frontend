@@ -179,6 +179,54 @@
         });
     }
 
+    async function copyCanvasToClipboard(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas.getContext("2d");
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/png");
+
+        const blob = await fetch(dataUrl).then((res) => res.blob());
+        const clipboardItem = new ClipboardItem({ "image/png": blob });
+
+        try {
+            await navigator.clipboard.write([clipboardItem]);
+            console.log("Canvas image copied to clipboard");
+        } catch (err) {
+            console.error("Failed to copy canvas image to clipboard", err);
+        }
+    }
+
+    // async function copyCanvasToClipboard(canvasId) {
+    //     const canvasElement = document.getElementById(canvasId);
+    //     if (!canvasElement) {
+    //         console.error("Canvas element not found");
+    //         return;
+    //     }
+
+    //     const canvas = canvasElement; // Type casting is not required in pure JavaScript
+    //     const ctx = canvas.getContext("2d");
+    //     if (!ctx) {
+    //         console.error("Failed to get canvas rendering context");
+    //         return;
+    //     }
+
+    //     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    //     // Create a data URL from the canvas
+    //     const dataUrl = canvas.toDataURL("image/png");
+
+    //     // Fetch the data URL as a blob and then copy it to the clipboard
+    //     const blob = await fetch(dataUrl).then((res) => res.blob());
+    //     const clipboardItem = new ClipboardItem({ "image/png": blob });
+
+    //     try {
+    //         await navigator.clipboard.write([clipboardItem]);
+    //         console.log("Canvas image copied to clipboard");
+    //     } catch (err) {
+    //         console.error("Failed to copy canvas image to clipboard", err);
+    //     }
+    // }
+
     function handleMapSubmit() {
         // Add any logic to validate or process the form data, if needed.
         showMap = true; // Set the map to be visible
@@ -191,6 +239,7 @@
         isLineChartVisible = false;
         showMap = false;
         generateBarGraph();
+        // copyCanvasToClipboard("myBarChart");
     }
     function handleLineDiagramSubmit() {
         isChartVisible = false;
@@ -369,6 +418,9 @@
     function navigateToLogin() {
         window.location.hash = `#/adminlogin`;
     }
+    function navigateToResearch() {
+        window.location.hash = `#/adminhome/research`;
+    }
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -420,6 +472,17 @@
                         class="w-6 h-6 mr-2"
                     />
                     Add New Hospital
+                </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToResearch}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/research.svg"
+                        alt="Add New Hospital Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Research Organizations
                 </li>
                 <li
                     class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
@@ -482,8 +545,9 @@
                             </div>
 
                             <!-- Logout Button -->
-                            <button class="btn btn-outline btn-error"on:click={navigateToLogin}
-                                >Logout</button
+                            <button
+                                class="btn btn-outline btn-error"
+                                on:click={navigateToLogin}>Logout</button
                             >
                         </div>
                     </div>
@@ -500,12 +564,29 @@
                     </h1>
                     {#if showMap}
                         <div class="mx-8" id="mapId" />
+                        <button
+                            class="btn btn-outline ml-8 hover:bg-red-600 mt-2"
+                            on:click={() => copyCanvasToClipboard("mapId")}
+                            >Copy</button
+                        >
                     {/if}
                     {#if isChartVisible}
                         <canvas id="myBarChart" width="400" height="200" />
+
+                        <button
+                            class="btn btn-outline ml-4 hover:bg-red-600"
+                            on:click={() => copyCanvasToClipboard("myBarChart")}
+                            >Copy</button
+                        >
                     {/if}
                     {#if isLineChartVisible}
                         <canvas id="myLineChart" width="400" height="200" />
+                        <button
+                            class="btn btn-outline ml-4 hover:bg-red-600"
+                            on:click={() =>
+                                copyCanvasToClipboard("myLineChart")}
+                            >Copy</button
+                        >
                     {/if}
 
                     <!-- Existing Navbar and Main Content -->

@@ -41,6 +41,9 @@
     function navigateToLogin() {
         window.location.hash = `#/adminlogin`;
     }
+    function navigateToResearch() {
+        window.location.hash = `#/adminhome/research`;
+    }
 
     async function removePhoto(id) {
         let { data: res } = await supabase.storage
@@ -145,6 +148,17 @@
                         class="w-6 h-6 mr-2"
                     />
                     Add New Hospital
+                </li>
+                <li
+                    class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
+                    on:click={navigateToResearch}
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/research.svg"
+                        alt="Add New Hospital Icon"
+                        class="w-6 h-6 mr-2"
+                    />
+                    Research Organizations
                 </li>
                 <li
                     class="flex items-center p-4 hover:bg-gray-300 cursor-pointer"
