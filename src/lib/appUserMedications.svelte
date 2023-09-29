@@ -1,5 +1,8 @@
 <script>
     import { onMount } from "svelte";
+    import { get } from "svelte/store";
+    import { userInfo } from "./store";
+    import { serverUrl } from "./constants";
     let Medications = [
         {
             name: "United Hospitals Dhaka",
@@ -33,6 +36,27 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+
+    async function getMedicationList() {
+        let payload = { patientId: get(userInfo).userId };
+        await fetch(serverUrl + "medication/get-medication-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                medicationList = data;
+                console.log(medicationList);
+            });
+    }
+
+    $: medicationList = [];
+    onMount(()=>{
+        getMedicationList();
+    })
+
 </script>
 
 <nav class="bg-white shadow-lg z-10 mb-4">
@@ -138,20 +162,20 @@
             Medications History
         </h1>
         <div class="space-y-6 ml-10 mr-4">
-            {#each Medications as medication}
+            {#each medicationList as medication}
                 <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg">
                     <div class="flex justify-between items-center">
                         <div class="flex-1">
                             <h2 class="text-xl font-semibold">
-                                {medication.name}
+                                {medication['hospitalName']}
                             </h2>
                             <p class="text-gray-600 text-sm">
-                                Date: {medication.date}
+                                Date: {medication['createdAt']}
                             </p>
                         </div>
                         <div class="flex-initial">
                             <a
-                                href={medication.fileUrl}
+                                href={medication['medicationUrl']}
                                 target="_blank"
                                 class="btn btn-outline hover:bg-rose-700"
                             >

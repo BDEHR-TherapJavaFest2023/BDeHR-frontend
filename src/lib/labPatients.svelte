@@ -1,5 +1,9 @@
 <script>
+    import { onMount } from "svelte";
     import { supabase } from "./supabaseClient";
+    import { serverUrl } from "./constants";
+    import { hospitalInfo, labInfo } from "./store";
+    import { get } from "svelte/store";
 
     let patients = [
         {
@@ -34,22 +38,63 @@
 
     let uploadingFlags = {};
 
-    async function handleFileUpload(patientID) {
+    async function fileUpload(file) {
+        const currentTime = new Date().toISOString();
+        let { data: res1 } = await supabase.storage
+            .from("reports")
+            .upload(`report_${currentTime}.pdf`, file);
+        let { data: res2 } = supabase.storage
+            .from("reports")
+            .getPublicUrl(`report_${currentTime}.pdf`);
+        return res2;
+    }
+
+    async function dbRow(id, patientId, response) {
+        let payload = {
+            labId: get(labInfo).labInfo["id"],
+            hospitalId: get(labInfo).labInfo["hospitalId"],
+            patientId: patientId,
+            hospitalName: get(hospitalInfo).hospitalInfo["name"],
+            url: response["publicUrl"],
+        };
+
+        console.log(payload);
+
+        await fetch(serverUrl + "report/add-report", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
+
+        let payload2 = { id: id };
+        await fetch(serverUrl + "h2p/discharge-patient", {
+            method: "POST",
+            body: JSON.stringify(payload2),
+        });
+    }
+
+    async function syncPatientList(id, patientId, response) {
+        await dbRow(id, patientId, response).then((response) => {
+            getPatientList();
+        });
+    }
+
+    async function UploadAndStuff(id, patientId, file) {
+        await fileUpload(file).then((response) => {
+            syncPatientList(id, patientId, response);
+        });
+    }
+
+    async function handleFileUpload(id, patientID) {
         const fileInput = document.getElementById(`file-${patientID}`);
         const file = fileInput?.files[0];
-
+        console.log(file);
         if (file) {
             // Indicate that the file is uploading for this patient
             uploadingFlags = { ...uploadingFlags, [patientID]: true };
 
+            await UploadAndStuff(id, patientID, file);
+
             try {
-                const path = `patients/${patientID}/${file.name}`;
-                const { error } = await supabase.storage
-                    .from("BDeHR")
-                    .upload(path, file);
-
-                if (error) throw error;
-
                 // On successful upload, hide the patient's row with an effect
                 const row = document.getElementById(`row-${patientID}`);
                 row.classList.add(
@@ -72,6 +117,29 @@
     function navigateBack() {
         window.location.hash = "#/labhome";
     }
+
+    $: patientList = [];
+    async function getPatientList() {
+        let payload = { labId: get(labInfo).labInfo["id"] };
+        await fetch(serverUrl + "h2p/get-lab-patient-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                patientList = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    patientList.push(JSON.parse(data[i]));
+                }
+                console.log(patientList);
+            });
+    }
+
+    onMount(() => {
+        getPatientList();
+    });
 </script>
 
 <!-- Navbar -->
@@ -100,39 +168,44 @@
 
         <!-- Patients List -->
         <div class="bg-white rounded shadow overflow-hidden">
-            {#each patients as patient (patient.ID)}
+            {#each patientList as patient}
                 <div
                     class="flex items-center justify-between p-4 border-b"
-                    id={`row-${patient.ID}`}
+                    id={`row-${patient["patientId"]}`}
                 >
                     <div>
-                        <div><strong>ID:</strong> {patient.ID}</div>
+                        <div><strong>ID:</strong> {patient["id"]}</div>
                         <div>
                             <strong>Contact:</strong>
-                            {patient.Contact_Number}
+                            {patient["patientPhone"]}
                         </div>
                         <div>
                             <strong>Investigation:</strong>
-                            {patient.Investigation}
+                            {patient["status"]}
                         </div>
-                        <div><strong>Date:</strong> {patient.Date}</div>
-                        <div><strong>Time:</strong> {patient.Time}</div>
+                        <div><strong>Date:</strong> {patient["admitDate"]}</div>
                     </div>
                     <div>
                         <input
                             type="file"
-                            id={`file-${patient.ID}`}
+                            id={`file-${patient["patientId"]}`}
                             class="hidden"
-                            on:change={() => handleFileUpload(patient.ID)}
+                            on:change={() =>
+                                handleFileUpload(
+                                    patient["id"],
+                                    patient["patientId"]
+                                )}
                         />
                         <button
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                             on:click={() =>
                                 document
-                                    .getElementById(`file-${patient.ID}`)
+                                    .getElementById(
+                                        `file-${patient["patientId"]}`
+                                    )
                                     .click()}>Add File</button
                         >
-                        {#if uploadingFlags[patient.ID]}
+                        {#if uploadingFlags[patient["id"]]}
                             <!-- Spinner for upload indication -->
                             <svg
                                 class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500 inline-block"

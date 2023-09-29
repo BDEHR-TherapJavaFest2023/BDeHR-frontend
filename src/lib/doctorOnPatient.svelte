@@ -1,10 +1,11 @@
 <script>
     import { onMount } from "svelte";
-    import { getContext } from "svelte";
     import { createPDF } from "./pdfUtility";
     import { createPDF2 } from "./dischargePdf";
     import { supabase } from "./supabaseClient";
     import { serverUrl } from "./constants";
+    import { doctorInfo, doctorHospital } from "./store";
+    import { get } from "svelte/store";
 
     export let params = {};
 
@@ -23,15 +24,16 @@
             "0"
         )}:${String(now.getSeconds()).padStart(2, "0")}`;
     }
-    function saveFormData(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
+
+    // function saveFormData(key, data) {
+    //     localStorage.setItem(key, JSON.stringify(data));
+    // }
 
     // To get form data from local storage
-    function getFormData(key) {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : null;
-    }
+    // function getFormData(key) {
+    //     const data = localStorage.getItem(key);
+    //     return data ? JSON.parse(data) : null;
+    // }
 
     function calculateAge(dob) {
         const today = new Date();
@@ -47,13 +49,88 @@
         return age;
     }
 
-    $: id = params.patientId
+    $: id = params.patientId;
     $: patientData = {};
     $: medicationList = [];
-    $: reportList = []
+    $: reportList = [];
+    $: form = {};
 
-    async function getPatientData(){
-        let payload = { id:id };
+    async function isMedicationPresent() {
+        let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+            patientId: patientData["patientId"],
+        };
+        await fetch(serverUrl + "medication/is-present", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data == "0") {
+                    addMedication();
+                } else {
+                    getFormData();
+                }
+            });
+    }
+
+    async function addMedication() {
+        let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+            patientId: patientData["patientId"],
+            age: calculateAge(patientData["dob"]),
+            gender: patientData["gender"],
+            form: JSON.stringify(newMedication),
+            hospitalName: params.hospitalName,
+            doctorName: get(doctorInfo).doctorName
+        };
+        console.log(payload);
+        await fetch(serverUrl + "medication/add-medication", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
+    }
+
+    async function getFormData() {
+        let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+            patientId: patientData["patientId"],
+        };
+        await fetch(serverUrl + "medication/get-form", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                form = JSON.parse(data);
+                newMedication = form;
+                // console.log(form);
+            });
+    }
+
+    async function setFormData() {
+        let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+            patientId: patientData["patientId"],
+            form: JSON.stringify(newMedication),
+        };
+        await fetch(serverUrl + "medication/set-form", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
+    }
+
+    async function getPatientData() {
+        let payload = { id: id };
         await fetch(serverUrl + "h2p/get-patient-data", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -63,16 +140,42 @@
             })
             .then((data) => {
                 patientData = JSON.parse(data);
-                console.log(patientData);
+                // console.log(patientData);
+                isMedicationPresent();
+                getMedicationList();
+                getReportList();
             });
     }
 
-    async function getMedicationList(){
-
+    async function getMedicationList() {
+        let payload = { patientId: patientData["patientId"] };
+        await fetch(serverUrl + "medication/get-medication-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                medicationList = data;
+                // console.log(medicationList);
+            });
     }
 
-    async function getReportList(){
-
+    async function getReportList() {
+        let payload = { patientId: patientData["patientId"] };
+        console.log(payload)
+        await fetch(serverUrl + "report/get-report-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                reportList = data;
+                console.log(reportList);
+            });
     }
 
     onMount(() => {
@@ -115,7 +218,7 @@
     ];
     let showModal = false;
 
-    let newMedication = getFormData("newMedication") || {
+    let newMedication = {
         Address: "",
         Contact: "",
         Occupation: "",
@@ -174,63 +277,87 @@
     };
 
     function handleEdit() {
-        saveFormData("newMedication", newMedication);
+        setFormData();
         showModal = false;
     }
 
+    async function createMedicationReport(currentTime) {
+        const pdfBytes = await createPDF(newMedication);
+        const blob = new Blob([pdfBytes], { type: "application/pdf" });
+        const link = document.createElement("a");
+
+        link.href = URL.createObjectURL(blob);
+        link.download = `medication_${currentTime}.pdf`;
+        link.click();
+
+        let { data: res1 } = await supabase.storage
+            .from("medications")
+            .upload(`medication_${currentTime}.pdf`, pdfBytes, {
+                contentType: "application/pdf",
+            });
+
+        let { data: res2 } = await supabase.storage
+            .from("medications")
+            .getPublicUrl(`medication_${currentTime}.pdf`);
+
+        return res2;
+    }
+
+    async function createDiagnosisReport(currentTime) {
+        const pdfBytes2 = await createPDF2(newMedication);
+
+        let { data: res1 } = await supabase.storage
+            .from("discharge")
+            .upload(`discharge_${currentTime}.pdf`, pdfBytes2, {
+                contentType: "application/pdf",
+            });
+
+        let { data: res2 } = supabase.storage
+            .from("discharge")
+            .getPublicUrl(`discharge_${currentTime}.pdf`);
+
+        return res2;
+    }
+
+    async function reportUpload1(){
+        const currentTime = new Date().toISOString();
+        await createMedicationReport(currentTime).then((response1)=>{
+            reportUpload2(currentTime, response1);
+        })
+    }
+
+    async function reportUpload2(currentTime, response1){
+        await createDiagnosisReport(currentTime).then((response2)=>{
+            let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+            patientId: patientData["patientId"],
+            problem: newMedication["ConfirmatoryDiagnosis"],
+            medicationUrl: response1["publicUrl"],
+            diagnosisUrl: response2["publicUrl"],
+        };
+
+            fetch(serverUrl + "medication/add-others", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+        })
+    }
+
+    async function dischagePatient(){
+        let payload = {id: id}
+        await fetch(serverUrl + "h2p/discharge-patient", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+    }
+
     async function handleSubmit() {
-        try {
-            const pdfBytes = await createPDF(newMedication);
-            const blob = new Blob([pdfBytes], { type: "application/pdf" });
-            const link = document.createElement("a");
-            const currentTime = new Date().toISOString();
-
-            link.href = URL.createObjectURL(blob);
-            link.download = `medication_${currentTime}.pdf`;
-            link.click();
-
-            let { data, error } = await supabase.storage
-                .from("medications")
-                .upload(`medication_${currentTime}.pdf`, pdfBytes, {
-                    contentType: "application/pdf",
-                });
-
-            if (error) {
-                console.error("Error uploading file:", error);
-                showModal = false;
-                return;
-            }
-
-            saveFormData("newMedication", newMedication);
-            const fileLink = supabase.storage
-                .from("medications")
-                .getPublicUrl(data.Key);
-            console.log(fileLink);
-
-            const pdfBytes2 = await createPDF2(newMedication);
-
-            ({ data, error } = await supabase.storage
-                .from("discharge")
-                .upload(`discharge_${currentTime}.pdf`, pdfBytes2, {
-                    contentType: "application/pdf",
-                }));
-
-            if (error) {
-                console.error("Error uploading file:", error);
-                showModal = false;
-                return;
-            }
-
-            const fileLink2 = supabase.storage
-                .from("discharge")
-                .getPublicUrl(data.Key);
-            console.log(fileLink2);
-
-            showModal = false;
-        } catch (e) {
-            console.error("An unexpected error occurred:", e);
-            showModal = false;
-        }
+        setFormData();
+        reportUpload1();
+        dischagePatient();
+        showModal = false;
+        window.location.hash = `#/doctorhome/doctorPatient/${params.hospitalName}`
     }
 
     const pastDiagnosisData = [
@@ -249,64 +376,74 @@
         // Add more diagnosis records as needed
     ];
 
-    function addMedication() {
-        pastMedications = [...pastMedications, newMedication];
-        newMedication = {
-            Address: "",
-            Contact: "",
-            Occupation: "",
-            MaritalStatus: "",
-            ChiefComplaints: "",
-            HOillness: "",
-            PastHistoryMedical: "",
-            TreatmentHistory: "",
-            OccupationalHistory: "",
-            SocioEconomicCondition: "",
-            Vaccinationhistory: "",
-            MenstrualHistory: "",
-            Height: "normal",
-            Nutrition: "normal",
-            Oedema: "normal",
-            Clubbing: "normal",
-            Thyroid: "normal",
-            Skin: "normal",
-            Weight: "normal",
-            Anaemia: "normal",
-            Cyanosis: "normal",
-            Neckvein: "normal",
-            Others: "normal",
-            Temperature: "normal",
-            Pulse: "70/min",
-            BloodPressure: "150/100",
-            Jaundice: "normal",
-            Dehydration: "normal",
-            CardioVascularSystem: "",
-            RespiratorySystemm: "",
-            GastroIntestinalSystem: "",
-            MusculoSkeletalSystem: "",
-            NervousSystem: "",
-            workupDiagnosis: "",
-            DifferentialDiagnosis: "",
-            RelativeInvestigationFindings: "",
-            SalientFeature: "",
-            ConfirmatoryDiagnosis: "",
-            Treatment: "",
-            FollowUpAdvice: "",
-            DischargePrescription: "",
-            remarks: "",
-        };
-        showModal = false;
-    }
+    // function addMedication() {
+    //     pastMedications = [...pastMedications, newMedication];
+    //     newMedication = {
+    //         Address: "",
+    //         Contact: "",
+    //         Occupation: "",
+    //         MaritalStatus: "",
+    //         ChiefComplaints: "",
+    //         HOillness: "",
+    //         PastHistoryMedical: "",
+    //         TreatmentHistory: "",
+    //         OccupationalHistory: "",
+    //         SocioEconomicCondition: "",
+    //         Vaccinationhistory: "",
+    //         MenstrualHistory: "",
+    //         Height: "normal",
+    //         Nutrition: "normal",
+    //         Oedema: "normal",
+    //         Clubbing: "normal",
+    //         Thyroid: "normal",
+    //         Skin: "normal",
+    //         Weight: "normal",
+    //         Anaemia: "normal",
+    //         Cyanosis: "normal",
+    //         Neckvein: "normal",
+    //         Others: "normal",
+    //         Temperature: "normal",
+    //         Pulse: "70/min",
+    //         BloodPressure: "150/100",
+    //         Jaundice: "normal",
+    //         Dehydration: "normal",
+    //         CardioVascularSystem: "",
+    //         RespiratorySystemm: "",
+    //         GastroIntestinalSystem: "",
+    //         MusculoSkeletalSystem: "",
+    //         NervousSystem: "",
+    //         workupDiagnosis: "",
+    //         DifferentialDiagnosis: "",
+    //         RelativeInvestigationFindings: "",
+    //         SalientFeature: "",
+    //         ConfirmatoryDiagnosis: "",
+    //         Treatment: "",
+    //         FollowUpAdvice: "",
+    //         DischargePrescription: "",
+    //         remarks: "",
+    //     };
+    //     showModal = false;
+    // }
 </script>
 
 <div class="p-6 bg-gray-100 min-h-screen">
     <div class="bg-white p-6 rounded-md shadow-xl">
         <h2 class="text-2xl font-semibold mb-4">Patient Details</h2>
         <div class="grid grid-cols-2 gap-4">
-            <p><span class="font-semibold">Name: </span>{patientData['patientName']}</p>
-            <p><span class="font-semibold">Age: </span>{calculateAge(patientData['dob'])}</p>
             <p>
-                <span class="font-semibold">Gender: </span>{patientData['gender']}
+                <span class="font-semibold">Name: </span>{patientData[
+                    "patientName"
+                ]}
+            </p>
+            <p>
+                <span class="font-semibold">Age: </span>{calculateAge(
+                    patientData["dob"]
+                )}
+            </p>
+            <p>
+                <span class="font-semibold">Gender: </span>{patientData[
+                    "gender"
+                ]}
             </p>
             <p><span class="font-semibold">ID: </span>{id}</p>
         </div>
@@ -338,13 +475,13 @@
     <div class="mt-6 bg-white p-6 rounded-md shadow-xl relative">
         {#if selectedTab === "Past Medications"}
             <ul>
-                {#each pastMedications as { hospitalName, doctorName, date, fileLink }}
+                {#each medicationList as medication}
                     <li class="mb-4">
-                        <p class="font-semibold">Hospital: {hospitalName}</p>
-                        <p>Doctor: {doctorName}</p>
-                        <p>Date: {date}</p>
+                        <p class="font-semibold">Hospital: {medication['hospitalName']}</p>
+                        <p>Doctor: {medication['doctorName']}</p>
+                        <p>Date: {medication['createdAt']}</p>
                         <a
-                            href={fileLink}
+                            href={medication['medicationUrl']}
                             target="_blank"
                             class="text-blue-500 underline">View PDF</a
                         >
@@ -368,15 +505,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {#each pastDiagnosisData as diagnosis}
+                    {#each medicationList as diagnosis}
                         <tr class="bg-gray-100 hover:bg-gray-200">
-                            <td class="border px-4 py-2">{diagnosis.date}</td>
+                            <td class="border px-4 py-2">{diagnosis['createdAt']}</td>
                             <td class="border px-4 py-2"
-                                >{diagnosis.diagnosedWith}</td
+                                >{diagnosis['problem']}</td
                             >
                             <td class="border px-4 py-2">
                                 <a
-                                    href={diagnosis.dischargeCertLink}
+                                    href={diagnosis['diagnosisUrl']}
                                     target="_blank"
                                     class="text-blue-500 underline">View PDF</a
                                 >
@@ -387,12 +524,12 @@
             </table>
         {:else}
             <ul>
-                {#each testReports as { hospitalName, date, fileLink }}
+                {#each reportList as report}
                     <li class="mb-4">
-                        <p class="font-semibold">Hospital: {hospitalName}</p>
-                        <p>Date: {date}</p>
+                        <p class="font-semibold">Hospital: {report['hospitalName']}</p>
+                        <p>Date: {report['createdAt']}</p>
                         <a
-                            href={fileLink}
+                            href={report['url']}
                             target="_blank"
                             class="text-blue-500 underline">View PDF</a
                         >
@@ -415,7 +552,10 @@
                         New Medication Entry for {patientData.name}
                     </h3>
 
-                    <form on:submit|preventDefault={handleSubmit} class="space-y-6">
+                    <form
+                        on:submit|preventDefault={handleSubmit}
+                        class="space-y-6"
+                    >
                         <!-- Initial Info -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"

@@ -2,7 +2,11 @@
     import { onMount } from "svelte";
     import L from "leaflet";
     import "leaflet/dist/leaflet.css";
-    import { hospitalDoctorList, hospitalPatientList, hospitalInfo } from "./store";
+    import {
+        hospitalDoctorList,
+        hospitalPatientList,
+        hospitalInfo,
+    } from "./store";
     import { get } from "svelte/store";
     import { serverUrl } from "./constants";
 
@@ -127,12 +131,12 @@
 
     let map;
 
-    $:doctorCnt = 0
-    $:patientCnt = 0
-    $:deptCnt = 0
+    $: doctorCnt = 0;
+    $: patientCnt = 0;
+    $: deptCnt = 0;
 
-    async function getDoctorCnt(){
-        let payload={hospitalId:get(hospitalInfo).hospitalInfo["id"]}
+    async function getDoctorCnt() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
         await fetch(serverUrl + "h2d/get-doctor-cnt", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -141,13 +145,13 @@
                 return response.text();
             })
             .then((data) => {
-                let cnt = +data
+                let cnt = +data;
                 doctorCnt = cnt;
-            })
+            });
     }
 
-    async function getPatientCnt(){
-        let payload={hospitalId:get(hospitalInfo).hospitalInfo["id"]}
+    async function getPatientCnt() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
         await fetch(serverUrl + "h2p/get-hospital-patient-cnt", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -156,22 +160,39 @@
                 return response.text();
             })
             .then((data) => {
-                console.log(data);
-                let cnt = +data
+                // console.log(data);
+                let cnt = +data;
                 patientCnt = cnt;
-            })
+            });
     }
 
-    function getDeptCnt(){
-        let deptList = []
-        deptList = get(hospitalInfo).hospitalInfo["deptList"].split(',')
-        deptCnt = deptList.length
+    function getDeptCnt() {
+        let deptList = [];
+        deptList = get(hospitalInfo).hospitalInfo["deptList"].split(",");
+        deptCnt = deptList.length;
+    }
+
+    $: admissionId = "";
+
+    function admissionIdCalculation() {
+        let hospitalId = get(hospitalInfo).hospitalInfo["id"];
+
+        let input = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        let output = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm0987654321";
+        let index = (x) => input.indexOf(x);
+        let translate = (x) => (index(x) > -1 ? output[index(x)] : x);
+        admissionId = hospitalId.split("").map(translate).join("");
+
+        console.log(hospitalId);
+        console.log(admissionId);
     }
 
     onMount(async () => {
         getDoctorCnt();
         getPatientCnt();
         getDeptCnt();
+
+        admissionIdCalculation();
 
         // No need for the 'require' here anymore
         const iconUrl =
@@ -190,22 +211,26 @@
         // Wait for the next micro-task to ensure the DOM is fully ready
         await Promise.resolve();
 
-        map = L.map("map").setView([get(hospitalInfo).hospitalInfo["latitude"], get(hospitalInfo).hospitalInfo["longitude"]], 14);
+        map = L.map("map").setView(
+            [
+                get(hospitalInfo).hospitalInfo["latitude"],
+                get(hospitalInfo).hospitalInfo["longitude"],
+            ],
+            14
+        );
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             attribution: "&copy; OpenStreetMap contributors",
         }).addTo(map);
-        L.marker([get(hospitalInfo).hospitalInfo["latitude"], get(hospitalInfo).hospitalInfo["longitude"]]).addTo(map);
+        L.marker([
+            get(hospitalInfo).hospitalInfo["latitude"],
+            get(hospitalInfo).hospitalInfo["longitude"],
+        ]).addTo(map);
 
         // Invalidate the map size after a short delay
         setTimeout(() => {
             map.invalidateSize();
         }, 100);
-
-
-
     });
-
-
 </script>
 
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">
@@ -275,6 +300,10 @@
                     <strong class="text-gray-700">Number of Departments:</strong
                     >
                     <span class="ml-2">{deptCnt}</span>
+                </div>
+                <div>
+                    <strong class="text-gray-700">Admission Id:</strong>
+                    <span class="ml-2">{admissionId}</span>
                 </div>
                 <div class="mt-2">
                     <button

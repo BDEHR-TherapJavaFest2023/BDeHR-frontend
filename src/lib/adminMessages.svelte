@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { serverUrl } from "./constants";
 
     let Messages = [
         {
@@ -25,6 +26,38 @@
         // add more messages like this
     ];
     Messages.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
+    
+    $: reqCnt=0;
+    async function getReqCnt(){
+        await fetch(serverUrl + "hospital-request/get-request-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                reqCnt=res;
+            })
+    }
+
+    $: msgCnt=0;
+
+    $:messageList = []
+    async function getMessageList(){
+        await fetch(serverUrl + "message/get-message-list")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                messageList = data;
+                console.log(messageList);
+            })
+    }
+
+    onMount(()=>{
+        getReqCnt();
+        getMsgCnt();
+        getMessageList();
+    })
 
     function navigateToDashboard() {
         window.location.hash = `#/adminhome`;
@@ -43,6 +76,16 @@
     }
     function navigateToResearch() {
         window.location.hash = `#/adminhome/research`;
+    }
+    async function getMsgCnt(){
+        await fetch(serverUrl + "message/get-unread-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                msgCnt=res;
+            })
     }
 </script>
 
@@ -150,7 +193,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{msgCnt}</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -165,7 +208,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{reqCnt}</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>
@@ -184,19 +227,19 @@
             </h1>
             <div class="container px-4 mt-8">
                 <div class="space-y-4 overflow-y-auto max-h-[70vh]">
-                    {#each Messages as { hospitalName, dateTime, MessageBody }}
+                    {#each messageList as message}
                         <div class="bg-white rounded-lg shadow-md p-4">
                             <h2 class="text-xl font-semibold text-blue-600">
-                                {hospitalName}
+                                {message['sender']}
                             </h2>
                             <p class="text-sm text-gray-500">
-                                {new Date(dateTime).toLocaleString()}
+                                {message['sentAt'].split('T')[0]}, {message['sentAt'].split('T')[1].split('.')[0]}
                             </p>
                             <div
                                 class="mt-2 p-3 rounded-full bg-blue-100 inline-block"
                             >
                                 <p class="text-base whitespace-pre-line">
-                                    {MessageBody}
+                                    {message['text']}
                                 </p>
                             </div>
                         </div>

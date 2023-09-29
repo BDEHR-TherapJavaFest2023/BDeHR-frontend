@@ -1,5 +1,9 @@
 <script>
     import { onMount } from "svelte";
+    import { serverUrl } from "./constants";
+    import { userInfo } from "./store";
+    import { get } from "svelte/store";
+    import toast, { Toaster } from "svelte-french-toast";
     let currenthospitals = [
         {
             name: "United Hospitals Dhaka",
@@ -14,9 +18,30 @@
     ];
     let hospitalCode = "";
 
-    function handleHospitalCodeSubmit() {
-        // ekhane baki kaj kor pial
-        console.log(`Submitted Hospital Code: ${hospitalCode}`);
+    async function handleHospitalCodeSubmit(event) {
+        let id = decrypt(hospitalCode);
+        console.log(id);
+
+        let payload = { patientId: get(userInfo).userId,hospitalId: id,patientName: get(userInfo).userName,patientPhone:get(userInfo).userPhone,status:"New" };
+        
+        await fetch(serverUrl + "h2p/add-patient", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data == "0") {
+                    toast.error("Wrong Id");
+                } else {
+                    toast.success("Success");
+                    getEntryList();
+                }
+            });
+
+        hospitalCode = "";
     }
 
     function navigateToLogin() {
@@ -37,8 +62,43 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+
+    $: entryList = [];
+
+    async function getEntryList() {
+        let payload = { patientId: get(userInfo).userId };
+        await fetch(serverUrl + "h2p/get-user-patient-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                entryList = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    entryList.push(JSON.parse(data[i]));
+                }
+                console.log(entryList);
+            });
+    }
+    //0d069a9f, 1q152n2s
+    function decrypt(str) {
+        let output =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        let input =
+            "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm0987654321";
+        let index = (x) => input.indexOf(x);
+        let translate = (x) => (index(x) > -1 ? output[index(x)] : x);
+        return str.split("").map(translate).join("");
+    }
+
+    onMount(() => {
+        getEntryList();
+    });
 </script>
 
+<Toaster/>
 <nav class="bg-white shadow-lg z-10 mb-4">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center py-4">
@@ -137,37 +197,40 @@
     <!-- Main Dashboard Content -->
     <div class="flex-1 bg-white p-2 h-full flex-grow">
         <div class="p-4 mt-10 ml-10">
-            <label
-                for="hospitalCode"
-                class="text-2xl text-rose-700 font-bold mb-2"
-                >Enter 8-digit Hospital Code:</label
-            >
-            <input
-                type="text"
-                id="hospitalCode"
-                placeholder="Enter code"
-                bind:value={hospitalCode}
-                class="border rounded p-2 w-1/2"
-                maxlength="8"
-            />
-            <button
-                on:click={handleHospitalCodeSubmit}
-                class="ml-4 bg-rose-500 text-white p-2 rounded hover:bg-rose-700"
-            >
-                Submit
-            </button>
+            <form on:submit|preventDefault={handleHospitalCodeSubmit}>
+                <label
+                    for="hospitalCode"
+                    class="text-2xl text-rose-700 font-bold mb-2"
+                    >Enter 8-digit Hospital Code:</label
+                >
+                <input
+                    type="text"
+                    id="hospitalCode"
+                    placeholder="Enter code"
+                    bind:value={hospitalCode}
+                    class="border rounded p-2 w-1/2"
+                    maxlength="8"
+                />
+                <button
+                    type="submit"
+                    class="ml-4 bg-rose-500 text-white p-2 rounded hover:bg-rose-700"
+                >
+                    Submit
+                </button>
+            </form>
         </div>
         <div class="mb-4 p-4 mt-5 ml-10">
             <h2 class="text-4xl text-rose-700 font-bold mb-4">
                 Current Hospitals
             </h2>
             <ul class="list-decimal list-inside bg-white rounded">
-                {#each currenthospitals as hospital}
+                {#each entryList as entry}
                     <li class="border rounded-lg my-2 hover:shadow-lg p-4">
-                        <span class="text-md font-medium">{hospital.name}</span
+                        <span class="text-md font-medium"
+                            >{entry["hospitalName"]}</span
                         ><br />
-                        <span>Date: {hospital.date}</span><br />
-                        <span>Patient ID: {hospital.PatientID}</span>
+                        <span>Date: {entry["admitDate"]}</span><br />
+                        <span>Patient ID: {entry["id"]}</span>
                     </li>
                 {/each}
             </ul>

@@ -8,41 +8,6 @@
     async function handleSubmit(event) {
         //Testing Direct Login
         window.location.hash = `#/adminhome`;
-        toast.success("Login Successful");
-        // const form = event.target;
-        // const data = new FormData(form);
-        // await fetch(serverUrl + "user/login", {
-        //     method: "POST",
-        //     body: data,
-        // })
-        //     .then((response) => {
-        //         return response.json();
-        //     })
-        //     .catch(() => null)
-        //     .then((data) => {
-        //         // let ret = +data;
-        //         console.log(data);
-        //         //Login Failed
-        //         if (!data) {
-        //             toast.error("Login Failed 🙁");
-        //         }
-        //         //Login Failed
-        //         else {
-        //             userInfo.set({
-        //                 userName: data["name"],
-        //                 userId: data["id"],
-        //                 userEmail: data["email"],
-        //                 userNid: data["nid"],
-        //                 userDob: data["dob"],
-        //                 userAddress: data["address"],
-        //                 userGender: data["gender"],
-        //                 userPhone: data["phone"],
-        //                 userPhoto: data["photo"],
-        //             });
-        //             window.location.hash = `#/user`;
-        //         }
-        //     });
-        // form.reset();
     }
     function navigateHome() {
         window.location.hash = `#/`;

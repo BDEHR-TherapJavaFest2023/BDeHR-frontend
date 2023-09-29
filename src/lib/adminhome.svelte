@@ -6,6 +6,8 @@
     import "leaflet.heat";
     import { fly } from "svelte/transition";
     import * as d3 from "d3";
+    import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
 
     const categories = ["Users", "Doctors", "Hospitals"];
     const months = ["Jan", "Feb", "Mar", "Apr", "May"];
@@ -44,99 +46,197 @@
         });
     }, 0);
 
-    let hospitals = [
-        {
-            name: "Dhaka Medical College",
-            latitude: 23.726,
-            longitude: 90.3976,
-        },
-        {
-            name: "Apollo Hospitals Dhaka",
-            latitude: 23.7705,
-            longitude: 90.3631,
-        },
-        {
-            name: "Square Hospitals Ltd",
-            latitude: 23.7392,
-            longitude: 90.394,
-        },
-        {
-            name: "Cumilla Medical College",
-            latitude: 23.4515,
-            longitude: 91.203,
-        },
-        {
-            name: "Chittagong Medical College",
-            latitude: 22.3593,
-            longitude: 91.8308,
-        },
-        {
-            name: "Sylhet Medical College",
-            latitude: 24.9014962,
-            longitude: 91.8536165,
-        },
-        {
-            name: "Rajshahi Medical College",
-            latitude: 24.372,
-            longitude: 88.5864,
-        },
-        {
-            name: "Rajshahi Medical College",
-            latitude: 24.372,
-            longitude: 88.5864,
-        },
-        {
-            name: "Barisal Medical College",
-            latitude: 22.6865,
-            longitude: 90.3613,
-        },
-        {
-            name: "Mymensingh Medical College",
-            latitude: 24.7418,
-            longitude: 90.4094,
-        },
-        {
-            name: "Khulna Medical College",
-            latitude: 22.8285,
-            longitude: 89.5382,
-        },
-        {
-            name: "Rangpur Medical College",
-            latitude: 25.7666,
-            longitude: 89.2338,
-        },
-        {
-            name: "Bogra Medical College",
-            latitude: 24.8279,
-            longitude: 89.3529,
-        },
-        {
-            name: "Pabne Medical College",
-            latitude: 24.0045,
-            longitude: 89.209,
-        },
-        {
-            name: "Patuakhali Medical College",
-            latitude: 22.3623,
-            longitude: 90.327,
-        },
-        {
-            name: "Cox's Bazar Medical College",
-            latitude: 21.4202,
-            longitude: 92.0149,
-        },
-        {
-            name: "Noakhali Medical College",
-            latitude: 22.9515,
-            longitude: 91.1038,
-        },
-        {
-            name: "Sirajganj Medical College",
-            latitude: 24.4489,
-            longitude: 89.6738,
-        },
-        // Add more hospitals with actual data for Bangladesh
-    ];
+    // let hospitals = [
+    //     {
+    //         name: "Dhaka Medical College",
+    //         latitude: 23.726,
+    //         longitude: 90.3976,
+    //     },
+    //     {
+    //         name: "Apollo Hospitals Dhaka",
+    //         latitude: 23.7705,
+    //         longitude: 90.3631,
+    //     },
+    //     {
+    //         name: "Square Hospitals Ltd",
+    //         latitude: 23.7392,
+    //         longitude: 90.394,
+    //     },
+    //     {
+    //         name: "Cumilla Medical College",
+    //         latitude: 23.4515,
+    //         longitude: 91.203,
+    //     },
+    //     {
+    //         name: "Chittagong Medical College",
+    //         latitude: 22.3593,
+    //         longitude: 91.8308,
+    //     },
+    //     {
+    //         name: "Sylhet Medical College",
+    //         latitude: 24.9014962,
+    //         longitude: 91.8536165,
+    //     },
+    //     {
+    //         name: "Rajshahi Medical College",
+    //         latitude: 24.372,
+    //         longitude: 88.5864,
+    //     },
+    //     {
+    //         name: "Rajshahi Medical College",
+    //         latitude: 24.372,
+    //         longitude: 88.5864,
+    //     },
+    //     {
+    //         name: "Barisal Medical College",
+    //         latitude: 22.6865,
+    //         longitude: 90.3613,
+    //     },
+    //     {
+    //         name: "Mymensingh Medical College",
+    //         latitude: 24.7418,
+    //         longitude: 90.4094,
+    //     },
+    //     {
+    //         name: "Khulna Medical College",
+    //         latitude: 22.8285,
+    //         longitude: 89.5382,
+    //     },
+    //     {
+    //         name: "Rangpur Medical College",
+    //         latitude: 25.7666,
+    //         longitude: 89.2338,
+    //     },
+    //     {
+    //         name: "Bogra Medical College",
+    //         latitude: 24.8279,
+    //         longitude: 89.3529,
+    //     },
+    //     {
+    //         name: "Pabne Medical College",
+    //         latitude: 24.0045,
+    //         longitude: 89.209,
+    //     },
+    //     {
+    //         name: "Patuakhali Medical College",
+    //         latitude: 22.3623,
+    //         longitude: 90.327,
+    //     },
+    //     {
+    //         name: "Cox's Bazar Medical College",
+    //         latitude: 21.4202,
+    //         longitude: 92.0149,
+    //     },
+    //     {
+    //         name: "Noakhali Medical College",
+    //         latitude: 22.9515,
+    //         longitude: 91.1038,
+    //     },
+    //     {
+    //         name: "Sirajganj Medical College",
+    //         latitude: 24.4489,
+    //         longitude: 89.6738,
+    //     },
+    //     // Add more hospitals with actual data for Bangladesh
+    // ];
+
+    $: hospitals = [];
+
+    async function getAllLocation() {
+        await fetch(serverUrl + "hospital/get-all-location")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                hospitals = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    hospitals.push(JSON.parse(data[i]));
+                }
+                console.log(hospitals);
+
+                animateValue(
+                    0,
+                    targetUserCount,
+                    1000,
+                    1537,
+                    (val) => (userCount = val)
+                );
+                animateValue(
+                    0,
+                    targetHospitalCount,
+                    1000,
+                    1,
+                    (val) => (hospitalCount = val)
+                );
+                animateValue(
+                    0,
+                    targetDoctorCount,
+                    1000,
+                    19,
+                    (val) => (doctorCount = val)
+                );
+                const hospitalMap = L.map("hospital-map").setView(
+                    [23.8103, 90.4125],
+                    7
+                );
+                L.tileLayer(
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    {
+                        attribution: "&copy; OpenStreetMap contributors",
+                    }
+                ).addTo(hospitalMap);
+
+                const customIcon = L.icon({
+                    iconUrl:
+                        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png",
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 40],
+                    popupAnchor: [0, -40],
+                });
+
+                hospitals.forEach((hospital) => {
+                    L.marker([hospital.latitude, hospital.longitude], {
+                        icon: customIcon,
+                    })
+                        .addTo(hospitalMap)
+                        .bindPopup(
+                            `<b>${hospital.name}</b><br>Lat: ${hospital.latitude}, Lon: ${hospital.longitude}`
+                        )
+                        .openPopup();
+                });
+
+                // Initialize Dengue Heatmap
+                // const dengueMap = L.map("dengue-heatmap").setView(
+                //     [23.8103, 90.4125],
+                //     7
+                // );
+                // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                //     attribution: "&copy; OpenStreetMap contributors",
+                // }).addTo(dengueMap);
+
+                let cfg = {
+                    radius: 25, // Increase if you want a larger spread for each point
+                    maxOpacity: 0.8,
+                    scaleRadius: true,
+                    useLocalExtrema: false,
+                    latField: "lat",
+                    lngField: "lng",
+                    valueField: "value",
+                    gradient: {
+                        // Define the intensity levels: 0.4, 0.6, 0.8 and 1.0
+                        // Adjust these values if you want a different spread of intensity
+                        0.4: "rgba(255,0,0,0.4)",
+                        0.6: "rgba(255,0,0,0.6)",
+                        0.8: "rgba(255,0,0,0.8)",
+                        1.0: "rgba(255,0,0,1)",
+                    },
+                };
+
+                // const heatmapLayer = L.heatLayer(dengueData.data, cfg);
+                // dengueMap.addLayer(heatmapLayer);
+            });
+    }
+
     let dengueData = {
         max: 8,
         data: [
@@ -184,7 +284,14 @@
         { Investigation: "TSH", count: 1500 },
     ];
 
+    async function getCnts(){
+
+    }
+
     onMount(() => {
+        getReqCnt();
+        getMsgCnt();
+        getAllLocation();
         // Initialize Hospital Map
         const svg = d3.select("#mySvg");
         const margin = { top: 20, right: 20, bottom: 30, left: 40 };
@@ -243,84 +350,85 @@
 
         //-----------------------------------------
 
-        animateValue(
-            0,
-            targetUserCount,
-            1000,
-            1537,
-            (val) => (userCount = val)
-        );
-        animateValue(
-            0,
-            targetHospitalCount,
-            1000,
-            1,
-            (val) => (hospitalCount = val)
-        );
-        animateValue(
-            0,
-            targetDoctorCount,
-            1000,
-            19,
-            (val) => (doctorCount = val)
-        );
-        const hospitalMap = L.map("hospital-map").setView(
-            [23.8103, 90.4125],
-            7
-        );
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: "&copy; OpenStreetMap contributors",
-        }).addTo(hospitalMap);
-
-        const customIcon = L.icon({
-            iconUrl:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png",
-            iconSize: [30, 30],
-            iconAnchor: [15, 40],
-            popupAnchor: [0, -40],
-        });
-
-        hospitals.forEach((hospital) => {
-            L.marker([hospital.latitude, hospital.longitude], {
-                icon: customIcon,
-            })
-                .addTo(hospitalMap)
-                .bindPopup(
-                    `<b>${hospital.name}</b><br>Lat: ${hospital.latitude}, Lon: ${hospital.longitude}`
-                )
-                .openPopup();
-        });
-
-        // Initialize Dengue Heatmap
-        // const dengueMap = L.map("dengue-heatmap").setView(
+        // animateValue(
+        //     0,
+        //     targetUserCount,
+        //     1000,
+        //     1537,
+        //     (val) => (userCount = val)
+        // );
+        // animateValue(
+        //     0,
+        //     targetHospitalCount,
+        //     1000,
+        //     1,
+        //     (val) => (hospitalCount = val)
+        // );
+        // animateValue(
+        //     0,
+        //     targetDoctorCount,
+        //     1000,
+        //     19,
+        //     (val) => (doctorCount = val)
+        // );
+        // const hospitalMap = L.map("hospital-map").setView(
         //     [23.8103, 90.4125],
         //     7
         // );
-        // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        //     attribution: "&copy; OpenStreetMap contributors",
-        // }).addTo(dengueMap);
+        // L.tileLayer(
+        //     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        //     {
+        //         attribution: "&copy; OpenStreetMap contributors",
+        //     }
+        // ).addTo(hospitalMap);
 
-        let cfg = {
-            radius: 25, // Increase if you want a larger spread for each point
-            maxOpacity: 0.8,
-            scaleRadius: true,
-            useLocalExtrema: false,
-            latField: "lat",
-            lngField: "lng",
-            valueField: "value",
-            gradient: {
-                // Define the intensity levels: 0.4, 0.6, 0.8 and 1.0
-                // Adjust these values if you want a different spread of intensity
-                0.4: "rgba(255,0,0,0.4)",
-                0.6: "rgba(255,0,0,0.6)",
-                0.8: "rgba(255,0,0,0.8)",
-                1.0: "rgba(255,0,0,1)",
-            },
-        };
+        // const customIcon = L.icon({
+        //     iconUrl:
+        //         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png",
+        //     iconSize: [30, 30],
+        //     iconAnchor: [15, 40],
+        //     popupAnchor: [0, -40],
+        // });
 
-        // const heatmapLayer = L.heatLayer(dengueData.data, cfg);
-        // dengueMap.addLayer(heatmapLayer);
+        // hospitals.forEach((hospital) => {
+        //     L.marker([hospital.latitude, hospital.longitude], {
+        //         icon: customIcon,
+        //     })
+        //         .addTo(hospitalMap)
+        //         .bindPopup(
+        //             `<b>${hospital.name}</b><br>Lat: ${hospital.latitude}, Lon: ${hospital.longitude}`
+        //         )
+        //         .openPopup();
+        // });
+
+        // // Initialize Dengue Heatmap
+        // // const dengueMap = L.map("dengue-heatmap").setView(
+        // //     [23.8103, 90.4125],
+        // //     7
+        // // );
+        // // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        // //     attribution: "&copy; OpenStreetMap contributors",
+        // // }).addTo(dengueMap);
+
+        // let cfg = {
+        //     radius: 25, // Increase if you want a larger spread for each point
+        //     maxOpacity: 0.8,
+        //     scaleRadius: true,
+        //     useLocalExtrema: false,
+        //     latField: "lat",
+        //     lngField: "lng",
+        //     valueField: "value",
+        //     gradient: {
+        //         // Define the intensity levels: 0.4, 0.6, 0.8 and 1.0
+        //         // Adjust these values if you want a different spread of intensity
+        //         0.4: "rgba(255,0,0,0.4)",
+        //         0.6: "rgba(255,0,0,0.6)",
+        //         0.8: "rgba(255,0,0,0.8)",
+        //         1.0: "rgba(255,0,0,1)",
+        //     },
+        // };
     });
+    
     let userCount = 0;
     let hospitalCount = 0;
     let doctorCount = 0;
@@ -362,9 +470,31 @@
     function navigateToLogin() {
         window.location.hash = `#/adminlogin`;
     }
-    function navigateToResearch()
-    {
+    function navigateToResearch() {
         window.location.hash = `#/adminhome/research`;
+    }
+
+    $: reqCnt=0;
+    $: msgCnt=0;
+    async function getReqCnt(){
+        await fetch(serverUrl + "hospital-request/get-request-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                reqCnt=res;
+            })
+    }
+    async function getMsgCnt(){
+        await fetch(serverUrl + "message/get-unread-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                msgCnt=res;
+            })
     }
 </script>
 
@@ -473,7 +603,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{msgCnt}</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -488,14 +618,15 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{reqCnt}</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>
 
                             <!-- Logout Button -->
-                            <button class="btn btn-outline btn-error" on:click={navigateToLogin}
-                                >Logout</button
+                            <button
+                                class="btn btn-outline btn-error"
+                                on:click={navigateToLogin}>Logout</button
                             >
                         </div>
                     </div>

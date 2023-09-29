@@ -3,6 +3,7 @@
     import "leaflet/dist/leaflet.css";
     import L from "leaflet";
     import "leaflet-routing-machine";
+    import { serverUrl } from "./constants";
 
     let map;
     let nearestHospital = null;
@@ -11,25 +12,6 @@
     let router;
 
     let userLocation = { lat: null, lng: null };
-    onMount(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                initializeMap();
-            },
-            (error) => {
-                console.error("Geolocation Error:", error);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0,
-            }
-        );
-    });
 
     function initializeMap() {
         map = L.map("map").setView([userLocation.lat, userLocation.lng], 10);
@@ -103,99 +85,99 @@
         }).addTo(map);
     }
 
-    let hospitals = [
-        {
-            name: "Dhaka Medical College",
-            latitude: 23.726,
-            longitude: 90.3976,
-        },
-        {
-            name: "Apollo Hospitals Dhaka",
-            latitude: 23.7705,
-            longitude: 90.3631,
-        },
-        {
-            name: "Square Hospitals Ltd",
-            latitude: 23.7392,
-            longitude: 90.394,
-        },
-        {
-            name: "Cumilla Medical College",
-            latitude: 23.4515,
-            longitude: 91.203,
-        },
-        {
-            name: "Chittagong Medical College",
-            latitude: 22.3593,
-            longitude: 91.8308,
-        },
-        {
-            name: "Sylhet Medical College",
-            latitude: 24.9014962,
-            longitude: 91.8536165,
-        },
-        {
-            name: "Rajshahi Medical College",
-            latitude: 24.372,
-            longitude: 88.5864,
-        },
-        {
-            name: "Rajshahi Medical College",
-            latitude: 24.372,
-            longitude: 88.5864,
-        },
-        {
-            name: "Barisal Medical College",
-            latitude: 22.6865,
-            longitude: 90.3613,
-        },
-        {
-            name: "Mymensingh Medical College",
-            latitude: 24.7418,
-            longitude: 90.4094,
-        },
-        {
-            name: "Khulna Medical College",
-            latitude: 22.8285,
-            longitude: 89.5382,
-        },
-        {
-            name: "Rangpur Medical College",
-            latitude: 25.7666,
-            longitude: 89.2338,
-        },
-        {
-            name: "Bogra Medical College",
-            latitude: 24.8279,
-            longitude: 89.3529,
-        },
-        {
-            name: "Pabne Medical College",
-            latitude: 24.0045,
-            longitude: 89.209,
-        },
-        {
-            name: "Patuakhali Medical College",
-            latitude: 22.3623,
-            longitude: 90.327,
-        },
-        {
-            name: "Cox's Bazar Medical College",
-            latitude: 21.4202,
-            longitude: 92.0149,
-        },
-        {
-            name: "Noakhali Medical College",
-            latitude: 22.9515,
-            longitude: 91.1038,
-        },
-        {
-            name: "Sirajganj Medical College",
-            latitude: 24.4489,
-            longitude: 89.6738,
-        },
-        // Add more hospitals with actual data for Bangladesh
-    ];
+    // let hospitals = [
+    //     {
+    //         name: "Dhaka Medical College",
+    //         latitude: 23.726,
+    //         longitude: 90.3976,
+    //     },
+    //     {
+    //         name: "Apollo Hospitals Dhaka",
+    //         latitude: 23.7705,
+    //         longitude: 90.3631,
+    //     },
+    //     {
+    //         name: "Square Hospitals Ltd",
+    //         latitude: 23.7392,
+    //         longitude: 90.394,
+    //     },
+    //     {
+    //         name: "Cumilla Medical College",
+    //         latitude: 23.4515,
+    //         longitude: 91.203,
+    //     },
+    //     {
+    //         name: "Chittagong Medical College",
+    //         latitude: 22.3593,
+    //         longitude: 91.8308,
+    //     },
+    //     {
+    //         name: "Sylhet Medical College",
+    //         latitude: 24.9014962,
+    //         longitude: 91.8536165,
+    //     },
+    //     {
+    //         name: "Rajshahi Medical College",
+    //         latitude: 24.372,
+    //         longitude: 88.5864,
+    //     },
+    //     {
+    //         name: "Rajshahi Medical College",
+    //         latitude: 24.372,
+    //         longitude: 88.5864,
+    //     },
+    //     {
+    //         name: "Barisal Medical College",
+    //         latitude: 22.6865,
+    //         longitude: 90.3613,
+    //     },
+    //     {
+    //         name: "Mymensingh Medical College",
+    //         latitude: 24.7418,
+    //         longitude: 90.4094,
+    //     },
+    //     {
+    //         name: "Khulna Medical College",
+    //         latitude: 22.8285,
+    //         longitude: 89.5382,
+    //     },
+    //     {
+    //         name: "Rangpur Medical College",
+    //         latitude: 25.7666,
+    //         longitude: 89.2338,
+    //     },
+    //     {
+    //         name: "Bogra Medical College",
+    //         latitude: 24.8279,
+    //         longitude: 89.3529,
+    //     },
+    //     {
+    //         name: "Pabne Medical College",
+    //         latitude: 24.0045,
+    //         longitude: 89.209,
+    //     },
+    //     {
+    //         name: "Patuakhali Medical College",
+    //         latitude: 22.3623,
+    //         longitude: 90.327,
+    //     },
+    //     {
+    //         name: "Cox's Bazar Medical College",
+    //         latitude: 21.4202,
+    //         longitude: 92.0149,
+    //     },
+    //     {
+    //         name: "Noakhali Medical College",
+    //         latitude: 22.9515,
+    //         longitude: 91.1038,
+    //     },
+    //     {
+    //         name: "Sirajganj Medical College",
+    //         latitude: 24.4489,
+    //         longitude: 89.6738,
+    //     },
+    //     // Add more hospitals with actual data for Bangladesh
+    // ];
 
     function navigateToLogin() {
         window.location.hash = `#/userlogin`;
@@ -215,6 +197,43 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+
+    $: hospitals = [];
+
+    async function getAllLocation() {
+        await fetch(serverUrl + "hospital/get-all-location")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                hospitals = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    hospitals.push(JSON.parse(data[i]));
+                }
+                console.log(hospitals);
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        initializeMap();
+                    },
+                    (error) => {
+                        console.error("Geolocation Error:", error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0,
+                    }
+                );
+            });
+    }
+
+    onMount(() => {
+        getAllLocation();
+    });
 </script>
 
 <nav class="bg-white shadow-lg z-10 mb-4">

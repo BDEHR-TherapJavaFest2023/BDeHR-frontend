@@ -1,5 +1,8 @@
 <script>
     import { onMount } from "svelte";
+    import { serverUrl } from "./constants";
+    import { userInfo } from "./store";
+    import { get } from "svelte/store";
 
     let Reports = [
         {
@@ -34,6 +37,29 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+
+    $: reportList = []
+
+    async function getReportList() {
+        let payload = { patientId: get(userInfo).userId };
+        console.log(payload)
+        await fetch(serverUrl + "report/get-report-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                reportList = data;
+                console.log(reportList);
+            });
+    }
+
+    onMount(()=>{
+        getReportList();
+    })
+
 </script>
 
 <nav class="bg-white shadow-lg z-10 mb-4">
@@ -138,20 +164,20 @@
             Test Reports
         </h1>
         <div class="space-y-6 ml-10 mr-4">
-            {#each Reports as medication}
+            {#each reportList as medication}
                 <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg">
                     <div class="flex justify-between items-center">
                         <div class="flex-1">
                             <h2 class="text-xl font-semibold">
-                                {medication.name}
+                                {medication['hospitalName']}
                             </h2>
                             <p class="text-gray-600 text-sm">
-                                Date: {medication.date}
+                                Date: {medication['createdAt']}
                             </p>
                         </div>
                         <div class="flex-initial">
                             <a
-                                href={medication.fileUrl}
+                                href={medication['medicationUrl']}
                                 target="_blank"
                                 class="btn btn-outline hover:bg-rose-700"
                             >

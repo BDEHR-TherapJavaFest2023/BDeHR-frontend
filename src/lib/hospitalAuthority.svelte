@@ -30,14 +30,16 @@
     }
 
     let uniqueSpecialities = [];
-    function removeDoctor(doctorID) {
-        // Remove doctor from local array
-        DoctorDatas = DoctorDatas.filter(
-            (doctor) => doctor.doctorID !== doctorID
-        );
-
-        // Update Svelte store
-        hospitalDoctorList.set({ doctorList: DoctorDatas });
+    async function removeDoctor(id) {
+       console.log(id)
+       let payload = {id: id}
+       await fetch(serverUrl + "h2d/remove-doctor", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+        .then((response)=>{
+            getDoctorList();
+        })
     }
 
     function addDegree() {
@@ -121,6 +123,26 @@
             });
     }
 
+    let showModalMessageAdmin = false;
+    let adminMessage = "";
+
+    async function sendMessageToAdmin() {
+
+        console.log(adminMessage);
+
+        let payload = { text: adminMessage, sender:get(hospitalInfo).hospitalInfo["name"] };
+        await fetch(serverUrl + "message/add-message", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+        .then(()=>{
+            toast.success("Message Sent");
+        })
+
+        showModalMessageAdmin = false;
+        adminMessage = ""; //abar khali kore disi
+    }
+
     onMount(() => {
         getLabList();
         getDoctorList();
@@ -166,6 +188,13 @@
             }`}
             on:click={() => (activeTab = "Labs")}>Laboratories</button
         >
+        <img
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/message.svg"
+            alt={get(hospitalInfo).hospitalInfo["name"] + " Logo"}
+            class="margin h-10 w-12 transition-transform transform hover:scale-125"
+            style="margin-left: auto;"
+            on:click={() => (showModalMessageAdmin = true)}
+        />
     </div>
 
     <!-- Doctor List -->
@@ -195,7 +224,7 @@
                             </div>
                             <button
                                 class="bg-red-500 text-white p-1 rounded"
-                                on:click={() => removeDoctor(doctor["doctorId"])}
+                                on:click={() => removeDoctor(doctor["id"])}
                                 >Remove</button
                             >
                         </div>
@@ -288,7 +317,6 @@
                             <input
                                 type="text"
                                 name="doctorId"
-                                bind:value={doctorID}
                                 class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                             />
@@ -304,7 +332,6 @@
                             <input
                                 type="text"
                                 name="speciality"
-                                bind:value={speciality}
                                 class="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 required
                             />
@@ -318,7 +345,6 @@
                             <input
                                 type="text"
                                 name="degrees"
-                                bind:value={degreeInput}
                                 on:keydown={handleDegreeInput}
                                 placeholder="Enter degree and press Enter"
                                 class="border p-2 w-full rounded"
@@ -375,6 +401,40 @@
                         >Submit</button
                     >
                 </form>
+            </div>
+        </div>
+    {/if}
+    {#if showModalMessageAdmin}
+        <div class="fixed z-10 inset-0 overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen">
+                <div
+                    class="bg-white rounded-lg p-8 m-2 w-full max-w-lg shadow-lg"
+                >
+                    <h2 class="text-2xl mb-4">Message Admin</h2>
+                    <div class="space-y-4">
+                        <!-- Textarea for the message -->
+                        <textarea
+                            class="textarea textarea-bordered w-full h-24"
+                            placeholder="Your message..."
+                            bind:value={adminMessage}
+                        />
+                        <!-- Buttons -->
+                        <div class="flex justify-end space-x-4">
+                            <button
+                                class="btn btn-outline hover:bg-red-500"
+                                on:click={() => (showModalMessageAdmin = false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                class="btn btn-outline hover:bg-green-500"
+                                on:click={sendMessageToAdmin}
+                            >
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     {/if}

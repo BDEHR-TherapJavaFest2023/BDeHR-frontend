@@ -1,11 +1,77 @@
 <script>
     import { onMount } from "svelte";
-    import toast, { Toaster } from "svelte-french-toast";
     import { hospitalPatientList, hospitalInfo } from "./store";
     import { get } from "svelte/store";
     import { serverUrl } from "./constants";
+    import toast, { Toaster } from "svelte-french-toast";
 
     let hospital_patients = [];
+    let showStatusForm = false; // eta hosse form er jonno
+    let selectedStatus = "";
+    let selectedDoctor = ""; // kun doctor
+    let selectedLab = ""; // kun lab
+    let roomNumber = ""; // Kun room
+    let selectedPatientIndex = null;
+    // const doctors = [
+    //     "Dr. Rezaul Karim",
+    //     "Dr. Shirin Akhter",
+    //     "Dr. Faiza Roshni",
+    // ]; // etare store theke ne somehow
+    // const labs = ["Lab 12989", "Lab 2suegf", "Lab 3sdoubv"]; //etareo parle store theke ne
+
+    async function saveStatus() {
+        // if (selectedPatientIndex !== null) {
+        //     let updatedPatient = { ...hospital_patients[selectedPatientIndex] };
+        //     updatedPatient.Status = selectedStatus;
+        //     if (selectedStatus === "Visiting Doctor") {
+        //         updatedPatient.DoctorAssigned = selectedDoctor;
+        //     }
+        //     // ... additional logic for lab and room number
+
+        //     hospital_patients[selectedPatientIndex] = updatedPatient;
+        //     hospitalPatientList.set({ patientList: hospital_patients }); // Update the Svelte store
+        // }
+
+        sstatus = selectedStatus;
+        if (selectedDoctor) sdoctorId = selectedDoctor;
+        slabId = selectedLab;
+
+        console.log(uid + "," + sstatus + "," + sdoctorId + "," + slabId);
+
+        let payload = {
+            id: uid,
+            status: sstatus,
+            doctorId: sdoctorId,
+            labId: slabId,
+        };
+        await fetch(serverUrl + "h2p/update-patient", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+        .then((response)=>{
+            getPatientList();
+        })
+
+        selectedStatus = "";
+        selectedDoctor = "";
+        selectedLab = "";
+        showStatusForm = false; // Close the status form
+    }
+
+    $: uid = 0;
+    $: sstatus = "";
+    $: sdoctorId = "";
+    $: slabId = "";
+
+    function openStatusForm(index, id) {
+        uid = id;
+        sstatus = patientList[index]["status"];
+        sdoctorId = patientList[index]["doctorId"] || "";
+        slabId = patientList[index]["slabId"] || "";
+        console.log(uid + "," + sstatus + "," + sdoctorId + "," + slabId);
+        selectedPatientIndex = index;
+        showStatusForm = true;
+    }
 
     function navigateBack() {
         window.location.hash = "#/hospitalhome";
@@ -14,6 +80,7 @@
         if (status === "Visiting Doctor") return "status-visiting";
         if (status === "Doing Diagnostics") return "status-diagnostics";
         if (status === "Admitted") return "status-admitted";
+        if (status === "New") return "status-new";
         return "";
     }
     let showForm = false;
@@ -23,39 +90,25 @@
         Status: "",
         DoctorAssigned: "",
         ContactNumber: "",
-        labId:""
     };
 
-    async function savePatient(event) {
-        const form = event.target;
-        const formData = new FormData(form);
+    function savePatient() {
+        hospital_patients = [...hospital_patients, newPatient];
+        hospitalPatientList.set({ patientList: hospital_patients });
 
-        console.log(formData.get("patientId"))
-
-        await fetch(serverUrl + "h2p/add-patient", {
-            method: "POST",
-            body: formData,
-        })
-            .then((response) => {
-                return response.text();
-            })
-            .then((data) => {
-                if (data === "0") {
-                    toast.error("Please recheck patient id");
-                } else {
-                    getPatientList();
-                }
-            });
-        
-        // getDoctorList();
-
-        form.reset()
+        newPatient = {
+            patientName: "",
+            patientID: "",
+            Status: "",
+            DoctorAssigned: "",
+            ContactNumber: "",
+        };
         showForm = false;
     }
 
-    $: patientList = []
+    $: patientList = [];
 
-    async function getPatientList(){
+    async function getPatientList() {
         let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
         await fetch(serverUrl + "h2p/get-hospital-patient-list", {
             method: "POST",
@@ -65,17 +118,56 @@
                 return response.json();
             })
             .then((data) => {
-                patientList = []
-                for(let i=0;i<Object.keys(data).length;i++){
-                    patientList.push(JSON.parse(data[i]))
+                patientList = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    patientList.push(JSON.parse(data[i]));
                 }
-                console.log(patientList)
+                console.log(patientList);
+            });
+    }
+
+    $: doctorList = [];
+
+    async function getDoctorList() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        await fetch(serverUrl + "h2d/get-doctor-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                doctorList = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    doctorList.push(JSON.parse(data[i]));
+                }
+                console.log(doctorList);
+            });
+    }
+
+    $: labList = [];
+
+    async function getLabList() {
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        await fetch(serverUrl + "lab/get-lab-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                labList = data;
             });
     }
 
     onMount(() => {
         getPatientList();
-    hospital_patients = get(hospitalPatientList).patientList;
+        getDoctorList();
+        getLabList();
+        hospital_patients = get(hospitalPatientList).patientList;
     });
 </script>
 
@@ -85,13 +177,13 @@
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
-                alt={get(hospitalInfo).hospitalInfo["name"] + " Logo"}
+                alt={get(hospitalInfo).hospitalInfo['name'] + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
                 on:click={navigateBack}
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{get(hospitalInfo).hospitalInfo["name"]}</span
+                >{get(hospitalInfo).hospitalInfo['name']}</span
             >
             <span>
                 <a href="#/hospitalogin" class="btn btn-outline ml-auto mr-2"
@@ -101,74 +193,98 @@
         </div>
     </nav>
 
-    <button
-        class="bg-purple-600 text-white px-4 py-2 rounded-lg mb-5"
-        on:click={() => (showForm = !showForm)}
-    >
-        Add Patient
-    </button>
+    {#if showStatusForm}
+        <div class="fixed inset-0 flex items-center justify-center z-50">
+            <div class="bg-black bg-opacity-50 absolute inset-0" />
+            <form
+                class="bg-white p-8 rounded-lg w-full max-w-md shadow-lg relative z-10"
+            >
+                <div class="mb-4">
+                    <label
+                        for="status"
+                        class="block text-sm font-medium text-gray-600"
+                        >Status</label
+                    >
+                    <select
+                        id="status"
+                        bind:value={selectedStatus}
+                        class="mt-1 p-2 w-full border rounded-md"
+                    >
+                        <option value="">Select Status</option>
+                        <option value="Visiting Doctor">Visiting Doctor</option>
+                        <option value="Doing Diagnostics"
+                            >Doing Diagnostics</option
+                        >
+                        <option value="Admitted">Admitted</option>
+                        <option value="New">New</option>
+                    </select>
+                </div>
 
-    {#if showForm}
-        <div class="overlay">
-            <form on:submit|preventDefault={savePatient} class="form-content">
-                <div class="ml-40">
-                    <h1>{get(hospitalInfo).hospitalInfo["name"]}</h1>
-                </div>
-                <div class="field">
-                    <label for="patientName">Name:</label>
-                    <input
-                        bind:value={newPatient.patientName}
-                        name="patientName"
-                    />
-                </div>
-                <div class="field">
-                    <label for="patientID">ID:</label>
-                    <input bind:value={newPatient.patientID} name="patientId" />
-                </div>
+                {#if selectedStatus === "Visiting Doctor"}
+                    <div class="mb-4">
+                        <label
+                            for="doctor"
+                            class="block text-sm font-medium text-gray-600"
+                            >Choose Doctor</label
+                        >
+                        <select
+                            id="doctor"
+                            bind:value={selectedDoctor}
+                            class="mt-1 p-2 w-full border rounded-md"
+                        >
+                            {#each doctorList as doctor}
+                                <option value={doctor["id"]}
+                                    >{doctor["name"]}</option
+                                >
+                            {/each}
+                        </select>
+                    </div>
+                {:else if selectedStatus === "Doing Diagnostics"}
+                    <div class="mb-4">
+                        <label
+                            for="lab"
+                            class="block text-sm font-medium text-gray-600"
+                            >Choose Lab</label
+                        >
+                        <select
+                            id="lab"
+                            bind:value={selectedLab}
+                            class="mt-1 p-2 w-full border rounded-md"
+                        >
+                            {#each labList as lab}
+                                <option value={lab["id"]}>{lab["name"]}</option>
+                            {/each}
+                        </select>
+                    </div>
+                {:else if selectedStatus === "Admitted"}
+                    <!-- <div class="mb-4">
+                        <label
+                            for="roomNumber"
+                            class="block text-sm font-medium text-gray-600"
+                            >Room Number</label
+                        >
+                        <input
+                            type="text"
+                            id="roomNumber"
+                            bind:value={roomNumber}
+                            class="mt-1 p-2 w-full border rounded-md"
+                        />
+                    </div> -->
+                {:else if selectedStatus === "New"}{/if}
 
-                <div class="field">
-                    <label for="Status">Status:</label>
-                    <input bind:value={newPatient.Status} name="status" />
+                <div class="flex justify-end">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        on:click={saveStatus}>Submit</button
+                    >
                 </div>
-                <div class="field">
-                    <label for="DoctorAssigned">Doctor to Visit:</label>
-                    <input
-                        bind:value={newPatient.DoctorAssigned}
-                        name="doctorId"
-                    />
-                </div>
-                <div class="field">
-                    <label for="labID">Lab to Visit:</label>
-                    <input bind:value={newPatient.labID} name="labId" />
-                </div>
-                <div class="field">
-                    <label for="ContactNumber">Contact Number:</label>
-                    <input
-                        bind:value={newPatient.ContactNumber}
-                        name="patientPhone"
-                    />
-                </div>
-                <input type="hidden" name="hospitalId" value={get(hospitalInfo).hospitalInfo["id"]}>
-                <!-- Similar structure for other fields -->
-                <!-- ... -->
-                <button
-                    class="btn border-black text-white bg-green-400 hover:bg-green-700 mr-2"
-                   type="submit"
-                >
-                    Save
-                </button>
-                <button
-                    class="btn border-black text-white bg-red-400 hover:bg-red-700 mr-2"
-                    on:click={() => (showForm = false)}
-                >
-                    Cancel
-                </button>
             </form>
         </div>
     {/if}
 
     <div class="patient-list">
-        {#each patientList as patient}
+        {#each patientList as patient, index}
             <div class="patient-item">
                 <div class="details">
                     <div class="detail-item">
@@ -181,16 +297,21 @@
                         Contact: <span>{patient["patientPhone"]}</span>
                     </div>
                 </div>
-                <div class="status {getStatusClass(patient.Status)}">
+                <div class="status {getStatusClass(patient['status'])}">
                     Status: {patient["status"]}
                 </div>
-                {#if patient["doctorId"]}
+                {#if patient["doctorName"]}
                     <div class="doctor">
-                        Doctor Assigned: {patient["doctorId"]}
+                        Doctor Assigned: {patient["doctorName"]}
                     </div>
                 {:else}
                     <div class="doctor">Doctor Assigned: Not Assigned</div>
                 {/if}
+                <button
+                    class="btn btn-outline mt-4"
+                    on:click={() => openStatusForm(index, patient["id"])}
+                    >Change Status</button
+                >
             </div>
         {/each}
     </div>
@@ -229,6 +350,13 @@
     .status-admitted {
         color: #2ecc71; /* Green for Admitted */
         background-color: #e6f9e9;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .status-new {
+        color: #ff0000; /* Green for Admitted */
+        background-color: #ffe3e3;
         padding: 5px 10px;
         border-radius: 5px;
     }
@@ -283,5 +411,32 @@
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ccc;
+    }
+
+    /*
+    ei 2 ta style ekkhon add korlam
+    */
+    /* ... existing CSS */
+
+    .status-form-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 11; /* ensure it appears above other elements */
+    }
+
+    .status-form {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        width: 80%;
+        max-width: 400px;
     }
 </style>

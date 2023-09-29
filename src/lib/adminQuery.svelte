@@ -5,6 +5,7 @@
     import L from "leaflet";
     import "leaflet.heat"; // for heatmap support
     import "leaflet/dist/leaflet.css";
+    import { serverUrl } from "./constants";
 
     let selectedFilter = "";
     let yValuesBarGraph = [];
@@ -21,62 +22,63 @@
     let ageFrom = 0; // Dummy field for Age From
     let ageTo = 100; // Dummy field for Age To
     let gender = ""; // Dummy field for Gender
-    const Patients = [
-        {
-            age: 20,
-            cancer: 10,
-            diabetes: 200,
-            stroke: 15,
-        },
-        {
-            age: 25,
-            cancer: 29,
-            diabetes: 1100,
-            stroke: 98,
-        },
-        {
-            age: 30,
-            cancer: 90,
-            diabetes: 1500,
-            stroke: 250,
-        },
-        {
-            age: 35,
-            cancer: 200,
-            diabetes: 2000,
-            stroke: 300,
-        },
-        {
-            age: 40,
-            cancer: 270,
-            diabetes: 2200,
-            stroke: 360,
-        },
-        {
-            age: 45,
-            cancer: 300,
-            diabetes: 2500,
-            stroke: 400,
-        },
-        {
-            age: 50,
-            cancer: 260,
-            diabetes: 2700,
-            stroke: 430,
-        },
-        {
-            age: 55,
-            cancer: 270,
-            diabetes: 2670,
-            stroke: 400,
-        },
-        {
-            age: 60,
-            cancer: 290,
-            diabetes: 2670,
-            stroke: 900,
-        },
-    ];
+
+    // const Patients = [
+    //     {
+    //         age: 20,
+    //         cancer: 10,
+    //         diabetes: 200,
+    //         stroke: 15,
+    //     },
+    //     {
+    //         age: 25,
+    //         cancer: 29,
+    //         diabetes: 1100,
+    //         stroke: 98,
+    //     },
+    //     {
+    //         age: 30,
+    //         cancer: 90,
+    //         diabetes: 1500,
+    //         stroke: 250,
+    //     },
+    //     {
+    //         age: 35,
+    //         cancer: 200,
+    //         diabetes: 2000,
+    //         stroke: 300,
+    //     },
+    //     {
+    //         age: 40,
+    //         cancer: 270,
+    //         diabetes: 2200,
+    //         stroke: 360,
+    //     },
+    //     {
+    //         age: 45,
+    //         cancer: 300,
+    //         diabetes: 2500,
+    //         stroke: 400,
+    //     },
+    //     {
+    //         age: 50,
+    //         cancer: 260,
+    //         diabetes: 2700,
+    //         stroke: 430,
+    //     },
+    //     {
+    //         age: 55,
+    //         cancer: 270,
+    //         diabetes: 2670,
+    //         stroke: 400,
+    //     },
+    //     {
+    //         age: 60,
+    //         cancer: 290,
+    //         diabetes: 2670,
+    //         stroke: 900,
+    //     },
+    // ];
 
     const colors = [
         { background: "rgba(255, 0, 0, 0.2)", border: "rgba(255, 0, 0, 1)" },
@@ -98,14 +100,13 @@
     ];
 
     function generateBarGraph() {
-        let labels = Patients.map((p) => p.age);
+        let labels = Patients.map((p) => p.age); 
         let datasets = [];
 
         let colorIndex = 0;
         for (const field of yValuesBarGraph) {
             if (Patients[0].hasOwnProperty(field)) {
                 let data = Patients.map((p) => p[field]);
-
                 // Use the current color from the colors array, and move to the next one
                 const currentColor = colors[colorIndex];
                 datasets.push({
@@ -259,112 +260,116 @@
         // Loop through each hospital and plot on map
         for (const hospital of hospitals) {
             // Create a circle marker based on count
-            const circle = L.circle([hospital.latitude, hospital.longitude], {
-                color: "red",
-                fillColor: "red",
-                fillOpacity: 0.5,
-                radius: Math.sqrt(hospital.count) * 500, // Radius proportional to sqrt of count
-            }).addTo(map);
+            const circle = L.circle(
+                [hospital["latitude"], hospital["longitude"]],
+                {
+                    color: "red",
+                    fillColor: "red",
+                    fillOpacity: 0.5,
+                    radius: Math.sqrt(hospital["count"]) * 500, // Radius proportional to sqrt of count
+                }
+            ).addTo(map);
 
             // Bind popup to show hospital name and count
             circle.bindPopup(
-                `<b>${hospital.name}</b><br>Count: ${hospital.count}`
+                `<b>${hospital["name"]}</b><br>Count: ${hospital["count"]}`
             );
         }
     }
 
-    const hospitals = [
-        {
-            name: "Dhaka Medical College",
-            latitude: 23.726,
-            longitude: 90.3976,
-            count: 1200,
-        },
-        {
-            name: "Cumilla Medical College",
-            latitude: 23.4515,
-            longitude: 91.203,
-            count: 1010,
-        },
-        {
-            name: "Chittagong Medical College",
-            latitude: 22.3593,
-            longitude: 91.8308,
-            count: 120,
-        },
-        {
-            name: "Sylhet Medical College",
-            latitude: 24.9014962,
-            longitude: 91.8536165,
-            count: 100,
-        },
-        {
-            name: "Rajshahi Medical College",
-            latitude: 24.372,
-            longitude: 88.5864,
-            count: 1300,
-        },
-        {
-            name: "Barisal Medical College",
-            latitude: 22.6865,
-            longitude: 90.3613,
-            count: 1000,
-        },
-        {
-            name: "Mymensingh Medical College",
-            latitude: 24.7418,
-            longitude: 90.4094,
-            count: 750,
-        },
-        {
-            name: "Khulna Medical College",
-            latitude: 22.8285,
-            longitude: 89.5382,
-            count: 1500,
-        },
-        {
-            name: "Rangpur Medical College",
-            latitude: 25.7666,
-            longitude: 89.2338,
-            count: 90,
-        },
-        {
-            name: "Bogra Medical College",
-            latitude: 24.8279,
-            longitude: 89.3529,
-            count: 80,
-        },
-        {
-            name: "Pabne Medical College",
-            latitude: 24.0045,
-            longitude: 89.209,
-            count: 110,
-        },
-        {
-            name: "Patuakhali Medical College",
-            latitude: 22.3623,
-            longitude: 90.327,
-            count: 1230,
-        },
-        {
-            name: "Cox's Bazar Medical College",
-            latitude: 21.4202,
-            longitude: 92.0149,
-            count: 520,
-        },
-        {
-            name: "Noakhali Medical College",
-            latitude: 22.9515,
-            longitude: 91.1038,
-            count: 100,
-        },
-        {
-            name: "Sirajganj Medical College",
-            latitude: 24.4489,
-            longitude: 89.6738,
-            count: 100,
-        },
-    ];
+    // const hospitals = [
+    //     {
+    //         name: "Dhaka Medical College",
+    //         latitude: 23.726,
+    //         longitude: 90.3976,
+    //         count: 1200,
+    //     },
+    //     {
+    //         name: "Cumilla Medical College",
+    //         latitude: 23.4515,
+    //         longitude: 91.203,
+    //         count: 1010,
+    //     },
+    //     {
+    //         name: "Chittagong Medical College",
+    //         latitude: 22.3593,
+    //         longitude: 91.8308,
+    //         count: 120,
+    //     },
+    //     {
+    //         name: "Sylhet Medical College",
+    //         latitude: 24.9014962,
+    //         longitude: 91.8536165,
+    //         count: 100,
+    //     },
+    //     {
+    //         name: "Rajshahi Medical College",
+    //         latitude: 24.372,
+    //         longitude: 88.5864,
+    //         count: 1300,
+    //     },
+    //     {
+    //         name: "Barisal Medical College",
+    //         latitude: 22.6865,
+    //         longitude: 90.3613,
+    //         count: 1000,
+    //     },
+    //     {
+    //         name: "Mymensingh Medical College",
+    //         latitude: 24.7418,
+    //         longitude: 90.4094,
+    //         count: 750,
+    //     },
+    //     {
+    //         name: "Khulna Medical College",
+    //         latitude: 22.8285,
+    //         longitude: 89.5382,
+    //         count: 1500,
+    //     },
+    //     {
+    //         name: "Rangpur Medical College",
+    //         latitude: 25.7666,
+    //         longitude: 89.2338,
+    //         count: 90,
+    //     },
+    //     {
+    //         name: "Bogra Medical College",
+    //         latitude: 24.8279,
+    //         longitude: 89.3529,
+    //         count: 80,
+    //     },
+    //     {
+    //         name: "Pabne Medical College",
+    //         latitude: 24.0045,
+    //         longitude: 89.209,
+    //         count: 110,
+    //     },
+    //     {
+    //         name: "Patuakhali Medical College",
+    //         latitude: 22.3623,
+    //         longitude: 90.327,
+    //         count: 1230,
+    //     },
+    //     {
+    //         name: "Cox's Bazar Medical College",
+    //         latitude: 21.4202,
+    //         longitude: 92.0149,
+    //         count: 520,
+    //     },
+    //     {
+    //         name: "Noakhali Medical College",
+    //         latitude: 22.9515,
+    //         longitude: 91.1038,
+    //         count: 100,
+    //     },
+    //     {
+    //         name: "Sirajganj Medical College",
+    //         latitude: 24.4489,
+    //         longitude: 89.6738,
+    //         count: 100,
+    //     },
+    // ];
+
     function handleEnterKey(event, targetArray) {
         if (event.keyCode === 13) {
             event.preventDefault();
@@ -421,6 +426,70 @@
     function navigateToResearch() {
         window.location.hash = `#/adminhome/research`;
     }
+
+    $: hospitals = [];
+
+    async function getHeatMapData() {
+        await fetch(serverUrl + "medication/get-patient-cnt")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                hospitals = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    hospitals.push(JSON.parse(data[i]));
+                }
+                console.log(hospitals);
+            });
+    }
+
+    $: Patients = []
+
+    async function getGraphData() {
+        await fetch(serverUrl + "medication/get-graph-data")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                Patients = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    Patients.push(JSON.parse(data[i]));
+                }
+                console.log(Patients);
+            });
+    }
+
+    $: reqCnt=0;
+    $: msgCnt=0;
+    async function getReqCnt(){
+        await fetch(serverUrl + "hospital-request/get-request-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                reqCnt=res;
+            })
+    }
+
+    async function getMsgCnt(){
+        await fetch(serverUrl + "message/get-unread-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                msgCnt=res;
+            })
+    }
+
+    onMount(() => {
+        getHeatMapData();
+        getGraphData();
+
+        getReqCnt();
+        getMsgCnt();
+    });
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -524,7 +593,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{msgCnt}</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -539,7 +608,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{reqCnt}</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>

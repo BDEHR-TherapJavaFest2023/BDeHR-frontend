@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { serverUrl } from "./constants";
 
     let Messages = [
         {
@@ -50,7 +51,22 @@
     //         }
     //     }
     // }
-
+    
+    $: reqCnt=0;
+    async function getReqCnt(){
+        await fetch(serverUrl + "hospital-request/get-request-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                reqCnt=res;
+            })
+    }
+    onMount(()=>{
+        getReqCnt();
+        getMsgCnt();
+    })
     function handlePaste(event, index) {
         event.preventDefault();
         const clipboardData = event.clipboardData;
@@ -124,6 +140,17 @@
     }
     function navigateToResearch() {
         window.location.hash = `#/adminhome/research`;
+    }
+    $: msgCnt=0;
+    async function getMsgCnt(){
+        await fetch(serverUrl + "message/get-unread-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                msgCnt=res;
+            })
     }
 </script>
 
@@ -231,7 +258,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{msgCnt}</span
                                 >
                                 <!-- Number of unread messages -->
                             </div>
@@ -246,7 +273,7 @@
                                 />
                                 <span
                                     class="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
-                                    >4</span
+                                    >{reqCnt}</span
                                 >
                                 <!-- Number of unread notifications -->
                             </div>

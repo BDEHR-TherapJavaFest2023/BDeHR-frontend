@@ -83,10 +83,6 @@
     }
 
     $: hospitalName = params.hospitalName;
-    $: patients = (patientsData[hospitalName] || []).sort(
-        (a, b) => new Date(b.dateTime) - new Date(a.dateTime)
-    );
-
     $: patientList = []
 
     async function getPatientList(){

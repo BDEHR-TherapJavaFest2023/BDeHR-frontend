@@ -1,17 +1,32 @@
 <script>
     import toast, { Toaster } from "svelte-french-toast";
     import { serverUrl } from "./constants";
-    import { labInfo } from "./store";
+    import { labInfo,hospitalInfo } from "./store";
 
     let hospitalId = "";
     let labId = "";
     let labPass = "";
+
+    async function getHospitalInfo(){
+        let payload = { hospitalId:hospitalId };
+        await fetch(serverUrl + "hospital/get-hospital-info", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                hospitalInfo.set({hospitalInfo:data});
+            })
+    }
 
     async function handleSubmit(event) {
         const form = event.target;
         const data = new FormData(form);
 
         console.log(data.get("id"));
+        console.log(data.get("hospitalId"))
         console.log(data.get("password"));
 
         await fetch(serverUrl + "lab/login", {
@@ -33,7 +48,7 @@
                 //Login Success
                 else {
                     labInfo.set({labInfo:data})
-                    window.location.hash = `#/doctorhome`;
+                    window.location.hash = `#/labhome`;
                 }
             });
 
