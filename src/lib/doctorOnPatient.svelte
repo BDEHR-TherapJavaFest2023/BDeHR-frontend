@@ -4,16 +4,13 @@
     import { createPDF } from "./pdfUtility";
     import { createPDF2 } from "./dischargePdf";
     import { supabase } from "./supabaseClient";
+    import { serverUrl } from "./constants";
+
     export let params = {};
 
     let tabs = ["Past Diagnosis", "Past Medications", "Test Reports"];
     let selectedTab = tabs[0];
 
-    let patientData = {
-        name: "Abir Muhtasim",
-        age: 28,
-        gender: "Male",
-    };
     let todayDateTime;
     function updateDateTime() {
         const now = new Date();
@@ -36,7 +33,51 @@
         return data ? JSON.parse(data) : null;
     }
 
+    function calculateAge(dob) {
+        const today = new Date();
+        const birthDate = new Date(dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (
+            monthDiff < 0 ||
+            (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ) {
+            age--;
+        }
+        return age;
+    }
+
+    $: id = params.patientId
+    $: patientData = {};
+    $: medicationList = [];
+    $: reportList = []
+
+    async function getPatientData(){
+        let payload = { id:id };
+        await fetch(serverUrl + "h2p/get-patient-data", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                patientData = JSON.parse(data);
+                console.log(patientData);
+            });
+    }
+
+    async function getMedicationList(){
+
+    }
+
+    async function getReportList(){
+
+    }
+
     onMount(() => {
+        getPatientData();
+
         updateDateTime();
         setInterval(updateDateTime, 1000); // Update every second
     });
@@ -262,12 +303,12 @@
     <div class="bg-white p-6 rounded-md shadow-xl">
         <h2 class="text-2xl font-semibold mb-4">Patient Details</h2>
         <div class="grid grid-cols-2 gap-4">
-            <p><span class="font-semibold">Name: </span>{patientData.name}</p>
-            <p><span class="font-semibold">Age: </span>{patientData.age}</p>
+            <p><span class="font-semibold">Name: </span>{patientData['patientName']}</p>
+            <p><span class="font-semibold">Age: </span>{calculateAge(patientData['dob'])}</p>
             <p>
-                <span class="font-semibold">Gender: </span>{patientData.gender}
+                <span class="font-semibold">Gender: </span>{patientData['gender']}
             </p>
-            <p><span class="font-semibold">ID: </span>{params.patientId}</p>
+            <p><span class="font-semibold">ID: </span>{id}</p>
         </div>
     </div>
     <div>
@@ -374,7 +415,7 @@
                         New Medication Entry for {patientData.name}
                     </h3>
 
-                    <form on:submit={handleSubmit} class="space-y-6">
+                    <form on:submit|preventDefault={handleSubmit} class="space-y-6">
                         <!-- Initial Info -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
                             <legend class="font-bold text-lg mb-4"
@@ -393,6 +434,7 @@
                                         placeholder="Write Your Address"
                                         class="w-full p-2 border rounded-md"
                                         required
+                                        name="Address"
                                     />
                                 </label>
                                 <label class="block">
@@ -404,6 +446,7 @@
                                         placeholder="Write Phone Number"
                                         class="w-full p-2 border rounded-md"
                                         required
+                                        name="Contact"
                                     />
                                 </label>
                                 <label class="block">
@@ -415,6 +458,7 @@
                                         placeholder="Write Your Current Occupation"
                                         class="w-full p-2 border rounded-md"
                                         required
+                                        name="Occupaton"
                                     />
                                 </label>
                                 <label class="block">
@@ -425,6 +469,7 @@
                                         bind:value={newMedication.MaritalStatus}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Unmarried/Married"
+                                        name="MaritalStatus"
                                     />
                                 </label>
                                 <!-- ... Continue with the rest ... -->
@@ -447,6 +492,7 @@
                                         class="w-full textarea textarea-bordered"
                                         placeholder="Chief Complaints"
                                         bind:value={newMedication.ChiefComplaints}
+                                        name="ChiefComplaints"
                                     />
                                 </label>
                                 <label class="block">
@@ -457,6 +503,7 @@
                                         class="w-full textarea textarea-bordered"
                                         placeholder="History of Present Illness"
                                         bind:value={newMedication.HOillness}
+                                        name="HOillness"
                                     />
                                 </label>
 
@@ -483,6 +530,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.PastHistoryMedical}
                                         placeholder="Medical History"
+                                        name="PastHistoryMedical"
                                     />
                                 </label>
                                 <label class="block">
@@ -494,6 +542,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.PastHistorySurgical}
                                         placeholder="Surgical History"
+                                        name="PastHistorySurgical"
                                     />
                                 </label>
                                 <label class="block">
@@ -504,6 +553,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.TreatmentHistory}
                                         placeholder="History of Treatment / Drug History"
+                                        name="TreatmentHistory"
                                     />
                                 </label>
                                 <label class="block">
@@ -514,6 +564,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.FamilyHistory}
                                         placeholder="Family History"
+                                        name="FamilyHistory"
                                     />
                                 </label>
                                 <label class="block">
@@ -524,6 +575,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.PersonalHistory}
                                         placeholder="Personal History"
+                                        name="PersonalHistory"
                                     />
                                 </label>
                                 <label class="block">
@@ -534,6 +586,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.OccupationalHistory}
                                         placeholder="Occupational History"
+                                        name="OccupationalHistory"
                                     />
                                 </label>
                                 <label class="block">
@@ -544,6 +597,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.SocioEconomicCondition}
                                         placeholder="Socio-Economic Condition"
+                                        name="SocioEconomicCondition"
                                     />
                                 </label>
                                 <label class="block">
@@ -554,6 +608,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Vaccinationhistory}
                                         placeholder="Immunizations History"
+                                        name="Vaccinationhistory"
                                     />
                                 </label>
 
@@ -565,6 +620,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.MenstrualHistory}
                                         placeholder="Menstrual History"
+                                        name="MenstrualHistory"
                                     />
                                 </label>
 
@@ -589,6 +645,7 @@
                                         bind:value={newMedication.Height}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Patient Height"
+                                        name="Height"
                                     />
                                 </label>
                                 <label class="block">
@@ -599,6 +656,7 @@
                                         bind:value={newMedication.Weight}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Patient Weight"
+                                        name="Weight"
                                     />
                                 </label>
                                 <label class="block">
@@ -609,6 +667,7 @@
                                         bind:value={newMedication.bmi}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Approx BMI"
+                                        name="bmi"
                                     />
                                 </label>
                                 <label class="block">
@@ -619,6 +678,7 @@
                                         bind:value={newMedication.Nutrition}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Nutrition Condition"
+                                        name="Nutrition"
                                     />
                                 </label>
                                 <label class="block">
@@ -629,6 +689,7 @@
                                         bind:value={newMedication.Anaemia}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Anaemia"
+                                        name="Anaemia"
                                     />
                                 </label>
                                 <label class="block">
@@ -639,6 +700,7 @@
                                         bind:value={newMedication.Jaundice}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Jaundice"
+                                        name="Jaundice"
                                     />
                                 </label>
                                 <label class="block">
@@ -649,6 +711,7 @@
                                         bind:value={newMedication.Oedema}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Oedema"
+                                        name="Oedema"
                                     />
                                 </label>
                                 <label class="block">
@@ -659,6 +722,7 @@
                                         bind:value={newMedication.Cyanosis}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Cyanosis"
+                                        name="Cyanosis"
                                     />
                                 </label>
                                 <label class="block">
@@ -669,6 +733,7 @@
                                         bind:value={newMedication.Dehydration}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Dehydration"
+                                        name="Dehydration"
                                     />
                                 </label>
                                 <label class="block">
@@ -679,6 +744,7 @@
                                         bind:value={newMedication.Temperature}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="°F"
+                                        name="Temperature"
                                     />
                                 </label>
                                 <label class="block">
@@ -689,6 +755,7 @@
                                         bind:value={newMedication.Pulse}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Pulse"
+                                        name="Pulse"
                                     />
                                 </label>
                                 <label class="block">
@@ -699,6 +766,7 @@
                                         bind:value={newMedication.BloodPressure}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="___ mmHg / __mmHg "
+                                        name="BloodPressure"
                                     />
                                 </label>
                                 <label class="block">
@@ -709,6 +777,7 @@
                                         bind:value={newMedication.RespiratoryRate}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="___/min "
+                                        name="RespiratoryRate"
                                     />
                                 </label>
 
@@ -720,6 +789,7 @@
                                         bind:value={newMedication.Clubbing}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Clubbing"
+                                        name="Clubbing"
                                     />
                                 </label>
                                 <label class="block">
@@ -730,6 +800,7 @@
                                         bind:value={newMedication.Neckvein}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Neckvein"
+                                        name="Neckvein"
                                     />
                                 </label>
 
@@ -741,6 +812,7 @@
                                         bind:value={newMedication.Lnodes}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="L. Nodes"
+                                        name="Lnodes"
                                     />
                                 </label>
                                 <label class="block">
@@ -751,6 +823,7 @@
                                         bind:value={newMedication.Thyroid}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Thyroid"
+                                        name="Thyroid"
                                     />
                                 </label>
                                 <label class="block">
@@ -761,6 +834,7 @@
                                         bind:value={newMedication.koilonychia}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Koilonychia"
+                                        name="koilonychia"
                                     />
                                 </label>
                                 <label class="block">
@@ -771,6 +845,7 @@
                                         bind:value={newMedication.Leukonychia}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Leukonychia"
+                                        name="Leukonychia"
                                     />
                                 </label>
 
@@ -782,6 +857,7 @@
                                         bind:value={newMedication.Skin}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Skin"
+                                        name="Skin"
                                     />
                                 </label>
 
@@ -793,6 +869,7 @@
                                         bind:value={newMedication.Others}
                                         class="w-full p-2 border rounded-md"
                                         placeholder="Something Else to Add"
+                                        name="Others"
                                     />
                                 </label>
                             </div>
@@ -815,6 +892,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.CardioVascularSystem}
                                         placeholder="Cardio Vascular System Examination Finding"
+                                        name="CardioVascularSystem"
                                     />
                                 </label>
                                 <label class="block">
@@ -825,6 +903,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.RespiratorySystemm}
                                         placeholder="Respiratory System Examination Finding"
+                                        name="RespiratorySystemm"
                                     />
                                 </label>
                                 <label class="block">
@@ -835,6 +914,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.GastroIntestinalSystem}
                                         placeholder="Gastro-Intestinal System Examination Finding"
+                                        name="GastroIntestinalSystem"
                                     />
                                 </label>
                                 <label class="block">
@@ -845,6 +925,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.MusculoSkeletalSystem}
                                         placeholder="Musculo-Skeletal System Examination Finding"
+                                        name="MusculoSkeletalSystem"
                                     />
                                 </label>
                                 <label class="block">
@@ -855,6 +936,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.NervousSystem}
                                         placeholder="Nervous System Examination Finding"
+                                        name="NervousSystem"
                                     />
                                 </label>
 
@@ -877,6 +959,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Inspection}
                                         placeholder="Inspection"
+                                        name="Inspection"
                                     />
                                 </label>
                                 <label class="block">
@@ -887,6 +970,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Palpation}
                                         placeholder="Palpation"
+                                        name="Palpation"
                                     />
                                 </label>
                                 <label class="block">
@@ -897,6 +981,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Percussion}
                                         placeholder="Percussion"
+                                        name="Percussion"
                                     />
                                 </label>
                                 <label class="block">
@@ -907,6 +992,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.Auscultation}
                                         placeholder="Auscultation"
+                                        name="Auscultation"
                                     />
                                 </label>
                             </div>
@@ -925,6 +1011,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.workupDiagnosis}
                                         placeholder="Provisional Diagnosis (Separate multiple by comma)"
+                                        name="workupDiagnosis"
                                     />
                                 </label>
                                 <label class="block">
@@ -935,6 +1022,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.DifferentialDiagnosis}
                                         placeholder="Differential Diagnosis (Separate multiple by comma)"
+                                        name="DifferentialDiagnosis"
                                     />
                                 </label>
 
@@ -956,6 +1044,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.RelativeInvestigationFindings}
                                         placeholder="Findings of Investigations"
+                                        name="RelativeInvestigationFindings"
                                     />
                                 </label>
                                 <label class="block">
@@ -967,6 +1056,7 @@
                                         bind:value={newMedication.SalientFeature}
                                         required
                                         placeholder="Salient Feature"
+                                        name="SalientFeature"
                                     />
                                 </label>
 
@@ -990,6 +1080,7 @@
                                         bind:value={newMedication.ConfirmatoryDiagnosis}
                                         required
                                         placeholder="Confirmatory Diagnosis"
+                                        name="ConfirmatoryDiagnosis"
                                     />
                                 </label>
 
@@ -1013,6 +1104,7 @@
                                         bind:value={newMedication.Treatment}
                                         required
                                         placeholder="Treatments"
+                                        name="Treatment"
                                     />
                                 </label>
                                 <label class="block">
@@ -1023,6 +1115,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.FollowUpAdvice}
                                         placeholder="Advices"
+                                        name="FollowUpAdvice"
                                     />
                                 </label>
                                 <label class="block">
@@ -1033,6 +1126,7 @@
                                         class="w-full textarea textarea-bordered"
                                         bind:value={newMedication.FollowUpDuration}
                                         placeholder="__ weeks"
+                                        name="FollowUpDuration"
                                     />
                                 </label>
 

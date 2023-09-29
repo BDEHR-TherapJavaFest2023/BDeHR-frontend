@@ -57,8 +57,9 @@
     async function addDoctor(event) {
         const form = event.target;
         const formData = new FormData(form);
+        formData.append("degree", degrees.toString());
 
-        await fetch(serverUrl + "hospital-request/request", {
+        await fetch(serverUrl + "h2d/add-doctor", {
             method: "POST",
             body: formData,
         })
@@ -66,9 +67,14 @@
                 return response.text();
             })
             .then((data) => {
-                console.log(data);
-            })
-
+                if (data === "0") {
+                    toast.error("Please recheck doctor id");
+                } else {
+                    getDoctorList();
+                }
+            });
+        
+        form.reset();
         // Optionally close the modal
         showModal = false;
     }
@@ -107,19 +113,21 @@
             })
             .then((data) => {
                 console.log(data);
-                doctorList = data;
+                doctorList = [];
+                for(let i=0;i<Object.keys(data).length;i++){
+                    doctorList.push(JSON.parse(data[i]))
+                }
+                console.log(doctorList)
             });
     }
- 
-    onMount(() => {
-        //console.log(get(hospitalDoctorList).doctorList);
-        DoctorDatas = get(hospitalDoctorList).doctorList;
-        uniqueSpecialities = [
-            ...new Set(DoctorDatas.map((doctor) => doctor.speciality)),
-        ];
 
+    onMount(() => {
         getLabList();
         getDoctorList();
+
+        DoctorDatas = get(hospitalDoctorList).doctorList;
+        uniqueSpecialities =
+            get(hospitalInfo).hospitalInfo["deptList"].split(",");  
     });
 </script>
 
@@ -168,26 +176,26 @@
                     {specialityItem}
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    {#each DoctorDatas.filter((doctor) => doctor.speciality === specialityItem) as doctor}
+                    {#each doctorList.filter((doctor) => doctor.speciality === specialityItem) as doctor}
                         <div
                             class="flex items-center justify-between bg-gray-100 p-4 rounded shadow-2xl transition-transform transform hover:scale-105"
                         >
                             <div class="flex items-center space-x-4">
                                 <img
-                                    src={doctor.imageURL}
-                                    alt={doctor.doctorName}
+                                    src={doctor["photo"]}
+                                    alt={doctor["name"]}
                                     class="w-16 h-16 rounded-full"
                                 />
                                 <div>
                                     <h3 class="font-semibold">
-                                        {doctor.doctorName}
+                                        {doctor["name"]}
                                     </h3>
-                                    <p>{doctor.degrees.join(", ")}</p>
+                                    <p>{doctor["degree"]}</p>
                                 </div>
                             </div>
                             <button
                                 class="bg-red-500 text-white p-1 rounded"
-                                on:click={() => removeDoctor(doctor.doctorID)}
+                                on:click={() => removeDoctor(doctor["doctorId"])}
                                 >Remove</button
                             >
                         </div>
@@ -309,7 +317,7 @@
                             >
                             <input
                                 type="text"
-                                name="degree"
+                                name="degrees"
                                 bind:value={degreeInput}
                                 on:keydown={handleDegreeInput}
                                 placeholder="Enter degree and press Enter"

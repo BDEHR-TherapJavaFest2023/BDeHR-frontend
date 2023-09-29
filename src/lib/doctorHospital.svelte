@@ -1,7 +1,9 @@
 <script>
+    import { onMount } from "svelte";
     import NavbarRunning from "./doctorNavbar.svelte";
-    import { doctorInfo, doctorHospitalList } from "./store";
+    import { doctorInfo, doctorHospitalList,doctorHospital } from "./store";
     import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
 
     let doctor_Hospitals = [];
     let NameRunning;
@@ -14,12 +16,35 @@
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/researches";
     }
-    function navigateToPatients(hospitalName) {
+    function navigateToPatients(hospitalName, id) {
         // Set the hospital name in a global store or send as a parameter
         // For simplicity, sending as a parameter
+        doctorHospital.set({hospitalId: id})
         console.log("Navigating to patients for hospital:", hospitalName);
         window.location.hash = `#/doctorhome/doctorPatient/${hospitalName}`;
     }
+
+    $: hospitalList=[]
+
+    async function getHospitalList() {
+        let payload = { doctorId: get(doctorInfo).doctorId };
+        await fetch(serverUrl + "h2d/get-hospital-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                hospitalList = data;
+                console.log(hospitalList);
+            });
+    }
+
+    onMount(()=>{
+        getHospitalList();
+    })
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -52,16 +77,16 @@
         style="padding-top: 10px;"
     >
         <!-- Display cards for each hospital name -->
-        {#each get(doctorHospitalList).hospitalList as hospital, index}
+        {#each hospitalList as hospital, index}
             <div
                 class="bg-white p-6 rounded-lg shadow-md text-center transition-colors hover:bg-gray-200
         transition-transform transform hover:scale-90 cursor-pointer"
-                on:click={() => navigateToPatients(hospital)}
+                on:click={() => navigateToPatients(hospital["name"],hospital["id"])}
             >
                 <div class="flex items-center justify-center space-x-4">
                     <!-- Assuming you have an icon component or library, replace with your icon of choice -->
 
-                    <span class="text-blue-500 font-bold">{hospital}</span>
+                    <span class="text-blue-500 font-bold">{hospital["name"]}</span>
                 </div>
             </div>
         {/each}

@@ -1,8 +1,10 @@
 <script>
     import { onMount } from "svelte";
-
+    import toast, { Toaster } from "svelte-french-toast";
     import { hospitalPatientList, hospitalInfo } from "./store";
     import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
+
     let hospital_patients = [];
 
     function navigateBack() {
@@ -21,39 +23,75 @@
         Status: "",
         DoctorAssigned: "",
         ContactNumber: "",
+        labId:""
     };
 
-    function savePatient() {
-        hospital_patients = [...hospital_patients, newPatient];
-        hospitalPatientList.set({ patientList: hospital_patients });
+    async function savePatient(event) {
+        const form = event.target;
+        const formData = new FormData(form);
 
-        newPatient = {
-            patientName: "",
-            patientID: "",
-            Status: "",
-            DoctorAssigned: "",
-            ContactNumber: "",
-        };
+        console.log(formData.get("patientId"))
+
+        await fetch(serverUrl + "h2p/add-patient", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                if (data === "0") {
+                    toast.error("Please recheck patient id");
+                } else {
+                    getPatientList();
+                }
+            });
+        
+        // getDoctorList();
+
+        form.reset()
         showForm = false;
     }
 
+    $: patientList = []
+
+    async function getPatientList(){
+        let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        await fetch(serverUrl + "h2p/get-hospital-patient-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                patientList = []
+                for(let i=0;i<Object.keys(data).length;i++){
+                    patientList.push(JSON.parse(data[i]))
+                }
+                console.log(patientList)
+            });
+    }
+
     onMount(() => {
-        hospital_patients = get(hospitalPatientList).patientList;
+        getPatientList();
+    hospital_patients = get(hospitalPatientList).patientList;
     });
 </script>
 
+<Toaster/>
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">
     <nav class="bg-white shadow-md mb-8 p-4 rounded-lg">
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
-                alt={get(hospitalInfo).hospitalName + " Logo"}
+                alt={get(hospitalInfo).hospitalInfo["name"] + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
                 on:click={navigateBack}
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{get(hospitalInfo).hospitalName}</span
+                >{get(hospitalInfo).hospitalInfo["name"]}</span
             >
             <span>
                 <a href="#/hospitalogin" class="btn btn-outline ml-auto mr-2"
@@ -72,44 +110,50 @@
 
     {#if showForm}
         <div class="overlay">
-            <form class="form-content">
+            <form on:submit|preventDefault={savePatient} class="form-content">
                 <div class="ml-40">
-                    <h1>{get(hospitalInfo).hospitalName}</h1>
+                    <h1>{get(hospitalInfo).hospitalInfo["name"]}</h1>
                 </div>
                 <div class="field">
                     <label for="patientName">Name:</label>
                     <input
                         bind:value={newPatient.patientName}
-                        id="patientName"
+                        name="patientName"
                     />
                 </div>
                 <div class="field">
                     <label for="patientID">ID:</label>
-                    <input bind:value={newPatient.patientID} id="patientID" />
+                    <input bind:value={newPatient.patientID} name="patientId" />
                 </div>
+
                 <div class="field">
                     <label for="Status">Status:</label>
-                    <input bind:value={newPatient.Status} id="Status" />
+                    <input bind:value={newPatient.Status} name="status" />
                 </div>
                 <div class="field">
                     <label for="DoctorAssigned">Doctor to Visit:</label>
                     <input
                         bind:value={newPatient.DoctorAssigned}
-                        id="DoctorAssigned"
+                        name="doctorId"
                     />
+                </div>
+                <div class="field">
+                    <label for="labID">Lab to Visit:</label>
+                    <input bind:value={newPatient.labID} name="labId" />
                 </div>
                 <div class="field">
                     <label for="ContactNumber">Contact Number:</label>
                     <input
                         bind:value={newPatient.ContactNumber}
-                        id="ContactNumber"
+                        name="patientPhone"
                     />
                 </div>
+                <input type="hidden" name="hospitalId" value={get(hospitalInfo).hospitalInfo["id"]}>
                 <!-- Similar structure for other fields -->
                 <!-- ... -->
                 <button
                     class="btn border-black text-white bg-green-400 hover:bg-green-700 mr-2"
-                    on:click={savePatient}
+                   type="submit"
                 >
                     Save
                 </button>
@@ -124,25 +168,25 @@
     {/if}
 
     <div class="patient-list">
-        {#each hospital_patients as patient}
+        {#each patientList as patient}
             <div class="patient-item">
                 <div class="details">
                     <div class="detail-item">
-                        Name: <span>{patient.patientName}</span>
+                        Name: <span>{patient["patientName"]}</span>
                     </div>
                     <div class="detail-item">
-                        ID: <span>{patient.patientID}</span>
+                        ID: <span>{patient["id"]}</span>
                     </div>
                     <div class="detail-item">
-                        Contact: <span>{patient.ContactNumber}</span>
+                        Contact: <span>{patient["patientPhone"]}</span>
                     </div>
                 </div>
                 <div class="status {getStatusClass(patient.Status)}">
-                    Status: {patient.Status}
+                    Status: {patient["status"]}
                 </div>
-                {#if patient.DoctorAssigned}
+                {#if patient["doctorId"]}
                     <div class="doctor">
-                        Doctor Assigned: {patient.DoctorAssigned}
+                        Doctor Assigned: {patient["doctorId"]}
                     </div>
                 {:else}
                     <div class="doctor">Doctor Assigned: Not Assigned</div>

@@ -1,4 +1,9 @@
 <script>
+    import { format } from "d3";
+    import { serverUrl } from "./constants";
+    import { get } from "svelte/store";
+    import { labInfo } from "./store";
+
     let hospitalName = "Dhaka Medical College";
     let hospitalLogo =
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/dmc.png";
@@ -19,15 +24,22 @@
         reader.readAsDataURL(file);
     }
 
-    function addMachine() {
-        machines = [...machines, { ...newMachine }];
-        newMachine = {
-            machineName: "",
-            companyName: "",
-            model: "",
-            incorporateDate: "",
-            image: "",
-        };
+    async function addMachine(event) {
+        const form = event.target;
+        const data = new FormData(form);
+
+        await fetch(serverUrl + "machine/add-machine", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                
+            });
+
+        form.reset();
         showMachineForm = false;
     }
     let machines = [
@@ -149,30 +161,35 @@
             {/each}
         </div>
         {#if showMachineForm}
+        <form on:submit|preventDefault={addMachine}>
             <div class="bg-white p-4 rounded-lg shadow-lg mt-8">
                 <h3 class="text-xl font-semibold mb-4">Add New Machine</h3>
                 <div class="space-y-4">
                     <input
                         type="text"
                         placeholder="Machine Name"
+                        name="name"
                         bind:value={newMachine.machineName}
                         class="border p-2 w-full rounded"
                     />
                     <input
                         type="text"
                         placeholder="Company Name"
+                        name="company"
                         bind:value={newMachine.companyName}
                         class="border p-2 w-full rounded"
                     />
                     <input
                         type="text"
                         placeholder="Model"
+                        name="model"
                         bind:value={newMachine.model}
                         class="border p-2 w-full rounded"
                     />
                     <input
                         type="date"
                         placeholder="Incorporate Date"
+                        name="idate"
                         bind:value={newMachine.incorporateDate}
                         class="border p-2 w-full rounded"
                     />
@@ -182,12 +199,14 @@
                         on:change={handleFileChange}
                         class="border p-2 w-full rounded"
                     />
+                    <input type="hidden" name="labId" value={get(labInfo).labInfo["id"]}>
                 </div>
                 <button
                     class="bg-green-500 text-white p-2 mt-4 rounded"
-                    on:click={addMachine}>Add Machine</button
+                    type="submit">Add Machine</button
                 >
             </div>
+        </form>
         {/if}
         <button
             class="bg-green-500 text-white p-2 rounded mt-6 hover:bg-green-600"

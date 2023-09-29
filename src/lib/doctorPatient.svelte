@@ -1,7 +1,10 @@
 <script>
     console.log("Started doctorPatient.svelte");
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
     export let params = {};
+    import {doctorInfo, doctorHospital } from "./store";
+    import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
 
     // let paramsContext = getContext("@@svelte-spa-router");
     // let params = paramsContext ? paramsContext.params : {};
@@ -83,24 +86,48 @@
     $: patients = (patientsData[hospitalName] || []).sort(
         (a, b) => new Date(b.dateTime) - new Date(a.dateTime)
     );
+
+    $: patientList = []
+
+    async function getPatientList(){
+        let payload = { doctorId: get(doctorInfo).doctorId, hospitalId: get(doctorHospital).hospitalId };
+        await fetch(serverUrl + "h2p/get-doctor-patient-list", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                patientList = []
+                for(let i=0;i<Object.keys(data).length;i++){
+                    patientList.push(JSON.parse(data[i]))
+                }
+                console.log(patientList)
+            });
+    }
+
+    onMount(()=>{
+        getPatientList()
+    })
 </script>
 
 <main class="bg-gray-100 min-h-screen p-6">
     <h1 class="text-2xl font-semibold mb-6">Patients in {hospitalName}</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {#each patients as patient (patient.id)}
+        {#each patientList as patient (patient.id)}
             <div
                 class="patient-card flex flex-col items-center justify-between p-4 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105 cursor-pointer"
-                on:click={() => navigateToSpecificPatient(patient.id)}
+                on:click={() => navigateToSpecificPatient(patient["id"])}
             >
                 <div class="mb-4 text-center">
-                    <span class="font-medium text-xl">{patient.name}</span>
+                    <span class="font-medium text-xl">{patient['patientName']}</span>
                     <span class="block text-gray-500 mt-2"
-                        >ID: {patient.id}</span
+                        >ID: {patient["id"]}</span
                     >
                     <span class="block text-sm text-gray-400 mt-1"
-                        >{new Date(patient.dateTime).toLocaleString()}</span
+                        >{patient["admitDate"]}</span
                     >
                 </div>
             </div>

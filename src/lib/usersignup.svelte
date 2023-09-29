@@ -107,7 +107,7 @@
                         uploadCustomPhoto(data, formData.get("photo"));
                     }
 
-                    userID = ret;
+                    userID = data;
                     showModal = true;
                     
                     //window.location.hash = `#/userlogin`;

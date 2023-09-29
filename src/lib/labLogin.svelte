@@ -1,23 +1,50 @@
 <script>
+    import toast, { Toaster } from "svelte-french-toast";
+    import { serverUrl } from "./constants";
+    import { labInfo } from "./store";
+
     let hospitalId = "";
     let labId = "";
     let labPass = "";
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        if (hospitalId && labId && labPass) {
-            // Here you can take necessary actions with the form data
-            // Example: You can send this data to your backend for verification
+    async function handleSubmit(event) {
+        const form = event.target;
+        const data = new FormData(form);
 
-            // For now, we're simply redirecting to the user route
-            window.location.href = "#/labhome";
-        }
+        console.log(data.get("id"));
+        console.log(data.get("password"));
+
+        await fetch(serverUrl + "lab/login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .catch(() => null)
+            .then((data) => {
+                // let ret = +data;
+                console.log(data);
+
+                //Login Failed
+                if (!data) {
+                    toast.error("Login Failed 🙁");
+                }
+                //Login Success
+                else {
+                    labInfo.set({labInfo:data})
+                    window.location.hash = `#/doctorhome`;
+                }
+            });
+
+        form.reset();
     }
     function navigateHome() {
         window.location.hash = `#/`;
     }
 </script>
 
+<Toaster/>
 <div
     class="flex items-center justify-center min-h-screen relative"
     style="background-image: url('https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blurblue.jpg'); background-size: cover; backdrop-filter: blur(10px);"
@@ -47,11 +74,12 @@
             <h5 class="text-3xl font-bold" style="color: #000000;">
                 Sign In to Lab's Account
             </h5>
-            <form on:submit={handleSubmit}>
+            <form on:submit|preventDefault={handleSubmit}>
                 <div class="mb-2">
                     <input
                         bind:value={hospitalId}
                         type="text"
+                        name="hospitalId"
                         placeholder="Enter Hospital ID"
                         class="input input-bordered w-full max-w-xs"
                     />
@@ -60,6 +88,7 @@
                     <input
                         bind:value={labId}
                         type="text"
+                        name="id"
                         placeholder="Enter Laboratory ID"
                         class="input input-bordered w-full max-w-xs"
                     />
@@ -67,7 +96,8 @@
                 <div>
                     <input
                         bind:value={labPass}
-                        type="text"
+                        type="password"
+                        name="password"
                         placeholder="Enter Password"
                         class="w-full input input-bordered max-w-xs"
                     />

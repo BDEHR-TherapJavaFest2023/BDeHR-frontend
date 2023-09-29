@@ -80,20 +80,9 @@
     // Start observing when the component is mounted
     //onMount(initIntersectionObserver);
 
-    async function test() {
-        await fetch("https://bdehr-backend.onrender.com/test")
-            .then((response) => {
-                return response.text();
-            })
-            .then((data) => {
-                console.log(data);
-            });
-    }
-
     onMount(() => {
         //console.log("Here");
         initIntersectionObserver();
-        test();
         const interval = setInterval(() => {
             nextSlide();
         }, 3000); // 3 seconds

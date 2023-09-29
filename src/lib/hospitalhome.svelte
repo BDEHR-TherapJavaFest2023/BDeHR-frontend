@@ -4,6 +4,7 @@
     import "leaflet/dist/leaflet.css";
     import { hospitalDoctorList, hospitalPatientList, hospitalInfo } from "./store";
     import { get } from "svelte/store";
+    import { serverUrl } from "./constants";
 
     // const data = {
     //     name: "Dhaka Medical College Hospital",
@@ -24,83 +25,83 @@
     //     NumberCurrentUnit: "300",
     // };
 
-    let DoctorsIntro = [
-        {
-            doctorName: "Dr. M. Rezaul Karim",
-            speciality: "Medicine",
-            degrees: ["MBBS", "FCPS", "FRCS"],
-            imageURL:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-        },
-        {
-            doctorName: "Dr. Shirin Akhter",
-            speciality: "Gynae & Obstetrics",
-            degrees: ["MBBS", "MCPS", "FCPS"],
-            imageURL:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-        },
-        {
-            doctorName: "Dr. Faiza Roshni",
-            speciality: "Surgery",
-            degrees: ["MBBS", "FCPS", "FRCS"],
-            imageURL:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-        },
-        {
-            doctorName: "Dr. Tasnim Ishrat Sara",
-            speciality: "Medicine",
-            degrees: ["MBBS", "FCPS", "FRCS"],
-            imageURL:
-                "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
-        },
-    ];
-    let patientsIntro = [
-        {
-            patientName: "Nazmus Sakib",
-            patientID: "AB13WE8",
-            Status: "Visiting Doctor",
-            DoctorAssigned: "Dr M. Rezaul Karim",
-            ContactNumber: "01759922550",
-        },
-        {
-            patientName: "Saad Md. Rafid Pial",
-            patientID: "ASC439O",
-            Status: "Doing Diagnostics",
-            DoctorAssigned: null,
-            ContactNumber: "01729456209",
-        },
-        {
-            patientName: "Salman Sayeed",
-            patientID: "99WE5Q7",
-            Status: "Admitted",
-            DoctorAssigned: "Dr Shirin Akhter",
-            ContactNumber: "01482956918",
-        },
-        {
-            patientName: "Mahir Labib Dihan",
-            patientID: "99RS5Q7",
-            Status: "Visiting Doctor",
-            DoctorAssigned: "Dr M. Rezaul Karim",
-            ContactNumber: "01482956918",
-        },
-        {
-            patientName: "Abir Muhtasim",
-            patientID: "99RG8Q7",
-            Status: "Visiting Doctor",
-            DoctorAssigned: "Dr M. Rezaul Karim",
-            ContactNumber: "01482956918",
-        },
-        {
-            patientName: "Sayem Shahad",
-            patientID: "99RS9S7",
-            Status: "Doing Diagnostics",
-            DoctorAssigned: null,
-            ContactNumber: "01482956918",
-        },
-    ];
+    // let DoctorsIntro = [
+    //     {
+    //         doctorName: "Dr. M. Rezaul Karim",
+    //         speciality: "Medicine",
+    //         degrees: ["MBBS", "FCPS", "FRCS"],
+    //         imageURL:
+    //             "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+    //     },
+    //     {
+    //         doctorName: "Dr. Shirin Akhter",
+    //         speciality: "Gynae & Obstetrics",
+    //         degrees: ["MBBS", "MCPS", "FCPS"],
+    //         imageURL:
+    //             "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+    //     },
+    //     {
+    //         doctorName: "Dr. Faiza Roshni",
+    //         speciality: "Surgery",
+    //         degrees: ["MBBS", "FCPS", "FRCS"],
+    //         imageURL:
+    //             "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+    //     },
+    //     {
+    //         doctorName: "Dr. Tasnim Ishrat Sara",
+    //         speciality: "Medicine",
+    //         degrees: ["MBBS", "FCPS", "FRCS"],
+    //         imageURL:
+    //             "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/userdefault.png",
+    //     },
+    // ];
+    // let patientsIntro = [
+    //     {
+    //         patientName: "Nazmus Sakib",
+    //         patientID: "AB13WE8",
+    //         Status: "Visiting Doctor",
+    //         DoctorAssigned: "Dr M. Rezaul Karim",
+    //         ContactNumber: "01759922550",
+    //     },
+    //     {
+    //         patientName: "Saad Md. Rafid Pial",
+    //         patientID: "ASC439O",
+    //         Status: "Doing Diagnostics",
+    //         DoctorAssigned: null,
+    //         ContactNumber: "01729456209",
+    //     },
+    //     {
+    //         patientName: "Salman Sayeed",
+    //         patientID: "99WE5Q7",
+    //         Status: "Admitted",
+    //         DoctorAssigned: "Dr Shirin Akhter",
+    //         ContactNumber: "01482956918",
+    //     },
+    //     {
+    //         patientName: "Mahir Labib Dihan",
+    //         patientID: "99RS5Q7",
+    //         Status: "Visiting Doctor",
+    //         DoctorAssigned: "Dr M. Rezaul Karim",
+    //         ContactNumber: "01482956918",
+    //     },
+    //     {
+    //         patientName: "Abir Muhtasim",
+    //         patientID: "99RG8Q7",
+    //         Status: "Visiting Doctor",
+    //         DoctorAssigned: "Dr M. Rezaul Karim",
+    //         ContactNumber: "01482956918",
+    //     },
+    //     {
+    //         patientName: "Sayem Shahad",
+    //         patientID: "99RS9S7",
+    //         Status: "Doing Diagnostics",
+    //         DoctorAssigned: null,
+    //         ContactNumber: "01482956918",
+    //     },
+    // ];
     function navigateToHospitalDoctors() {
         // Set the doctor_id in the store
-        hospitalDoctorList.set({doctorList: DoctorsIntro});
+        // hospitalDoctorList.set({doctorList: DoctorsIntro});
         // hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
@@ -108,7 +109,7 @@
     }
     function navigateToHospitalPatients() {
         // Set the doctor_id in the store
-        hospitalPatientList.set({patientList: patientsIntro})
+        // hospitalPatientList.set({patientList: patientsIntro})
         // hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
@@ -117,7 +118,7 @@
 
     function navigateToHospitalAuthority() {
         // Set the doctor_id in the store
-        hospitalDoctorList.set({doctorList: DoctorsIntro});
+        // hospitalDoctorList.set({doctorList: DoctorsIntro});
         // hospitalInfo.set({hospitalName: data.name, hospitalLogo: data.logoUrl});
 
         // Navigate to the hospitals page
@@ -126,7 +127,52 @@
 
     let map;
 
+    $:doctorCnt = 0
+    $:patientCnt = 0
+    $:deptCnt = 0
+
+    async function getDoctorCnt(){
+        let payload={hospitalId:get(hospitalInfo).hospitalInfo["id"]}
+        await fetch(serverUrl + "h2d/get-doctor-cnt", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let cnt = +data
+                doctorCnt = cnt;
+            })
+    }
+
+    async function getPatientCnt(){
+        let payload={hospitalId:get(hospitalInfo).hospitalInfo["id"]}
+        await fetch(serverUrl + "h2p/get-hospital-patient-cnt", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                console.log(data);
+                let cnt = +data
+                patientCnt = cnt;
+            })
+    }
+
+    function getDeptCnt(){
+        let deptList = []
+        deptList = get(hospitalInfo).hospitalInfo["deptList"].split(',')
+        deptCnt = deptList.length
+    }
+
     onMount(async () => {
+        getDoctorCnt();
+        getPatientCnt();
+        getDeptCnt();
+
         // No need for the 'require' here anymore
         const iconUrl =
             "https://www.iconarchive.com/download/i103443/paomedia/small-n-flat/map-marker.1024.png";
@@ -154,7 +200,12 @@
         setTimeout(() => {
             map.invalidateSize();
         }, 100);
+
+
+
     });
+
+
 </script>
 
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">
@@ -189,7 +240,11 @@
                 />
             </div>
             <div class="w-full md:w-1/2 px-4 pt-6 md:pt-0 mt-2">
-                <img src={get(hospitalInfo).hospitalInfo["logo"]} alt={get(hospitalInfo).hospitalInfo["name"]} class="h-15 w-20" />
+                <img
+                    src={get(hospitalInfo).hospitalInfo["logo"]}
+                    alt={get(hospitalInfo).hospitalInfo["name"]}
+                    class="h-15 w-20"
+                />
                 <h1 class="text-4xl font-bold mb-2 text-purple-600">
                     {get(hospitalInfo).hospitalInfo["name"]}
                 </h1>
@@ -198,23 +253,28 @@
                 </h1>
                 <div>
                     <strong class="text-gray-700">Hospital ID:</strong>
-                    <span class="ml-2">{get(hospitalInfo).hospitalInfo["id"]}</span>
+                    <span class="ml-2"
+                        >{get(hospitalInfo).hospitalInfo["id"]}</span
+                    >
                 </div>
                 <div>
                     <strong class="text-gray-700">Established:</strong>
-                    <span class="ml-2">{get(hospitalInfo).hospitalInfo["dob"]}</span>
+                    <span class="ml-2"
+                        >{get(hospitalInfo).hospitalInfo["dob"]}</span
+                    >
                 </div>
                 <div>
                     <strong class="text-gray-700">Current Doctors:</strong>
-                    <span class="ml-2">Fetch Later</span>
+                    <span class="ml-2">{doctorCnt}</span>
                 </div>
                 <div>
                     <strong class="text-gray-700">Current Patients:</strong>
-                    <span class="ml-2">Fetch Later</span>
+                    <span class="ml-2">{patientCnt}</span>
                 </div>
                 <div>
-                    <strong class="text-gray-700">Number of Departments:</strong>
-                    <span class="ml-2">Process Later</span>
+                    <strong class="text-gray-700">Number of Departments:</strong
+                    >
+                    <span class="ml-2">{deptCnt}</span>
                 </div>
                 <div class="mt-2">
                     <button
@@ -254,14 +314,16 @@
                 <strong>Phone:</strong>
                 <a
                     href={"tel:" + get(hospitalInfo).hospitalInfo["phone"]}
-                    class="text-blue-500 hover:underline">{get(hospitalInfo).hospitalInfo["phone"]}</a
+                    class="text-blue-500 hover:underline"
+                    >{get(hospitalInfo).hospitalInfo["phone"]}</a
                 >
             </li>
             <li class="flex items-start space-x-2 mt-2">
                 <strong>Email:</strong>
                 <a
                     href={"mailto:" + get(hospitalInfo).hospitalInfo["email"]}
-                    class="text-blue-500 hover:underline">{get(hospitalInfo).hospitalInfo["email"]}</a
+                    class="text-blue-500 hover:underline"
+                    >{get(hospitalInfo).hospitalInfo["email"]}</a
                 >
             </li>
             <!-- <li class="mt-2">
