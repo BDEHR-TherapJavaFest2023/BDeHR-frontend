@@ -26,7 +26,7 @@
     ];
     let doctorResearches = [
         "Dengue on Elderly",
-        "Why Pial is Boksod",
+        "Corona Trends",
         "Common Cold on Children",
         "Renal diseases on diabetec patient",
     ];
