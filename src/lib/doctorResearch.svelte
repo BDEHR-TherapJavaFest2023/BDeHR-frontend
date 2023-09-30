@@ -1,7 +1,7 @@
 <script>
     import NavbarRunning from "./doctorNavbar.svelte";
-    import { doctorInfo,doctorResearchList } from "./store";
-    import {get} from "svelte/store"
+    import { doctorInfo, doctorResearchList } from "./store";
+    import { get } from "svelte/store";
 
     function navigateToProfile() {
         // Navigate to the Profile page
@@ -10,6 +10,11 @@
     function navigateToHospital() {
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/hospitals";
+    }
+    function navigateToParticular(rname) {
+        // Navigate to the hospitals page
+
+        window.location.hash = `#/doctorhome/researches/${rname}`;
     }
 </script>
 
@@ -52,7 +57,11 @@
                 <div class="flex items-center justify-center space-x-4">
                     <!-- Assuming you have an icon component or library, replace with your icon of choice -->
 
-                    <span class="text-blue-500 font-bold">{hospital}</span>
+                    <span
+                        class="text-blue-500 font-bold"
+                        on:click={() => navigateToParticular(hospital)}
+                        >{hospital}</span
+                    >
                 </div>
             </div>
         {/each}

@@ -36,6 +36,7 @@ import adminResearch from './lib/adminResearch.svelte';
 import ResearchLogin from './lib/researchLogin.svelte';
 import ResearchSignUp from './lib/researchSignUp.svelte'
 import ResearchHome from './lib/researchhome.svelte'
+import DoctorResearchDepth from './lib/doctorResearchDepth.svelte';
 
 export const routes = {
     // Define your routes here
@@ -53,6 +54,7 @@ export const routes = {
     '/doctorhome': doctorHome,
     '/doctorhome/hospitals': doctorHospital,
     '/doctorhome/researches': doctorResearch,
+    '/doctorhome/researches/:researchParticular': DoctorResearchDepth,
     '/hospitalhome': hospitalHome,
     '/hospitalhome/patients': hospitalPatients,
     '/hospitalhome/doctors': hospitalDoctors,
