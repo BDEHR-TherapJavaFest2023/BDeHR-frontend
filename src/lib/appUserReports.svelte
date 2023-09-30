@@ -177,7 +177,7 @@
                         </div>
                         <div class="flex-initial">
                             <a
-                                href={medication['medicationUrl']}
+                                href={medication['url']}
                                 target="_blank"
                                 class="btn btn-outline hover:bg-rose-700"
                             >
