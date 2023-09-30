@@ -197,6 +197,24 @@
         }
     }
 
+    async function downloadCanvasAsImage(canvasId, filename) {
+        const canvas = document.getElementById(canvasId);
+        const dataUrl = canvas.toDataURL("image/png");
+
+        const blob = await fetch(dataUrl).then((res) => res.blob());
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = filename;
+
+        document.body.appendChild(a);
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+    }
+
     // async function copyCanvasToClipboard(canvasId) {
     //     const canvasElement = document.getElementById(canvasId);
     //     if (!canvasElement) {
@@ -638,7 +656,14 @@
                             on:click={() => copyCanvasToClipboard("mapId")}
                             >Copy</button
                         >
+                        <button
+                            class="btn btn-outline ml-4 hover:bg-green-600"
+                            on:click={() =>
+                                downloadCanvasAsImage("mapId", "map.png")}
+                            >Download</button
+                        >
                     {/if}
+                    
                     {#if isChartVisible}
                         <canvas id="myBarChart" width="400" height="200" />
 
@@ -646,6 +671,14 @@
                             class="btn btn-outline ml-4 hover:bg-red-600"
                             on:click={() => copyCanvasToClipboard("myBarChart")}
                             >Copy</button
+                        >
+                        <button
+                            class="btn btn-outline ml-4 hover:bg-green-600"
+                            on:click={() =>
+                                downloadCanvasAsImage(
+                                    "myBarChart",
+                                    "bar_chart.png"
+                                )}>Download</button
                         >
                     {/if}
                     {#if isLineChartVisible}
@@ -655,6 +688,14 @@
                             on:click={() =>
                                 copyCanvasToClipboard("myLineChart")}
                             >Copy</button
+                        >
+                        <button
+                            class="btn btn-outline ml-4 hover:bg-green-600"
+                            on:click={() =>
+                                downloadCanvasAsImage(
+                                    "myLineChart",
+                                    "line_chart.png"
+                                )}>Download</button
                         >
                     {/if}
 

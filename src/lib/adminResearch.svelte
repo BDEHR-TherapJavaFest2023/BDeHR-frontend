@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { supabase } from "./supabaseClient";
     import { serverUrl } from "./constants";
 
     let Messages = [
@@ -27,100 +28,74 @@
         // add more messages like this
     ];
     Messages.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
-    // function handlePaste(event, index) {
-    //     event.preventDefault();
-    //     const clipboardData = event.clipboardData;
-    //     const items = clipboardData.items;
-    //     const responseBox = document.getElementById(`response-box-${index}`);
 
-    //     for (let i = 0; i < items.length; i++) {
-    //         if (items[i].type.indexOf("image") !== -1) {
-    //             const blob = items[i].getAsFile();
-    //             const reader = new FileReader();
-    //             reader.onload = function (event) {
-    //                 const img = document.createElement("img");
-    //                 img.src = event.target.result;
-    //                 responseBox.appendChild(img);
-    //             };
-    //             reader.readAsDataURL(blob);
-    //         } else if (items[i].type.indexOf("text/plain") !== -1) {
-    //             items[i].getAsString(function (str) {
-    //                 const textNode = document.createTextNode(str);
-    //                 responseBox.appendChild(textNode);
-    //             });
-    //         }
-    //     }
-    // }
-    
-    $: reqCnt=0;
-    async function getReqCnt(){
-        await fetch(serverUrl + "hospital-request/get-request-cnt")
-            .then((response) => {
-                return response.text();
-            })
-            .then((data) => {
-                let res = +data;
-                reqCnt=res;
-            })
+    let activeMessage = null;
+    let fileInput;
+    let uid = 0;
+
+    function showModal(index, id) {
+        uid = id;
+        console.log(uid);
+        activeMessage = Messages[index];
+        const modalElement = document.getElementById("responseModal");
+        modalElement.classList.remove("hidden");
     }
-    onMount(()=>{
-        getReqCnt();
-        getMsgCnt();
-    })
-    function handlePaste(event, index) {
-        event.preventDefault();
-        const clipboardData = event.clipboardData;
-        const items = clipboardData.items;
 
-        // Select the contenteditable div within the specific response box
-        const responseBox = document.querySelector(
-            `#response-box-${index} .editable-content`
-        );
+    function closeModal() {
+        const modalElement = document.getElementById("responseModal");
+        modalElement.classList.add("hidden");
+    }
 
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].type.indexOf("image") !== -1) {
-                const blob = items[i].getAsFile();
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const img = document.createElement("img");
-                    img.src = event.target.result;
-                    img.style.maxWidth = "100%";
-                    img.style.height = "auto";
-                    img.style.display = "block";
-                    responseBox.appendChild(img);
-                };
-                reader.readAsDataURL(blob);
-            } else if (items[i].type.indexOf("text/plain") !== -1) {
-                items[i].getAsString(function (str) {
-                    const textNode = document.createTextNode(str);
-                    responseBox.appendChild(textNode);
-                });
-            }
+    function handleFileUpload() {
+        const selectedFile = fileInput.files[0];
+        if (selectedFile) {
+            // Perform file upload operations
+            console.log(`Uploading file: ${selectedFile.name}`);
         }
     }
 
-    function sendMessage(messageId) {
-        Messages = Messages.filter((_, index) => index !== messageId);
+    async function uploadData(selectedFile) {
+        const currentTime = new Date().toISOString();
+        let { data: res1 } = await supabase.storage
+            .from("graphs")
+            .upload(`graphs_${currentTime}`, selectedFile);
+
+        let { data: res2 } = supabase.storage
+            .from("graphs")
+            .getPublicUrl(`graphs_${currentTime}`);
+        return res2;
     }
 
-    // Additional function to show the respond box for a specific message
-
-    let showRespondBox = new Array(Messages.length).fill(null);
-
-    // Function to toggle the visibility of the response box for a specific message
-    function toggleResponseBox(index) {
-        showRespondBox[index] = !showRespondBox[index];
+    async function uploadResponse(selectedFile, text) {
+        await uploadData(selectedFile).then((response) => {
+            let payload = {
+                resText: text,
+                id: uid,
+                url: response["publicUrl"],
+            };
+            // console.log(payload);
+            fetch(serverUrl + "data/add-response", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            }).then((response) => {
+                getMessageList();
+            });
+        });
     }
 
-    // Function to send a message and hide its response box
-    function sendMessageAndHideBox(index) {
-        sendMessage(index); // Your existing sendMessage function
-        toggleResponseBox(index);
-    }
+    let resText = "";
 
-    // Function to show the response box for a specific message
-    function showResponseBoxForMessage(index) {
-        showRespondBox = showRespondBox === index ? -1 : index; // Toggle the response box
+    async function handleSubmit() {
+        // Check if any file is uploaded
+        const selectedFile = fileInput?.files[0];
+        if (selectedFile) {
+            uploadResponse(selectedFile, resText);
+            resText = "";
+        } else {
+            console.log("No file selected for upload.");
+        }
+        closeModal();
+        // Perform additional form submit tasks here if needed
     }
 
     function navigateToDashboard() {
@@ -141,17 +116,49 @@
     function navigateToResearch() {
         window.location.hash = `#/adminhome/research`;
     }
-    $: msgCnt=0;
-    async function getMsgCnt(){
+
+    $: reqCnt = 0;
+    $: msgCnt = 0;
+    async function getReqCnt() {
+        await fetch(serverUrl + "hospital-request/get-request-cnt")
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+                let res = +data;
+                reqCnt = res;
+            });
+    }
+
+    async function getMsgCnt() {
         await fetch(serverUrl + "message/get-unread-cnt")
             .then((response) => {
                 return response.text();
             })
             .then((data) => {
                 let res = +data;
-                msgCnt=res;
-            })
+                msgCnt = res;
+            });
     }
+
+    $: messageList = [];
+
+    async function getMessageList() {
+        await fetch(serverUrl + "data/get-request-list")
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                messageList = data || [];
+                console.log(messageList);
+            });
+    }
+
+    onMount(() => {
+        getReqCnt();
+        getMsgCnt();
+        getMessageList();
+    });
 </script>
 
 <main class="bg-gray-100 min-h-screen">
@@ -292,53 +299,83 @@
             </h1>
             <div class="container px-4 mt-8">
                 <div class="space-y-4 overflow-y-auto max-h-[70vh]">
-                    {#each Messages as { orgName, dateTime, MessageBody }, index}
+                    {#each messageList as message,index}
                         <div class="bg-white rounded-lg shadow-md p-4 relative">
                             <h2 class="text-xl font-semibold text-blue-600">
-                                {orgName}
+                                {message["sender"]}
                             </h2>
                             <p class="text-sm text-gray-500">
-                                {new Date(dateTime).toLocaleString()}
+                                {message["reqTime"]}
                             </p>
                             <div
                                 class="mt-2 p-3 rounded-full bg-blue-100 inline-block"
                             >
                                 <p class="text-base whitespace-pre-line">
-                                    {MessageBody}
+                                    {message["reqText"]}
                                 </p>
                             </div>
                             <button
                                 class="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                on:click={() => toggleResponseBox(index)}
+                                on:click={() => showModal(index, message["id"])}
                             >
                                 Respond
                             </button>
-                            <div
-                                id={`response-box-${index}`}
-                                class={showRespondBox[index]
-                                    ? "mt-4 border rounded p-4"
-                                    : "hidden"}
-                            >
-                                <!-- Flex layout to keep contenteditable div above Send button -->
-                                <div class="flex flex-col">
-                                    <div
-                                        contenteditable="true"
-                                        class="border h-48 mb-2 p-2 editable-content scrollable-content"
-                                        placeholder="Paste your image here..."
-                                        on:paste={(event) =>
-                                            handlePaste(event, index)}
-                                    />
-                                    <button
-                                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                                        on:click={() =>
-                                            sendMessageAndHideBox(index)}
-                                    >
-                                        Send
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     {/each}
+                </div>
+                <div
+                    id="responseModal"
+                    class="fixed inset-0 flex items-center justify-center hidden"
+                >
+                    <div
+                        class="absolute inset-0 bg-black opacity-50"
+                        on:click={closeModal}
+                    />
+                    <div class="bg-white w-2/5 p-6 rounded-lg z-10">
+                        <h2 class="text-xl font-semibold text-blue-600 mb-4">
+                            Responding to: {activeMessage?.orgName}
+                        </h2>
+                        <form on:submit|preventDefault={handleSubmit}>
+                            <div class="mb-4">
+                                <label
+                                    for="responseText"
+                                    class="block text-sm font-medium text-gray-600"
+                                    >Your Response</label
+                                >
+                                <textarea
+                                    id="responseText"
+                                    name="resText"
+                                    rows="4"
+                                    class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                                    bind:value={resText}
+                                    aria-label="Message"
+                                />
+                            </div>
+                            <div class="mb-4">
+                                <label
+                                    for="responseFile"
+                                    class="block text-sm font-medium text-gray-600"
+                                    >Upload a File</label
+                                >
+                                <input
+                                    type="file"
+                                    id="responseFile"
+                                    name="file"
+                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
+                                    bind:this={fileInput}
+                                    on:change={handleFileUpload}
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-accent"
+                                >Send Response</button
+                            >
+                            <button
+                                type="button"
+                                class="btn btn-error"
+                                on:click={closeModal}>Cancel</button
+                            >
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

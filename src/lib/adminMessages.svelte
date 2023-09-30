@@ -48,7 +48,7 @@
                 return response.json();
             })
             .then((data) => {
-                messageList = data;
+                messageList = data || [];
                 console.log(messageList);
             })
     }

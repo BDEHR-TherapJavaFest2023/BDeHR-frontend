@@ -1,12 +1,39 @@
 <script>
     import toast, { Toaster } from "svelte-french-toast";
-
+    import { serverUrl } from "./constants";
+    import { orgInfo } from "./store";
     let id = "";
     let password = "";
 
     async function handleSubmit(event) {
-        //Testing Direct Login
-        window.location.hash = `#/researchOrg/home`;
+        const form = event.target;
+        const data = new FormData(form);
+
+        await fetch(serverUrl + "research/login", {
+            method: "POST",
+            body: data,
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .catch(() => null)
+            .then((data) => {
+                // let ret = +data;
+                console.log(data);
+
+                //Login Failed
+                if (!data) {
+                    toast.error("Login Failed 🙁");
+                }
+                //Login Failed
+                else {
+                    orgInfo.set({orgInfo:data});
+                    window.location.hash = `#/researchOrg/home`;
+                }
+            });
+
+        form.reset();
+        
     }
     function navigateHome() {
         window.location.hash = `#/`;

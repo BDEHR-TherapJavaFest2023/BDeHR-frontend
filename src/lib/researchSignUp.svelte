@@ -21,9 +21,55 @@
         }
     }
 
+    async function uploadPhoto(id, photo) {
+        let { data: res1 } = await supabase.storage
+            .from("resPhoto")
+            .upload(id, photo);
+
+        let { data: res2 } = supabase.storage
+            .from("resPhoto")
+            .getPublicUrl(id);
+        return res2;
+    }
+
+    async function dbUpdate(id, photo) {
+        await uploadPhoto(id, photo).then((response) => {
+            let payload = { id: id, url: response["publicUrl"] };
+
+            fetch(serverUrl + "research/change-photo", {
+                method: "POST",
+                body: JSON.stringify(payload),
+            });
+        });
+    }
+
     async function handleSubmit(event) {
-        orgID = "abduvw";
-        showModal = true;
+        const form = event.target;
+        const formData = new FormData(form);
+
+        await fetch(serverUrl + "research/signup", {
+            method: "POST",
+            body: formData,
+        })
+            .then((response) => {
+                return response.text();
+            })
+            .then((data) => {
+
+                //Signup Failed
+                if (data == "0") {
+                    toast.error("Signup Failed 🙁");
+                }
+                //Signup Successful
+                else {
+                    dbUpdate(data, formData.get("photo"));
+
+                    orgID = data;
+                    showModal = true;
+                    //window.location.hash = `#/userlogin`;
+                }
+            });
+        form.reset();
     }
 </script>
 
@@ -133,9 +179,10 @@
                     class="block text-gray-700 text-sm font-bold mb-2"
                     for="profilePicture"
                 >
-                    Profile Picture
+                    Organization Logo<span class="text-red-600">*</span>
                 </label>
                 <input
+                    required
                     class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     name="photo"
                     type="file"
