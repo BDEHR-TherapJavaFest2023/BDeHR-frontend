@@ -91,7 +91,7 @@
 
             uploadProfile();
         } else {
-            await uploadPhoto(doctorData.doctor_id, formData.get("photo")).then(
+            await uploadPhoto(doctorData.user_id, formData.get("photo")).then(
                 (response) => {
                     doctorInfo.set({
                         doctorName: formData.get("name").toString(),
