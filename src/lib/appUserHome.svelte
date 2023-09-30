@@ -93,7 +93,7 @@
     async function uploadPhoto(id, photo) {
         let { data: res2 } = await supabase.storage
             .from("userPhoto")
-            .update(id.toString(), photo, {
+            .update(id, photo, {
                 cacheControl: "0",
                 upsert: true,
             });

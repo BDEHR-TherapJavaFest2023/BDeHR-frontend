@@ -38,7 +38,7 @@
         console.log(id+" "+typeof id)
         let { data: res2 } = await supabase.storage
             .from("doctorPhoto")
-            .update(id.toString(), photo, {
+            .update(id, photo, {
                 cacheControl: "0",
                 upsert: true,
             });

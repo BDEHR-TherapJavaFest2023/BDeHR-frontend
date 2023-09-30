@@ -31,7 +31,7 @@
         //     hospital_patients[selectedPatientIndex] = updatedPatient;
         //     hospitalPatientList.set({ patientList: hospital_patients }); // Update the Svelte store
         // }
-
+            
         sstatus = selectedStatus;
         if (selectedDoctor) sdoctorId = selectedDoctor;
         slabId = selectedLab;
@@ -47,10 +47,9 @@
         await fetch(serverUrl + "h2p/update-patient", {
             method: "POST",
             body: JSON.stringify(payload),
-        })
-        .then((response)=>{
+        }).then((response) => {
             getPatientList();
-        })
+        });
 
         selectedStatus = "";
         selectedDoctor = "";
@@ -150,6 +149,7 @@
 
     async function getLabList() {
         let payload = { hospitalId: get(hospitalInfo).hospitalInfo["id"] };
+        console.log(payload);
         await fetch(serverUrl + "lab/get-lab-list", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -171,19 +171,19 @@
     });
 </script>
 
-<Toaster/>
+<Toaster />
 <main class="min-h-screen p-8 bg-gradient-to-br from-blue-300 to-purple-300">
     <nav class="bg-white shadow-md mb-8 p-4 rounded-lg">
         <div class="container mx-auto flex justify-between items-center">
             <img
                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.png"
-                alt={get(hospitalInfo).hospitalInfo['name'] + " Logo"}
+                alt={get(hospitalInfo).hospitalInfo["name"] + " Logo"}
                 class="h-10 w-12 transition-transform transform hover:scale-125"
                 on:click={navigateBack}
             />
 
             <span class="text-3xl font-semibold text-purple-600"
-                >{get(hospitalInfo).hospitalInfo['name']}</span
+                >{get(hospitalInfo).hospitalInfo["name"]}</span
             >
             <span>
                 <a href="#/hospitalogin" class="btn btn-outline ml-auto mr-2"
@@ -233,7 +233,7 @@
                             class="mt-1 p-2 w-full border rounded-md"
                         >
                             {#each doctorList as doctor}
-                                <option value={doctor["id"]}
+                                <option value={doctor["doctorId"]}
                                     >{doctor["name"]}</option
                                 >
                             {/each}
