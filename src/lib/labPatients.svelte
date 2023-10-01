@@ -79,6 +79,10 @@
             getPatientList();
         });
     }
+    $: showModal = false;
+    function modalCng() {
+        showModal = true;
+    }
 
     async function syncPatientList(patient, id, patientId, response) {
         await dbRow(patient, id, patientId, response).then((response) => {
@@ -200,12 +204,7 @@
                             type="file"
                             id={`file-${patient["patientId"]}`}
                             class="hidden"
-                            on:change={() =>
-                                handleFileUpload(
-                                    patient,
-                                    patient["id"],
-                                    patient["patientId"]
-                                )}
+                            on:change={() => modalCng()}
                         />
                         <button
                             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -241,6 +240,39 @@
                         {/if}
                     </div>
                 </div>
+                {#if showModal}
+                    <div
+                        class="fixed inset-0 flex items-center justify-center z-50"
+                    >
+                        <div class="bg-white p-4 rounded-lg shadow-lg w-1/3">
+                            <h2 class="text-lg font-semibold mb-2">
+                                Confirmation
+                            </h2>
+                            <p>Are you sure you want to upload this file?</p>
+                            <div class="flex justify-end mt-4">
+                                <button
+                                    class="btn btn-error"
+                                    on:click={() => (showModal = false)}
+                                    >Cancel</button
+                                >
+                                <button
+                                    class="btn btn-success ml-2"
+                                    on:click={() => {
+                                        handleFileUpload(
+                                            patient,
+                                            patient["id"],
+                                            patient["patientId"]
+                                        );
+
+                                        showModal = false;
+                                    }}
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
             {/each}
         </div>
     </div>

@@ -2,7 +2,7 @@
     console.log("Started doctorPatient.svelte");
     import { getContext, onMount } from "svelte";
     export let params = {};
-    import {doctorInfo, doctorHospital } from "./store";
+    import { doctorInfo, doctorHospital } from "./store";
     import { get } from "svelte/store";
     import { serverUrl } from "./constants";
 
@@ -83,10 +83,13 @@
     }
 
     $: hospitalName = params.hospitalName;
-    $: patientList = []
+    $: patientList = [];
 
-    async function getPatientList(){
-        let payload = { doctorId: get(doctorInfo).doctorId, hospitalId: get(doctorHospital).hospitalId };
+    async function getPatientList() {
+        let payload = {
+            doctorId: get(doctorInfo).doctorId,
+            hospitalId: get(doctorHospital).hospitalId,
+        };
         await fetch(serverUrl + "h2p/get-doctor-patient-list", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -95,21 +98,38 @@
                 return response.json();
             })
             .then((data) => {
-                patientList = []
-                for(let i=0;i<Object.keys(data).length;i++){
-                    patientList.push(JSON.parse(data[i]))
+                patientList = [];
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    patientList.push(JSON.parse(data[i]));
                 }
-                console.log(patientList)
+                console.log(patientList);
             });
     }
 
-    onMount(()=>{
-        getPatientList()
-    })
+    function navigateBack() {
+        window.location.hash = `#/doctorhome/hospitals`;
+    }
+
+    onMount(() => {
+        getPatientList();
+    });
 </script>
 
 <main class="bg-gray-100 min-h-screen p-6">
-    <h1 class="text-2xl font-semibold mb-6">Patients in {hospitalName}</h1>
+    <header
+        class="bg-blue-400 rounded-lg p-4 flex justify-between items-center"
+    >
+        <img
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.svg"
+            class="h-10 w-12 transition-transform transform hover:scale-125"
+            on:click={navigateBack}
+        />
+        <div class="text-white">
+            <h1 class="text-4xl font-semibold mb-4">
+                Patients in {hospitalName}
+            </h1>
+        </div>
+    </header>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {#each patientList as patient (patient.id)}
@@ -118,7 +138,9 @@
                 on:click={() => navigateToSpecificPatient(patient["id"])}
             >
                 <div class="mb-4 text-center">
-                    <span class="font-medium text-xl">{patient['patientName']}</span>
+                    <span class="font-medium text-xl"
+                        >{patient["patientName"]}</span
+                    >
                     <span class="block text-gray-500 mt-2"
                         >ID: {patient["id"]}</span
                     >
