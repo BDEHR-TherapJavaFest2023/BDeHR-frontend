@@ -131,7 +131,7 @@
         </div>
     </header>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
         {#each patientList as patient (patient.id)}
             <div
                 class="patient-card flex flex-col items-center justify-between p-4 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105 cursor-pointer"
