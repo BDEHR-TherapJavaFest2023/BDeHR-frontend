@@ -4,7 +4,7 @@
     import { serverUrl } from "./constants";
     import { hospitalInfo, labInfo } from "./store";
     import { get } from "svelte/store";
-
+    import toast, { Toaster } from "svelte-french-toast";
     let patients = [
         {
             ID: "1234",
@@ -49,7 +49,7 @@
         return res2;
     }
 
-    async function dbRow(id, patientId, response) {
+    async function dbRow(patient, id, patientId, response) {
         let payload = {
             labId: get(labInfo).labInfo["id"],
             hospitalId: get(labInfo).labInfo["hospitalId"],
@@ -65,26 +65,35 @@
             body: JSON.stringify(payload),
         });
 
-        let payload2 = { id: id };
-        await fetch(serverUrl + "h2p/discharge-patient", {
+        let payload2 = {
+            id: patient["id"],
+            status: "Diagnosis Done",
+            doctorId: patient["doctorId"],
+            labId: "",
+        };
+        console.log(payload2);
+        await fetch(serverUrl + "h2p/update-patient", {
             method: "POST",
             body: JSON.stringify(payload2),
-        });
-    }
-
-    async function syncPatientList(id, patientId, response) {
-        await dbRow(id, patientId, response).then((response) => {
+        }).then((response) => {
             getPatientList();
         });
     }
 
-    async function UploadAndStuff(id, patientId, file) {
-        await fileUpload(file).then((response) => {
-            syncPatientList(id, patientId, response);
+    async function syncPatientList(patient, id, patientId, response) {
+        await dbRow(patient, id, patientId, response).then((response) => {
+            getPatientList();
+            toast.success("Report Added");
         });
     }
 
-    async function handleFileUpload(id, patientID) {
+    async function UploadAndStuff(patient, id, patientId, file) {
+        await fileUpload(file).then((response) => {
+            syncPatientList(patient, id, patientId, response);
+        });
+    }
+
+    async function handleFileUpload(patient, id, patientID) {
         const fileInput = document.getElementById(`file-${patientID}`);
         const file = fileInput?.files[0];
         console.log(file);
@@ -92,20 +101,20 @@
             // Indicate that the file is uploading for this patient
             uploadingFlags = { ...uploadingFlags, [patientID]: true };
 
-            await UploadAndStuff(id, patientID, file);
+            await UploadAndStuff(patient, id, patientID, file);
 
             try {
                 // On successful upload, hide the patient's row with an effect
-                const row = document.getElementById(`row-${patientID}`);
-                row.classList.add(
-                    "opacity-0",
-                    "transform",
-                    "scale-0.95",
-                    "duration-300"
-                );
-                setTimeout(() => {
-                    row.style.display = "none";
-                }, 300);
+                // const row = document.getElementById(`row-${patientID}`);
+                // row.classList.add(
+                //     "opacity-0",
+                //     "transform",
+                //     "scale-0.95",
+                //     "duration-300"
+                // );
+                // setTimeout(() => {
+                //     row.style.display = "none";
+                // }, 300);
             } catch (error) {
                 console.error("Failed to upload:", error);
             } finally {
@@ -142,6 +151,7 @@
     });
 </script>
 
+<Toaster />
 <!-- Navbar -->
 <nav class="bg-blue-500 p-4 shadow-md">
     <div class="container mx-auto flex items-center justify-between">
@@ -192,6 +202,7 @@
                             class="hidden"
                             on:change={() =>
                                 handleFileUpload(
+                                    patient,
                                     patient["id"],
                                     patient["patientId"]
                                 )}

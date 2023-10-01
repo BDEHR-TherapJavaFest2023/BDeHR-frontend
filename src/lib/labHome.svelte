@@ -40,7 +40,7 @@
         return res2;
     }
 
-    async function dbUp(id,response) {
+    async function dbUp(id, response) {
         let payload = { id: id, url: response["publicUrl"] };
 
         await fetch(serverUrl + "machine/change-photo", {
@@ -53,7 +53,7 @@
 
     async function uploadPhoto(id, name, photo) {
         await changePhoto(id, name, photo).then((response) => {
-            dbUp(id,response);
+            dbUp(id, response);
         });
     }
 
@@ -180,10 +180,15 @@
                 alt="Hospital Logo"
                 class="mx-auto w-32 h-32 mb-4"
             />
-            <h2 class="text-3xl font-bold mb-2">Lab:{get(labInfo).labInfo["id"]}</h2>
+            <h2 class="text-4xl font-bold mb-2">
+                Lab: {get(labInfo).labInfo["name"]} | ID: {get(labInfo).labInfo[
+                    "id"
+                ]}
+            </h2>
+
             <button
                 on:click={navigateToPatients}
-                class="mb-8 px-8 py-3 rounded-full bg-blue-500 text-white font-bold transition duration-300 hover:bg-blue-600"
+                class="mt-2 mb-8 px-8 py-3 rounded-full bg-blue-500 text-white font-bold transition duration-300 hover:bg-blue-600"
             >
                 Patients
             </button>

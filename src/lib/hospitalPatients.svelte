@@ -31,7 +31,7 @@
         //     hospital_patients[selectedPatientIndex] = updatedPatient;
         //     hospitalPatientList.set({ patientList: hospital_patients }); // Update the Svelte store
         // }
-            
+
         sstatus = selectedStatus;
         if (selectedDoctor) sdoctorId = selectedDoctor;
         slabId = selectedLab;
@@ -80,6 +80,8 @@
         if (status === "Doing Diagnostics") return "status-diagnostics";
         if (status === "Admitted") return "status-admitted";
         if (status === "New") return "status-new";
+        if (status === "Diagnosis Done") return "status-dignosdone";
+        //Diagnosis Done
         return "";
     }
     let showForm = false;
@@ -357,6 +359,12 @@
     .status-new {
         color: #ff0000; /* Green for Admitted */
         background-color: #ffe3e3;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    .status-dignosdone {
+        color: #e500ff; /* Green for Admitted */
+        background-color: #fbd8ff;
         padding: 5px 10px;
         border-radius: 5px;
     }
