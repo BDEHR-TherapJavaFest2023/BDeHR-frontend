@@ -35,7 +35,7 @@
         return age;
     }
     async function uploadPhoto(id, photo) {
-        console.log(id+" "+typeof id)
+        console.log(id + " " + typeof id);
         let { data: res2 } = await supabase.storage
             .from("doctorPhoto")
             .update(id, photo, {
@@ -126,71 +126,137 @@
     }
 </script>
 
-<main class="p-4 max-w-xl mx-auto shadow-2xl">
-    <div class="mb-6">
-        <img
-            src={doctorData.doctorImage}
-            alt="doctor Profile"
-            class="rounded-full w-48 h-48 mx-auto"
-        />
-    </div>
-    <form on:submit|preventDefault={handleSubmit}>
+<form on:submit|preventDefault={handleSubmit}>
+    <main class="p-4 max-w-4xl mx-auto shadow-2xl grid grid-cols-2 gap-4">
         {#if isEditing}
-            <div class="space-y-4">
-                <input
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    on:change={handleImageUpload}
-                />
-                <input
-                    type="text"
-                    name="name"
-                    bind:value={doctorData.name}
-                    class="daisy-input w-full"
-                    placeholder="Name"
-                />
+            <div>
+                <div class="mb-6">
+                    <img
+                        src={doctorData.doctorImage}
+                        alt="doctor Profile"
+                        class="rounded-full w-64 h-80 mx-auto"
+                    />
+                    <input
+                        type="file"
+                        name="photo"
+                        accept="image/*"
+                        on:change={handleImageUpload}
+                    />
+                </div>
                 <input
                     type="text"
                     name="address"
                     bind:value={doctorData.address}
-                    class="daisy-input w-full"
+                    class="daisy-input"
                     placeholder="Address"
                 />
                 <input
                     type="text"
                     name="phone"
                     bind:value={doctorData.phone}
-                    class="daisy-input w-full"
+                    class="daisy-input"
                     placeholder="Phone Number"
                 />
                 <input
                     type="email"
                     name="email"
                     bind:value={doctorData.email}
-                    class="daisy-input w-full"
+                    class="daisy-input"
                     placeholder="Email"
                 />
             </div>
-        {:else}
-            <div class="space-y-4">
-                <p><strong>Name:</strong> {doctorData.name}</p>
+            <div>
+                <input
+                    type="text"
+                    name="name"
+                    bind:value={doctorData.name}
+                    class="daisy-input"
+                    placeholder="Name"
+                />
                 <p><strong>Doctor ID:</strong> {doctorData.user_id}</p>
                 <p><strong>BMDC ID:</strong> {doctorData.bmdc}</p>
-
                 <p><strong>Age:</strong> {calculateAge(doctorData.dob)}</p>
                 <p><strong>Gender:</strong> {doctorData.gender}</p>
-                <p><strong>Address:</strong> {doctorData.address}</p>
-                <p><strong>Phone:</strong> {doctorData.phone}</p>
-                <p><strong>Email:</strong> {doctorData.email}</p>
+            </div>
+        {:else}
+            <div>
+                <div class="mb-6">
+                    <img
+                        src={doctorData.doctorImage}
+                        alt="doctor Profile"
+                        class="rounded-full w-80 h-96 mx-auto"
+                    />
+                </div>
+                <div class="flex items-center space-x-2 mb-2 ml-10">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/location.svg"
+                        class="transform transition duration-300 hover:rotate-12"
+                        alt="Location Icon"
+                    />
+                    <p>
+                        <strong>Address: </strong>
+                        {doctorData.address}
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2 mb-2 ml-10">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/phone.svg"
+                        class="transform transition duration-300 hover:rotate-12"
+                        alt="Phone Icon"
+                    />
+                    <p>
+                        <strong>Phone: </strong>
+                        {doctorData.phone}
+                    </p>
+                </div>
+                <div class="flex items-center space-x-2 mb-2 ml-10">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-blue.svg"
+                        class="transform transition duration-300 hover:rotate-12"
+                        alt="Email Icon"
+                    />
+                    <p>
+                        <strong>Email: </strong>
+                        {doctorData.email}
+                    </p>
+                </div>
+            </div>
+            <div>
+                <p class="text-5xl font-bold mb-3">
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/295067.svg"
+                        class="transform transition duration-300 hover:rotate-12"
+                        alt="title"
+                        width={80}
+                        height={80}
+                    />
+                    {doctorData.name}
+                </p>
+                <p class="text-3xl font-bold">
+                    {calculateAge(doctorData.dob)} years | {doctorData.gender}
+                </p>
+
+                <div class="divider" />
+                <p class="text-2xl font-bold mb-2">
+                    <strong>Speciality: </strong>
+                    Medicine
+                </p>
+                <p class="text-2xl font-bold mb-2">
+                    <strong>Doctor ID: </strong>
+                    {doctorData.user_id}
+                </p>
+                <p class="text-2xl font-bold">
+                    <strong>BMDC ID: </strong>
+                    {doctorData.bmdc}
+                </p>
             </div>
         {/if}
-
-        <div class="mt-6">
+        <div class="col-span-2 mt-6">
             {#if isEditing}
-                <div class="flex flec-col justify-around">
-                    <button class="daisy-btn daisy-btn-primary" type="submit"
-                        >Save Changes</button
+                <div class="flex justify-around">
+                    <button
+                        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        type="submit">Save Changes</button
                     >
                     <button
                         class="daisy-btn daisy-btn-primary"
@@ -199,21 +265,30 @@
                 </div>
             {:else}
                 <button
-                    class="daisy-btn daisy-btn-secondary"
-                    on:click={toggleEditing}>Edit</button
+                    class="daisy-btn daisy-btn-secondary ml-10"
+                    on:click={toggleEditing}
                 >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/pencil-edit-button-svgrepo-com.svg"
+                        class="transform transition duration-300 hover:rotate-12 mr-2"
+                        alt="Edit Icon"
+                        width="20"
+                        height="20"
+                    />
+                    Edit
+                </button>
             {/if}
         </div>
-    </form>
-</main>
+    </main>
+</form>
 
 <style>
     .daisy-input {
-        /* Add styles for input if necessary */
         padding: 8px 12px;
         border: 1px solid #ccc;
         border-radius: 4px;
         width: 100%;
+        margin-bottom: 8px;
     }
     .daisy-btn {
         /* Add styles for button if necessary */
@@ -221,7 +296,11 @@
         cursor: pointer;
         border: none;
         border-radius: 4px;
+        display: flex; /* Added this */
+        align-items: center; /* Added this */
+        justify-content: center; /* Optional: to center the items horizontally */
     }
+
     .daisy-btn-primary {
         background-color: #007bff;
         color: white;

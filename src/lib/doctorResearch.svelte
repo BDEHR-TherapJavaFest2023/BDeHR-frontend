@@ -21,7 +21,7 @@
 <main class="bg-gray-100 min-h-screen">
     <NavbarRunning doctorName={get(doctorInfo).doctorName} />
 
-    <div style="padding-top: 145px;">
+    <div style="padding-top: 90px;">
         <div class="flex justify-center mt-4 space-x-4">
             <button
                 class="btn border-black text-white bg-slate-400 hover:bg-black"

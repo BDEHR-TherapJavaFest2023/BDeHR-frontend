@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import NavbarRunning from "./doctorNavbar.svelte";
-    import { doctorInfo, doctorHospitalList,doctorHospital } from "./store";
+    import { doctorInfo, doctorHospitalList, doctorHospital } from "./store";
     import { get } from "svelte/store";
     import { serverUrl } from "./constants";
 
@@ -19,12 +19,12 @@
     function navigateToPatients(hospitalName, id) {
         // Set the hospital name in a global store or send as a parameter
         // For simplicity, sending as a parameter
-        doctorHospital.set({hospitalId: id})
+        doctorHospital.set({ hospitalId: id });
         console.log("Navigating to patients for hospital:", hospitalName);
         window.location.hash = `#/doctorhome/doctorPatient/${hospitalName}`;
     }
 
-    $: hospitalList=[]
+    $: hospitalList = [];
 
     async function getHospitalList() {
         let payload = { doctorId: get(doctorInfo).doctorId };
@@ -42,15 +42,15 @@
             });
     }
 
-    onMount(()=>{
+    onMount(() => {
         getHospitalList();
-    })
+    });
 </script>
 
 <main class="bg-gray-100 min-h-screen">
     <NavbarRunning doctorName={get(doctorInfo).doctorName} />
 
-    <div style="padding-top: 145px;">
+    <div style="padding-top: 90px;">
         <div class="flex justify-center mt-4 space-x-4">
             <button
                 class="btn border-black text-white bg-slate-400 hover:bg-black"
@@ -81,12 +81,15 @@
             <div
                 class="bg-white p-6 rounded-lg shadow-md text-center transition-colors hover:bg-gray-200
         transition-transform transform hover:scale-90 cursor-pointer"
-                on:click={() => navigateToPatients(hospital["name"],hospital["id"])}
+                on:click={() =>
+                    navigateToPatients(hospital["name"], hospital["id"])}
             >
                 <div class="flex items-center justify-center space-x-4">
                     <!-- Assuming you have an icon component or library, replace with your icon of choice -->
 
-                    <span class="text-blue-500 font-bold">{hospital["name"]}</span>
+                    <span class="text-blue-500 font-bold"
+                        >{hospital["name"]}</span
+                    >
                 </div>
             </div>
         {/each}
