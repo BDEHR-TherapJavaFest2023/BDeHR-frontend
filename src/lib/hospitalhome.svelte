@@ -119,6 +119,9 @@
         // Navigate to the hospitals page
         window.location.hash = "#/hospitalhome/patients";
     }
+    function navigateToBloodBank() {
+        window.location.hash = "#/hospitalhome/bloodbank";
+    }
 
     function navigateToHospitalAuthority() {
         // Set the doctor_id in the store
@@ -177,8 +180,10 @@
     function admissionIdCalculation() {
         let hospitalId = get(hospitalInfo).hospitalInfo["id"];
 
-        let input = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-        let output = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm0987654321";
+        let input =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+        let output =
+            "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm0987654321";
         let index = (x) => input.indexOf(x);
         let translate = (x) => (index(x) > -1 ? output[index(x)] : x);
         admissionId = hospitalId.split("").map(translate).join("");
@@ -317,6 +322,12 @@
                         on:click={navigateToHospitalPatients}
                     >
                         Patients
+                    </button>
+                    <button
+                        class="btn border-black text-white bg-violet-500 hover:bg-violet-900 mr-2"
+                        on:click={navigateToBloodBank}
+                    >
+                        Blood Bank
                     </button>
                     <button
                         class="btn border-black text-white bg-rose-500 hover:bg-rose-900"

@@ -89,6 +89,9 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+    function navigateToDonate() {
+        window.location.hash = `#/appuser/blooddonate`;
+    }
 
     async function uploadPhoto(id, photo) {
         let { data: res2 } = await supabase.storage
@@ -179,7 +182,6 @@
 
         toggleEditMode();
     }
-
 </script>
 
 <nav class="bg-white shadow-lg z-10 mb-4">
@@ -218,7 +220,7 @@
         <!-- Company Logo -->
 
         <!-- Menu Items -->
-        <ul class="text-base font-semibold mt-2 ml-1">
+        <ul class="text-base font-semibold mt-1 ml-1">
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
             <li
@@ -276,6 +278,17 @@
                 />
                 Hospital Entry
             </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToDonate}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blood.svg"
+                    alt="Give Blood"
+                    class="w-6 h-6 mr-2"
+                />
+                Blood Donate
+            </li>
         </ul>
     </div>
 
@@ -287,42 +300,43 @@
             >
                 <!-- Image Upload Section -->
                 <form on:submit|preventDefault={handleSubmit}>
-                <div class="flex-none md:w-1/4 text-center">
-                    <img
-                        src={userData.userImage}
-                        alt="User Image"
-                        class="rounded-full w-50 h-50 mx-auto mb-4 object-cover"
-                    />
-                    {#if editMode}
-                        <label
-                            for="file-upload"
-                            class="cursor-pointer underline">Change Photo</label
-                        >
-                        <input
-                            id="file-upload"
-                            name="photo"
-                            type="file"
-                            class="hidden"
-                            accept="image/*"
-                            on:change={handleFileChange}
+                    <div class="flex-none md:w-1/4 text-center">
+                        <img
+                            src={userData.userImage}
+                            alt="User Image"
+                            class="rounded-full w-50 h-50 mx-auto mb-4 object-cover"
                         />
-                    {/if}
-                </div>
-                <!-- User Info Section -->
-                <div class="flex-1 space-y-4">
-                    <div class="space-y-1">
-                        <!-- Add fields here. For example: -->
-                        <div>
+                        {#if editMode}
+                            <label
+                                for="file-upload"
+                                class="cursor-pointer underline"
+                                >Change Photo</label
+                            >
                             <input
-                                type="text"
-                                class="form-input text-6xl text-rose-700 font-bold"
-                                name="name"
-                                bind:value={userData.name}
-                                readonly={!editMode}
+                                id="file-upload"
+                                name="photo"
+                                type="file"
+                                class="hidden"
+                                accept="image/*"
+                                on:change={handleFileChange}
                             />
-                        </div>
-                        <div>
-                            <!-- {#if editMode}
+                        {/if}
+                    </div>
+                    <!-- User Info Section -->
+                    <div class="flex-1 space-y-4">
+                        <div class="space-y-1">
+                            <!-- Add fields here. For example: -->
+                            <div>
+                                <input
+                                    type="text"
+                                    class="form-input text-6xl text-rose-700 font-bold"
+                                    name="name"
+                                    bind:value={userData.name}
+                                    readonly={!editMode}
+                                />
+                            </div>
+                            <div>
+                                <!-- {#if editMode}
                                 <input
                                     type="date"
                                     class="form-input"
@@ -333,86 +347,98 @@
                                     class="text-3xl text-rose-700 font-semibold"
                                     >{calculateAge(userData.dob)} years old</span
                                 >
-                            <!-- {/if} -->
+                                <!-- {/if} -->
 
-                            <span class="text-3xl text-rose-700 font-semibold"
-                                >| {userData.gender}</span
-                            >
-                        </div>
+                                <span
+                                    class="text-3xl text-rose-700 font-semibold"
+                                    >| {userData.gender}</span
+                                >
+                            </div>
 
-                        <div>
-                            <label class="block text-sm font-medium mt-8"
-                                >User ID</label
+                            <div
+                                class="flex items-center space-x-2 text-2xl text-rose-700 font-semibold"
                             >
-                            <span class="text-2xl font-semibold"
-                                >{userData.user_id}</span
-                            >
+                                <img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blood-drop.svg"
+                                    class="w-6 h-6 transform transition duration-300 hover:rotate-12"
+                                    alt="Phone Icon"
+                                />
+
+                                Blood Group: O+
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mt-8"
+                                    >User ID</label
+                                >
+                                <span class="text-2xl font-semibold"
+                                    >{userData.user_id}</span
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mt-2"
+                                    >User NID</label
+                                >
+                                <span class="text-2xl font-semibold"
+                                    >{userData.nid}</span
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mt-2"
+                                    >Address</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-input text-2xl font-semibold"
+                                    name="address"
+                                    bind:value={userData.address}
+                                    readonly={!editMode}
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mt-2"
+                                    >Phone</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-input text-2xl font-semibold"
+                                    name="phone"
+                                    bind:value={userData.phone}
+                                    readonly={!editMode}
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mt-2"
+                                    >Email</label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-input text-2xl font-semibold"
+                                    name="email"
+                                    bind:value={userData.email}
+                                    readonly={!editMode}
+                                />
+                            </div>
+                            <!-- Add other fields similarly -->
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mt-2"
-                                >User NID</label
-                            >
-                            <span class="text-2xl font-semibold"
-                                >{userData.nid}</span
-                            >
+                        <div class="flex justify-start">
+                            {#if !editMode}
+                                <button
+                                    class="btn btn-outline hover:bg-green-600"
+                                    on:click={toggleEditMode}
+                                >
+                                    Edit
+                                </button>
+                            {:else}
+                                <button
+                                    class="btn btn-outline hover:bg-green-600"
+                                    type="submit"
+                                >
+                                    Save
+                                </button>
+                            {/if}
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mt-2"
-                                >Address</label
-                            >
-                            <input
-                                type="text"
-                                class="form-input text-2xl font-semibold"
-                                name="address"
-                                bind:value={userData.address}
-                                readonly={!editMode}
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mt-2"
-                                >Phone</label
-                            >
-                            <input
-                                type="text"
-                                class="form-input text-2xl font-semibold"
-                                name="phone"
-                                bind:value={userData.phone}
-                                readonly={!editMode}
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium mt-2"
-                                >Email</label
-                            >
-                            <input
-                                type="text"
-                                class="form-input text-2xl font-semibold"
-                                name="email"
-                                bind:value={userData.email}
-                                readonly={!editMode}
-                            />
-                        </div>
-                        <!-- Add other fields similarly -->
                     </div>
-                    <div class="flex justify-start">
-                        {#if !editMode}
-                        <button
-                            class="btn btn-outline hover:bg-green-600"
-                            on:click={toggleEditMode}
-                        >
-                            Edit
-                        </button>
-                        {:else}
-                        <button
-                            class="btn btn-outline hover:bg-green-600"
-                            type="submit"
-                        >
-                            Save
-                        </button>
-                        {/if}
-            
-                    </div>
-                </div>
                 </form>
             </div>
         </div>

@@ -22,8 +22,14 @@
         let id = decrypt(hospitalCode);
         console.log(id);
 
-        let payload = { patientId: get(userInfo).userId,hospitalId: id,patientName: get(userInfo).userName,patientPhone:get(userInfo).userPhone,status:"New" };
-        
+        let payload = {
+            patientId: get(userInfo).userId,
+            hospitalId: id,
+            patientName: get(userInfo).userName,
+            patientPhone: get(userInfo).userPhone,
+            status: "New",
+        };
+
         await fetch(serverUrl + "h2p/add-patient", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -62,6 +68,9 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+    function navigateToDonate() {
+        window.location.hash = `#/appuser/blooddonate`;
+    }
 
     $: entryList = [];
 
@@ -98,7 +107,7 @@
     });
 </script>
 
-<Toaster/>
+<Toaster />
 <nav class="bg-white shadow-lg z-10 mb-4">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center py-4">
@@ -190,6 +199,17 @@
                     class="w-6 h-6 mr-2"
                 />
                 Hospital Entry
+            </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToDonate}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blood.svg"
+                    alt="Give Blood"
+                    class="w-6 h-6 mr-2"
+                />
+                Blood Donate
             </li>
         </ul>
     </div>

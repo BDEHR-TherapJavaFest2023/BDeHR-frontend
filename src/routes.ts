@@ -6,6 +6,7 @@ import doctorLogin from './lib/doctorLogin.svelte';
 import doctorHome from './lib/doctorhome.svelte';
 import hospitalHome from './lib/hospitalhome.svelte';
 import hospitalPatients from './lib/hospitalPatients.svelte';
+import HospitalBloodBank from './lib/hospitalBloodBank.svelte';
 import hospitalDoctors from './lib/hospitalDoctors.svelte';
 import dospitalAuthorityLogin from './lib/hospitalauthoritylogin.svelte'
 import HospitalAuthority from './lib/hospitalAuthority.svelte';
@@ -29,6 +30,7 @@ import appUserEntry from './lib/appUserEntry.svelte';
 import appUserFind from './lib/appUserFind.svelte';
 import appUserMedications from './lib/appUserMedications.svelte';
 import appUserReports from './lib/appUserReports.svelte';
+import AppUserBlood from './lib/appUserBlood.svelte';
 import User from './lib/user.svelte';
 import UserMedication from './lib/userMedication.svelte';
 import UserReport from './lib/userReport.svelte';
@@ -57,6 +59,7 @@ export const routes = {
     '/doctorhome/researches/:researchParticular': DoctorResearchDepth,
     '/hospitalhome': hospitalHome,
     '/hospitalhome/patients': hospitalPatients,
+    '/hospitalhome/bloodbank': HospitalBloodBank,
     '/hospitalhome/doctors': hospitalDoctors,
     '/adminhome': adminHome,
     '/adminhome/query': adminQuery,
@@ -76,6 +79,7 @@ export const routes = {
     '/appuser/find': appUserFind,
     '/appuser/medications': appUserMedications,
     '/appuser/reports': appUserReports,
+    '/appuser/blooddonate': AppUserBlood,
     '/researchlogin': ResearchLogin,
     '/researchsignup': ResearchSignUp,
     '/researchOrg/home': ResearchHome,

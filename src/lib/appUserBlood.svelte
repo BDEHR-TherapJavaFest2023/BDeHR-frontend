@@ -7,11 +7,15 @@
 
     let map;
     let nearestHospital = null;
+    let selectedHospitalTodonate = null;
     let hasSubmitted = false;
     let polyline = null; // To store the direction line
     let router;
 
     let userLocation = { lat: null, lng: null };
+    function __donate(hospitalName) {
+        alert("Donating to " + hospitalName);
+    }
 
     function initializeMap() {
         map = L.map("map").setView([userLocation.lat, userLocation.lng], 10);
@@ -43,12 +47,25 @@
             iconAnchor: [15, 40],
             popupAnchor: [0, -40],
         });
-        hospitals.forEach((hospital) => {
-            L.marker([hospital.latitude, hospital.longitude], {
+        hospitals.forEach((hospital, index) => {
+            const popupContent = `
+        <b>${hospital.name}</b> 
+        <button id="donateButton_${index}">Donate Here</button>
+    `;
+
+            const marker = L.marker([hospital.latitude, hospital.longitude], {
                 icon: customIcon,
             })
                 .addTo(map)
-                .bindPopup(hospital.name);
+                .bindPopup(popupContent);
+
+            marker.on("popupopen", () => {
+                document
+                    .getElementById(`donateButton_${index}`)
+                    .addEventListener("click", () => {
+                        donateToHospital(hospital.name);
+                    });
+            });
         });
     }
 
@@ -85,99 +102,83 @@
         }).addTo(map);
     }
 
-    // let hospitals = [
-    //     {
-    //         name: "Dhaka Medical College",
-    //         latitude: 23.726,
-    //         longitude: 90.3976,
-    //     },
-    //     {
-    //         name: "Apollo Hospitals Dhaka",
-    //         latitude: 23.7705,
-    //         longitude: 90.3631,
-    //     },
-    //     {
-    //         name: "Square Hospitals Ltd",
-    //         latitude: 23.7392,
-    //         longitude: 90.394,
-    //     },
-    //     {
-    //         name: "Cumilla Medical College",
-    //         latitude: 23.4515,
-    //         longitude: 91.203,
-    //     },
-    //     {
-    //         name: "Chittagong Medical College",
-    //         latitude: 22.3593,
-    //         longitude: 91.8308,
-    //     },
-    //     {
-    //         name: "Sylhet Medical College",
-    //         latitude: 24.9014962,
-    //         longitude: 91.8536165,
-    //     },
-    //     {
-    //         name: "Rajshahi Medical College",
-    //         latitude: 24.372,
-    //         longitude: 88.5864,
-    //     },
-    //     {
-    //         name: "Rajshahi Medical College",
-    //         latitude: 24.372,
-    //         longitude: 88.5864,
-    //     },
-    //     {
-    //         name: "Barisal Medical College",
-    //         latitude: 22.6865,
-    //         longitude: 90.3613,
-    //     },
-    //     {
-    //         name: "Mymensingh Medical College",
-    //         latitude: 24.7418,
-    //         longitude: 90.4094,
-    //     },
-    //     {
-    //         name: "Khulna Medical College",
-    //         latitude: 22.8285,
-    //         longitude: 89.5382,
-    //     },
-    //     {
-    //         name: "Rangpur Medical College",
-    //         latitude: 25.7666,
-    //         longitude: 89.2338,
-    //     },
-    //     {
-    //         name: "Bogra Medical College",
-    //         latitude: 24.8279,
-    //         longitude: 89.3529,
-    //     },
-    //     {
-    //         name: "Pabne Medical College",
-    //         latitude: 24.0045,
-    //         longitude: 89.209,
-    //     },
-    //     {
-    //         name: "Patuakhali Medical College",
-    //         latitude: 22.3623,
-    //         longitude: 90.327,
-    //     },
-    //     {
-    //         name: "Cox's Bazar Medical College",
-    //         latitude: 21.4202,
-    //         longitude: 92.0149,
-    //     },
-    //     {
-    //         name: "Noakhali Medical College",
-    //         latitude: 22.9515,
-    //         longitude: 91.1038,
-    //     },
-    //     {
-    //         name: "Sirajganj Medical College",
-    //         latitude: 24.4489,
-    //         longitude: 89.6738,
-    //     },
-    //     // Add more hospitals with actual data for Bangladesh
-    // ];
+    let lastDonationDate = new Date("2023-10-10"); // Dummy date for the last donation
+    let nextDonationDate = new Date(lastDonationDate);
+    nextDonationDate.setMonth(lastDonationDate.getMonth() + 4);
+
+    $: canDonate = new Date() > nextDonationDate;
+    $: calculateCountdown();
+
+    let daysLeft = 0;
+    let hoursLeft = 0;
+    let minutesLeft = 0;
+    let secondsLeft = 0;
+
+    function calculateCountdown() {
+        const now = new Date();
+        const timeDifference = nextDonationDate - now; // Difference in milliseconds
+
+        daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        hoursLeft = Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        minutesLeft = Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        secondsLeft = Math.floor((timeDifference % (1000 * 60)) / 1000);
+    }
+
+    let donationStatus = "map"; // ['map', 'pending', 'denied', 'approved']
+
+    function donateToHospital(hospital) {
+        if (canDonate) {
+            console.log(`Donating to ${hospital.name}`);
+            donationStatus = "pending";
+
+            // Simulate a request to the hospital and their response
+            setTimeout(() => {
+                let isApproved = Math.random() > 0.5; // just a random logic, replace with actual approval logic
+
+                if (isApproved) {
+                    donationStatus = "approved";
+                    selectedHospitalTodonate = hospital;
+                    alert(
+                        `You have been approved for donation by ${hospital.name}. Please donate soon.`
+                    );
+
+                    // Draw route to the approved hospital
+                    const approvedHospitalCoordinates = hospitals.find(
+                        (h) => h.name === hospital.name
+                    );
+                    if (approvedHospitalCoordinates) {
+                        // Remove existing router if any
+                        if (router) {
+                            map.removeControl(router);
+                        }
+
+                        // Create a new routing control to the approved hospital and add it to the map
+                        router = L.Routing.control({
+                            waypoints: [
+                                L.latLng(userLocation.lat, userLocation.lng),
+                                L.latLng(
+                                    approvedHospitalCoordinates.latitude,
+                                    approvedHospitalCoordinates.longitude
+                                ),
+                            ],
+                            createMarker: function () {
+                                return null; // Do not create marker
+                            },
+                            routeWhileDragging: true,
+                        }).addTo(map);
+                    }
+                } else {
+                    donationStatus = "denied";
+                }
+            }, 3000);
+        } else {
+            console.log("Can't donate now. Waiting for the 4-month interval.");
+        }
+    }
 
     function navigateToLogin() {
         window.location.hash = `#/userlogin`;
@@ -235,7 +236,13 @@
     }
 
     onMount(() => {
-        getAllLocation();
+        if (canDonate) {
+            getAllLocation();
+        }
+        if (!canDonate) {
+            calculateCountdown();
+            setInterval(calculateCountdown, 1000);
+        }
     });
 </script>
 
@@ -308,7 +315,7 @@
                 Test Reports
             </li>
             <li
-                class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
                 on:click={navigateToFind}
             >
                 <img
@@ -330,7 +337,7 @@
                 Hospital Entry
             </li>
             <li
-                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                class="flex items-center p-4 bg-green-400 cursor-default rounded-3xl"
                 on:click={navigateToDonate}
             >
                 <img
@@ -345,20 +352,95 @@
 
     <!-- Main Dashboard Content -->
     <div class="flex-1 bg-white p-2 h-full flex-grow">
-        <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">Map</h1>
-        <div
-            id="map"
-            class="mt-2 ml-10 mr-8 outline-double rounded-lg h-[53vh]"
-        />
-        {#if hasSubmitted}
-            <p class="text-3xl text-rose-700 font-bold mt-4 ml-10">
-                Nearest Hospital: {nearestHospital.name}
-            </p>
+        {#if canDonate}
+            {#if donationStatus === "map"}
+                <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">
+                    Blood Requirement Map
+                </h1>
+                <div
+                    id="map"
+                    class="mt-2 ml-10 mr-8 outline-double rounded-lg h-[53vh]"
+                />
+                {#if hasSubmitted}
+                    <p class="text-3xl text-rose-700 font-bold mt-4 ml-10">
+                        Nearest Hospital: {nearestHospital.name}
+                    </p>
+                {:else}
+                    <button
+                        class="btn btn-outline rounded-lg hover:bg-rose-700 mt-4 ml-10"
+                        on:click={findNearestHospital}
+                        >Find Nearest Hospital</button
+                    >
+                {/if}
+            {:else if donationStatus === "pending"}
+                <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">
+                    Waiting for hospital confirmation...
+                </h1>
+            {:else if donationStatus === "denied"}
+                <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">
+                    Donation denied by the hospital.
+                </h1>
+            {:else if donationStatus === "approved"}
+                <h1 class="mt-10 ml-10 mb-4 text-4xl text-rose-700 font-bold">
+                    You have been approved for donation by {selectedHospitalTodonate}.
+                    Please donate soon.
+                </h1>
+            {/if}
         {:else}
-            <button
-                class="btn btn-outline rounded-lg hover:bg-rose-700 mt-4 ml-10"
-                on:click={findNearestHospital}>Find Nearest Hospital</button
-            >
+            <div class="flex flex-col items-center justify-center min-h-screen">
+                <div
+                    class="flex items-center space-x-2 text-5xl text-rose-700 font-semibold mb-2"
+                >
+                    <img
+                        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blood-drop.svg"
+                        class="w-12 h-12 transform transition duration-300 hover:rotate-12"
+                        alt="Phone Icon"
+                    />
+
+                    Your Blood Group: O+
+                </div>
+                <h1 class="text-4xl font-bold mb-4">
+                    You Can Donate Blood in...
+                </h1>
+                <div class="grid grid-flow-col gap-5 text-center auto-cols-max">
+                    <!-- Days Countdown -->
+                    <div
+                        class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content"
+                    >
+                        <span class="countdown font-mono text-5xl"
+                            >{daysLeft}</span
+                        >
+                        days
+                    </div>
+                    <!-- Hours Countdown -->
+                    <div
+                        class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content"
+                    >
+                        <span class="countdown font-mono text-5xl"
+                            >{hoursLeft}</span
+                        >
+                        hours
+                    </div>
+                    <!-- Minutes Countdown -->
+                    <div
+                        class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content"
+                    >
+                        <span class="countdown font-mono text-5xl"
+                            >{minutesLeft}</span
+                        >
+                        min
+                    </div>
+                    <!-- Seconds Countdown -->
+                    <div
+                        class="flex flex-col p-2 bg-neutral rounded-box text-neutral-content"
+                    >
+                        <span class="countdown font-mono text-5xl"
+                            >{secondsLeft}</span
+                        >
+                        sec
+                    </div>
+                </div>
+            </div>
         {/if}
     </div>
 </main>

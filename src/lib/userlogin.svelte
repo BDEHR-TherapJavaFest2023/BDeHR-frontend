@@ -24,6 +24,8 @@
                 // let ret = +data;
                 console.log(data);
 
+                //checkingCredentialsToast.dismiss();
+
                 //Login Failed
                 if (!data) {
                     toast.error("Login Failed 🙁");
@@ -41,6 +43,7 @@
                         userPhone: data["phone"],
                         userPhoto: data["photo"],
                     });
+                    toast.success("Login Success 🎉");
                     window.location.hash = `#/appuser/home`;
                 }
             });

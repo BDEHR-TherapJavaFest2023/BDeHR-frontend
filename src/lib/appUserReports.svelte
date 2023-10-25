@@ -37,12 +37,15 @@
     function navigateToEntry() {
         window.location.hash = `#/appuser/entry`;
     }
+    function navigateToDonate() {
+        window.location.hash = `#/appuser/blooddonate`;
+    }
 
-    $: reportList = []
+    $: reportList = [];
 
     async function getReportList() {
         let payload = { patientId: get(userInfo).userId };
-        console.log(payload)
+        console.log(payload);
         await fetch(serverUrl + "report/get-report-list", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -56,10 +59,9 @@
             });
     }
 
-    onMount(()=>{
+    onMount(() => {
         getReportList();
-    })
-
+    });
 </script>
 
 <nav class="bg-white shadow-lg z-10 mb-4">
@@ -155,6 +157,17 @@
                 />
                 Hospital Entry
             </li>
+            <li
+                class="flex items-center p-4 hover:bg-gray-300 cursor-pointer rounded-3xl"
+                on:click={navigateToDonate}
+            >
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/blood.svg"
+                    alt="Give Blood"
+                    class="w-6 h-6 mr-2"
+                />
+                Blood Donate
+            </li>
         </ul>
     </div>
 
@@ -169,15 +182,15 @@
                     <div class="flex justify-between items-center">
                         <div class="flex-1">
                             <h2 class="text-xl font-semibold">
-                                {medication['hospitalName']}
+                                {medication["hospitalName"]}
                             </h2>
                             <p class="text-gray-600 text-sm">
-                                Date: {medication['createdAt']}
+                                Date: {medication["createdAt"]}
                             </p>
                         </div>
                         <div class="flex-initial">
                             <a
-                                href={medication['url']}
+                                href={medication["url"]}
                                 target="_blank"
                                 class="btn btn-outline hover:bg-rose-700"
                             >
