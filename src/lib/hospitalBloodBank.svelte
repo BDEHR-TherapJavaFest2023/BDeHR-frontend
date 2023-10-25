@@ -45,10 +45,14 @@
         if (newStatus === "Rejected") {
             //ekhane ami korsi. but donor er ekta field ke set ba reset kore dewa lagbe
             donors = donors.filter((d) => d !== donor);
-        }
-
-        if (newStatus === "Donation Done") {
-            //ekhane donor er last date of donation change kor
+        } else if (newStatus === "Donation Done" && donor.bloodType) {
+            // Decrement the demand for the donor's blood type by 1
+            const blood = bloodTypes.find((b) => b.type === donor.bloodType);
+            if (blood) {
+                blood.demand -= 1;
+                bloodTypes = [...bloodTypes]; // Update the Svelte component
+            }
+            //ekhane donor er blood donation date update kora lagbe
             console.log("Donation done for", donor.name);
         }
     }
