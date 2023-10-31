@@ -121,11 +121,15 @@
             class="mx-0 my-0"
         />
         <div class="flex flex-col space-y-7 min-h-screen">
+            <a href="#/adminlogin" class="text-lg font-bold">Admin</a>
             <a href="#/userlogin" class="text-lg font-bold">User</a>
             <a href="#/hospitalogin" class="text-lg font-bold">Hospital</a>
             <a href="#/doctorlogin" class="text-lg font-bold">Doctor</a>
             <a href="#/lablogin" class="text-lg font-bold">Laboratory</a>
-            <a href="#/adminlogin" class="text-lg font-bold">Admin</a>
+            <a href="#/researchlogin" class="text-lg font-bold">Research</a>
+            <a href="#/pharmaceuticalcompanylogin" class="text-lg font-bold"
+                >Pharma Comapny</a
+            >
         </div>
     </div>
 </div>

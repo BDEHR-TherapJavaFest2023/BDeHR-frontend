@@ -11,6 +11,7 @@
     let isHoveredLab = false;
     let isHoveredAdmin = false;
     let isHoveredResearch = false;
+    let isHoveredPharma = false;
 
     function toggleHover() {
         isHovered = !isHovered;
@@ -30,6 +31,9 @@
     }
     function toggleHoverResearch() {
         isHoveredResearch = !isHoveredResearch;
+    }
+    function toggleHoverPharma() {
+        isHoveredPharma = !isHoveredPharma;
     }
 
     // Function to handle intersection
@@ -67,6 +71,7 @@
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Doctor_module.png",
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/istockphoto-1319979886-612x612-remove1bg.png",
         "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/labbegin-removebg-preview.png",
+        "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/istockphoto-1166036878-612x612-removebg.png",
     ];
 
     function nextSlide() {
@@ -228,6 +233,20 @@
                         </h5>
                     </div>
                 </a>
+                <a class="module-item" href="#/pharmaceuticalcompanylogin">
+                    <div class="flex space-x-3">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/noun-pill-7773.svg"
+                            class="transform transition duration-300 hover:rotate-12"
+                            alt="title"
+                            width={50}
+                            height={50}
+                        />
+                        <h5 class="text-2xl font-bold font-heading">
+                            Pharma Company
+                        </h5>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -264,7 +283,7 @@
                 </a>
                 <a
                     href="#/userlogin"
-                    class="w-1/5 flex items-center btn btn-outline text-2xl font-bold hover:bg-blue-600 rounded-xl"
+                    class="w-1/5 flex items-center btn btn-outline text-2xl font-bold hover:bg-green-600 rounded-xl"
                 >
                     Login
                 </a>
@@ -609,13 +628,13 @@
                 ? 'animate-left-to-right'
                 : ''}"
         >
-            <h5 class="text-6xl font-bold mt-20" style="color: #0051FF;">
+            <h5 class="text-6xl font-bold mt-20" style="color: #08B2AB;">
                 Research Organizations
             </h5>
-            <h5 class="text-3xl font-bold" style="color: #0051FF;">
+            <h5 class="text-3xl font-bold" style="color: #08B2AB;">
                 Process the most up to date data
             </h5>
-            <p class="text-2xl" style="color: #0051FF;">
+            <p class="text-2xl" style="color: #08B2AB;">
                 Systematically request data from Administrator
                 <br />
                 Gain the most recent accurate data
@@ -625,9 +644,52 @@
 
             <a
                 href="#/researchlogin"
-                class="w-2/3 btn btn-outline hover:bg-[#0051FF]">Get Started</a
+                class="w-2/3 btn btn-outline hover:bg-[#08B2AB]">Get Started</a
             >
         </div>
+    </div>
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <div
+        class="card lg:card-side bg-base-100 flex"
+        on:mouseenter={toggleHoverPharma}
+        on:mouseleave={toggleHoverPharma}
+    >
+        <div
+            class="card-body flex flex-col justify-center w-1/2 {isHoveredPharma
+                ? 'animate-left-to-right'
+                : ''}"
+        >
+            <h5 class="text-6xl font-bold mt-20" style="color: #8583F9;">
+                Pharmaceutical Company Module
+            </h5>
+            <h5 class="text-3xl font-bold" style="color: #8583F9;">
+                Enhance Drug Supply Chain
+            </h5>
+            <p class="text-2xl" style="color: #8583F9;">
+                Make your drugs visible to doctors
+                <br />
+                Add drugs
+                <br />
+                Analysis Drug Requirements
+            </p>
+            <a
+                href="#/pharmaceuticalcompanylogin"
+                class="w-2/3 btn btn-outline hover:bg-[#8583F9]">Get Started</a
+            >
+        </div>
+
+        <figure
+            class="w-1/2 relative"
+            style="background: #CCCBFD; height: 500px;"
+        >
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(1).png"
+                alt="User"
+                class="absolute top-0 left-0 w-full h-full object-contain object-center {isHoveredPharma
+                    ? 'animate-right-to-left'
+                    : ''}"
+            />
+        </figure>
     </div>
 
     <Footer />
