@@ -40,6 +40,8 @@ import ResearchSignUp from './lib/researchSignUp.svelte'
 import ResearchHome from './lib/researchhome.svelte'
 import DoctorResearchDepth from './lib/doctorResearchDepth.svelte';
 import Pharmacompanylogin from './lib/pharmCompanyLogin.svelte';
+import PharmaCompanyHome__SvelteComponent_ from './lib/pharmaCompanyHome.svelte';
+import PharmaAddDrug__SvelteComponent_ from './lib/pharmaAddDrug.svelte';
 
 export const routes = {
     // Define your routes here
@@ -85,4 +87,6 @@ export const routes = {
     '/researchsignup': ResearchSignUp,
     '/researchOrg/home': ResearchHome,
     '/pharmaceuticalcompanylogin': Pharmacompanylogin,
+    '/pharmaceuticalcompany/home': PharmaCompanyHome__SvelteComponent_,
+    '/pharmaceuticalcompany/addproduct': PharmaAddDrug__SvelteComponent_,
 };

@@ -8,13 +8,14 @@
     onMount(() => {
         setTimeout(() => {
             isLoading = false;
-        }, 2000); // Simulating an async load for the image.
+        }, 1500); // Simulating an async load for the image.
     });
 
     function handleLogin() {
-        // Handle your login logic here
+        // ekhane handle kor sob + toaster add kor
         console.log({ id });
         console.log({ password });
+        window.location.hash = `#/pharmaceuticalcompany/home`;
     }
 </script>
 
