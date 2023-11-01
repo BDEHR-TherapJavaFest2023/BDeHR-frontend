@@ -207,9 +207,55 @@
     ];
 
     let expandedProductId = null;
+    let expandedViewProductId = null;
+    let showDeleteModal = false;
+    let confirmedDeleteId = null;
+
+    let showConfirmationModal = false;
+    let tempProduct = null; // Temporary storage for the product being edited
+    let displayEditModoal = false;
+
+    function saveChanges() {
+        showConfirmationModal = true;
+        displayEditModoal = false;
+    }
+
+    function confirmSave() {
+        const index = products.findIndex((p) => p.id === expandedProductId);
+        products[index] = { ...tempProduct };
+        showConfirmationModal = false;
+        expandedProductId = null;
+        tempProduct = null;
+    }
+
+    function cancelSave() {
+        showConfirmationModal = false;
+        displayEditModoal = true;
+    }
+
+    function closeEdit() {
+        expandedProductId = null;
+        displayEditModoal = false;
+    }
 
     function toggleDetails(id) {
-        expandedProductId = expandedProductId === id ? null : id;
+        if (expandedProductId === id) {
+            expandedProductId = null;
+            tempProduct = null; // Clear tempProduct when closing the modal
+        } else {
+            displayEditModoal = true;
+            expandedProductId = id;
+            const product = products.find((p) => p.id === id);
+            tempProduct = { ...product }; // Create a copy of the product when opening the modal
+        }
+    }
+
+    function toggleDetailsView(id) {
+        expandedViewProductId = expandedViewProductId === id ? null : id;
+    }
+    function deleteProduct(productId) {
+        //ekhane delete er badbaki logic implement korte hobe
+        products = products.filter((product) => product.id !== productId);
     }
 
     onMount(() => {
@@ -387,6 +433,22 @@
                             {#each products as product (product.id)}
                                 <!-- Assuming each product has a unique ID -->
                                 <div class="bg-white p-4 rounded shadow">
+                                    <button
+                                        class="btn bg-red-400 hover:bg-red-500"
+                                        on:click={() => {
+                                            confirmedDeleteId = product.id;
+                                            showDeleteModal = true;
+                                        }}
+                                    >
+                                        <img
+                                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/rubbish-bin.svg"
+                                            class="text-right transform transition duration-300 hover:rotate-12"
+                                            alt="Edit Icon"
+                                            width="20"
+                                            height="20"
+                                            style="vertical-align: middle;"
+                                        />
+                                    </button>
                                     <img
                                         src={product.image}
                                         alt={product.name}
@@ -407,15 +469,18 @@
                                     </div>
                                     <p>{product.chemicalName}</p>
                                     <p>{product.intensity}</p>
-                                    <div class="mt-4">
+                                    <div
+                                        class="mt-5"
+                                        style="display: flex; align-items: center;"
+                                    >
                                         <button
                                             class="mr-2 btn btn-primary"
                                             on:click={() =>
-                                                toggleDetails(product.id)}
+                                                toggleDetailsView(product.id)}
                                             >View Details</button
                                         >
                                         <button
-                                            class="btn bg-red-500 hover:bg-red-600"
+                                            class="btn bg-lime-400 hover:bg-lime-500"
                                             on:click={() =>
                                                 toggleDetails(product.id)}
                                         >
@@ -425,127 +490,492 @@
                                                 alt="Edit Icon"
                                                 width="20"
                                                 height="20"
+                                                style="vertical-align: middle;"
                                             />
                                             Edit
                                         </button>
                                     </div>
 
+                                    {#if expandedViewProductId}
+                                        <div
+                                            class="fixed inset-0 flex items-center justify-center z-50"
+                                        >
+                                            <div class="modal modal-open">
+                                                <div
+                                                    class="modal-box custom-modal-width relative"
+                                                >
+                                                    <!-- relative positioning for the modal-box -->
+                                                    <!-- Product Image - Floating to the upper right corner with a frame -->
+                                                    {#each products.filter((p) => p.id === expandedViewProductId) as product}
+                                                        <img
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            class="absolute top-4 right-4 w-40 h-30 object-cover border-2 border-gray-300 rounded shadow-md transition-transform transform hover:scale-105"
+                                                        />
+
+                                                        <div
+                                                            class="flex items-center"
+                                                        >
+                                                            <p
+                                                                class="text-2xl font-bold mb-4 text-blue-600 mr-2"
+                                                            >
+                                                                {product.name}
+                                                            </p>
+                                                            <img
+                                                                src={images[
+                                                                    product
+                                                                        .variant
+                                                                ]}
+                                                                alt={product.variant}
+                                                                class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                                            />
+                                                        </div>
+
+                                                        <div class="space-y-4">
+                                                            <!-- Displaying the details with improved styling -->
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Variant:</span
+                                                                >
+                                                                {product.variant}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Chemical
+                                                                    Name:</span
+                                                                >
+                                                                {product.chemicalName}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Intensity:</span
+                                                                >
+                                                                {product.intensity}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Category:</span
+                                                                >
+                                                                {product.category}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Best
+                                                                    Before:</span
+                                                                >
+                                                                {product.bestBefore}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Indications:</span
+                                                                >
+                                                                {product.indications}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Pharmacology:</span
+                                                                >
+                                                                {product.pharmacology}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Dosage:</span
+                                                                >
+                                                                {product.dosage}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Administration:</span
+                                                                >
+                                                                {product.administration}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Interaction:</span
+                                                                >
+                                                                {product.interaction}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Side
+                                                                    Effects:</span
+                                                                >
+                                                                {product.sideEffects}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Precautions:</span
+                                                                >
+                                                                {product.precautions}
+                                                            </p>
+                                                            <p>
+                                                                <span
+                                                                    class="font-bold text-gray-600"
+                                                                    >Storage
+                                                                    Conditions:</span
+                                                                >
+                                                                {product.storageConditions}
+                                                            </p>
+                                                            <!-- ... other detail fields ... -->
+                                                        </div>
+                                                        <div
+                                                            class="modal-action mt-4"
+                                                        >
+                                                            <button
+                                                                class="btn btn-secondary"
+                                                                on:click={() =>
+                                                                    (expandedViewProductId =
+                                                                        null)}
+                                                                >Close</button
+                                                            >
+                                                        </div>
+                                                    {/each}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if showDeleteModal}
+                                        <div
+                                            class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-opacity-0"
+                                        >
+                                            <div
+                                                class="bg-white p-6 rounded-md shadow-lg"
+                                            >
+                                                <h3
+                                                    class="text-xl font-bold mb-4"
+                                                >
+                                                    Confirm Deletion
+                                                </h3>
+                                                <p>
+                                                    Are you sure you want to
+                                                    delete this product?
+                                                </p>
+                                                <div
+                                                    class="mt-4 flex justify-end space-x-4"
+                                                >
+                                                    <button
+                                                        class="btn btn-secondary"
+                                                        on:click={() =>
+                                                            (showDeleteModal = false)}
+                                                        >Cancel</button
+                                                    >
+                                                    <button
+                                                        class="btn btn-danger"
+                                                        on:click={() => {
+                                                            deleteProduct(
+                                                                confirmedDeleteId
+                                                            );
+                                                            showDeleteModal = false;
+                                                        }}>Confirm</button
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+
                                     <!-- Details section -->
-                                    {#if expandedProductId}
+                                    {#if displayEditModoal}
                                         <div
                                             class="fixed inset-0 flex items-center justify-center z-50"
                                         >
                                             <div class="modal modal-open">
                                                 <div class="modal-box">
-                                                    <!-- Cross button for closing the modal -->
-                                                    <button
-                                                        class="btn btn-clear float-right"
-                                                        on:click={() =>
-                                                            (expandedProductId =
-                                                                null)}
-                                                    />
-
-                                                    {#each products.filter((p) => p.id === expandedProductId) as product}
-                                                        <h2
-                                                            class="text-2xl font-bold mb-4"
+                                                    <form
+                                                        on:submit|preventDefault={saveChanges}
+                                                    >
+                                                        <button
+                                                            class="btn btn-clear float-right text-2xl font-bold"
+                                                            on:click={closeEdit}
+                                                            >X</button
                                                         >
-                                                            {product.name}
-                                                        </h2>
+                                                        <div
+                                                            class="flex items-center"
+                                                        >
+                                                            <p
+                                                                class="text-2xl font-bold mb-4 text-blue-600 mr-2"
+                                                            >
+                                                                {tempProduct.name}
+                                                            </p>
+                                                            <img
+                                                                src={images[
+                                                                    tempProduct
+                                                                        .variant
+                                                                ]}
+                                                                alt={tempProduct.variant}
+                                                                class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                                            />
+                                                        </div>
 
                                                         <!-- Fields for each detail with labels -->
+
+                                                        <!-- ... Your input fields go here ... -->
                                                         <div class="space-y-4">
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Name</span
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="name"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Name</label
                                                                 >
                                                                 <input
                                                                     type="text"
-                                                                    bind:value={product.name}
+                                                                    id="name"
+                                                                    bind:value={tempProduct.name}
+                                                                    placeholder="Enter Name"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Variant</span
+                                                            </div>
+
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="variant"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Variant</label
                                                                 >
-                                                                <input
-                                                                    type="text"
-                                                                    bind:value={product.variant}
-                                                                    class="input input-bordered w-full"
-                                                                />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
+                                                                <select
+                                                                    bind:value={tempProduct.variant}
+                                                                    class="select select-bordered w-full"
+                                                                    placeholder="Choose Variant"
+                                                                >
+                                                                    <option
+                                                                        disabled="disabled"
+                                                                        selected="selected"
+                                                                        >Choose
+                                                                        a
+                                                                        variant</option
+                                                                    >
+                                                                    <option
+                                                                        value="Tablet"
+                                                                        >Tablet</option
+                                                                    >
+                                                                    <option
+                                                                        value="Capsule"
+                                                                        >Capsule</option
+                                                                    >
+                                                                    <option
+                                                                        value="Injection"
+                                                                        >Injection</option
+                                                                    >
+                                                                    <option
+                                                                        value="Syrup"
+                                                                        >Syrup</option
+                                                                    >
+                                                                    <option
+                                                                        value="Ointment"
+                                                                        >Ointment</option
+                                                                    >
+                                                                    <option
+                                                                        value="Eyedrop"
+                                                                        >Eyedrop</option
+                                                                    >
+                                                                    <option
+                                                                        value="Suppository"
+                                                                        >Suppository</option
+                                                                    >
+                                                                    <!-- ... -->
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="chemicalName"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
                                                                     >Chemical
-                                                                    Name</span
+                                                                    Name</label
                                                                 >
                                                                 <input
                                                                     type="text"
-                                                                    bind:value={product.chemicalName}
+                                                                    id="chemicalName"
+                                                                    bind:value={tempProduct.chemicalName}
+                                                                    placeholder="Enter Chemical Name"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Intensity</span
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="intensity"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Intensity</label
                                                                 >
                                                                 <input
                                                                     type="text"
-                                                                    bind:value={product.intensity}
+                                                                    id="intensity"
+                                                                    bind:value={tempProduct.intensity}
+                                                                    placeholder="Enter Intensity"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Category</span
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="category"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Category</label
                                                                 >
                                                                 <input
                                                                     type="text"
-                                                                    bind:value={product.category}
+                                                                    id="category"
+                                                                    bind:value={tempProduct.category}
+                                                                    placeholder="Enter Category"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Dosage</span
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="image"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Image</label
                                                                 >
                                                                 <input
                                                                     type="text"
-                                                                    bind:value={product.dosage}
+                                                                    id="image"
+                                                                    bind:value={tempProduct.image}
+                                                                    placeholder="Enter Image URL"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
-                                                            <label
-                                                                class="label"
-                                                            >
-                                                                <span
-                                                                    class="label-text"
-                                                                    >Administration</span
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="bestBefore"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Best Before</label
                                                                 >
                                                                 <input
-                                                                    type="text"
-                                                                    bind:value={product.administration}
+                                                                    type="number"
+                                                                    id="bestBefore"
+                                                                    bind:value={tempProduct.bestBefore}
+                                                                    placeholder="in weeks"
                                                                     class="input input-bordered w-full"
                                                                 />
-                                                            </label>
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="indications"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Indications</label
+                                                                >
+                                                                <textarea
+                                                                    id="indications"
+                                                                    bind:value={tempProduct.indications}
+                                                                    placeholder="Enter Indications"
+                                                                    class="textarea textarea-bordered w-full p-2"
+                                                                />
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="pharmacology"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Pharmacology</label
+                                                                >
+                                                                <textarea
+                                                                    id="pharmacology"
+                                                                    bind:value={tempProduct.pharmacology}
+                                                                    placeholder="Enter Pharmacology"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="dosage"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Dosage</label
+                                                                >
+                                                                <textarea
+                                                                    id="dosage"
+                                                                    bind:value={tempProduct.dosage}
+                                                                    placeholder="Enter Dosage"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <!-- Administration -->
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="administration"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Administration</label
+                                                                >
+                                                                <textarea
+                                                                    id="administration"
+                                                                    bind:value={tempProduct.administration}
+                                                                    placeholder="Enter Administration Method"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <!-- Interaction -->
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="interaction"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Interaction</label
+                                                                >
+                                                                <textarea
+                                                                    id="interaction"
+                                                                    bind:value={tempProduct.interaction}
+                                                                    placeholder="Enter Drug Interactions"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <!-- Side Effects -->
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="sideEffects"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Side
+                                                                    Effects</label
+                                                                >
+                                                                <textarea
+                                                                    id="sideEffects"
+                                                                    bind:value={tempProduct.sideEffects}
+                                                                    placeholder="Enter Side Effects"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <!-- Precautions and Warnings -->
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="precautions"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Precautions
+                                                                    and Warnings</label
+                                                                >
+                                                                <textarea
+                                                                    id="precautions"
+                                                                    bind:value={tempProduct.precautions}
+                                                                    placeholder="Enter Precautions and Warnings"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
+                                                            <!-- Storage Conditions -->
+                                                            <div class="mb-2">
+                                                                <label
+                                                                    for="storageConditions"
+                                                                    class="block text-sm font-medium text-gray-700 text-left"
+                                                                    >Storage
+                                                                    Conditions</label
+                                                                >
+                                                                <textarea
+                                                                    id="storageConditions"
+                                                                    bind:value={tempProduct.storageConditions}
+                                                                    placeholder="Enter Storage Conditions"
+                                                                    class="textarea textarea-bordered w-full"
+                                                                />
+                                                            </div>
+
                                                             <!-- ... other detail fields ... -->
                                                         </div>
 
@@ -554,17 +984,49 @@
                                                         >
                                                             <button
                                                                 class="btn"
-                                                                on:click={() =>
-                                                                    (expandedProductId =
-                                                                        null)}
-                                                                >Close</button
+                                                                type="button"
+                                                                on:click={closeEdit}
+                                                                >Cancel</button
                                                             >
                                                             <button
                                                                 class="btn btn-primary"
+                                                                type="submit"
                                                                 >Save Changes</button
                                                             >
                                                         </div>
-                                                    {/each}
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {/if}
+
+                                    {#if showConfirmationModal}
+                                        <div
+                                            class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-opacity-0"
+                                        >
+                                            <div
+                                                class="bg-white p-6 rounded-md shadow-lg"
+                                            >
+                                                <h2
+                                                    class="text-xl font-bold mb-4"
+                                                >
+                                                    Confirm Changes
+                                                </h2>
+                                                <p>
+                                                    Do you really want to save
+                                                    the changes?
+                                                </p>
+                                                <div class="modal-action mt-4">
+                                                    <button
+                                                        class="btn btn-secondary"
+                                                        on:click={cancelSave}
+                                                        >Cancel</button
+                                                    >
+                                                    <button
+                                                        class="btn btn-danger"
+                                                        on:click={confirmSave}
+                                                        >Confirm</button
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
@@ -622,5 +1084,8 @@
     .stat-value {
         font-size: 2em;
         font-weight: bold;
+    }
+    .custom-modal-width {
+        width: 75vw;
     }
 </style>
