@@ -258,6 +258,14 @@
         products = products.filter((product) => product.id !== productId);
     }
 
+    //Filter part
+    let filterBrand = null;
+    let filterCategory = null;
+    let filterLowerSale = 0;
+    let filterUpperSale = 9999999;
+    let filterInterval;
+    let filterSortDirection = "Ascending";
+
     onMount(() => {
         getAnimation();
     });
@@ -1049,6 +1057,110 @@
                             <p class="text-2xl font-extrabold text-blue-600">
                                 Filter Options
                             </p>
+                        </div>
+                        <div class="mb-2">
+                            <label
+                                for="filterBrand"
+                                class="block text-sm font-bold text-black text-left"
+                                >Brand</label
+                            >
+                            <input
+                                type="text"
+                                id="filterBrand"
+                                bind:value={filterBrand}
+                                placeholder="Enter Brand Name"
+                                class="input input-bordered w-full"
+                            />
+                        </div>
+                        <div class="mb-2">
+                            <label
+                                for="category"
+                                class="block text-sm font-bold text-black text-left"
+                                >Category</label
+                            >
+                            <input
+                                type="text"
+                                id="category"
+                                bind:value={filterCategory}
+                                placeholder="Enter Category"
+                                class="input input-bordered w-full"
+                            />
+                        </div>
+                        <div class="flex mb-2 space-x-4">
+                            <!-- Lower Sale Bound -->
+                            <div class="w-1/2">
+                                <label
+                                    for="lowerSale"
+                                    class="block text-sm font-bold text-black text-left"
+                                    >Lower Sale Bound</label
+                                >
+                                <input
+                                    type="number"
+                                    id="lowerSale"
+                                    bind:value={filterLowerSale}
+                                    placeholder="Lower Sale Bound"
+                                    class="input input-bordered w-full"
+                                />
+                            </div>
+
+                            <!-- Upper Sale Bound -->
+                            <div class="w-1/2">
+                                <label
+                                    for="upperSale"
+                                    class="block text-sm font-bold text-black text-left"
+                                    >Upper Sale Bound</label
+                                >
+                                <input
+                                    type="number"
+                                    id="upperSale"
+                                    bind:value={filterUpperSale}
+                                    placeholder="Upper Sale Bound"
+                                    class="input input-bordered w-full"
+                                />
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label
+                                for="filterInterval"
+                                class="block text-sm font-bold text-black text-left"
+                                >Interval</label
+                            >
+                            <input
+                                type="number"
+                                id="filterInterval"
+                                bind:value={filterInterval}
+                                placeholder="For Last __weeks"
+                                class="input input-bordered w-full"
+                            />
+                        </div>
+                        <div class="mb-6">
+                            <label
+                                for="variant"
+                                class="block text-sm font-bold text-black text-left"
+                                >Sorting Direction</label
+                            >
+                            <select
+                                bind:value={filterSortDirection}
+                                class="select select-bordered w-full"
+                                placeholder="Choose Sort Direction"
+                            >
+                                <option disabled="disabled" selected="selected"
+                                    >Choose Sorting Option</option
+                                >
+                                <option value="Ascending"
+                                    >Ascending Order</option
+                                >
+                                <option value="Descending"
+                                    >Descending Order</option
+                                >
+                            </select>
+                        </div>
+                        <div>
+                            <button
+                                class="group w-full flex justify-center py-2 px-4 mt-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Apply Filters
+                            </button>
                         </div>
                     </div>
                 </div>
