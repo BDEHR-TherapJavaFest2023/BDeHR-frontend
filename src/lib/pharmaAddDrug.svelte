@@ -16,9 +16,9 @@
         sideEffects: "",
         precautions: "",
         storageConditions: "",
+        numberOfUnitsSold:0,
     };
 
-    const variants = ["Option1", "Option2", "Option3"];
     let currentStep = 0;
     function nextStep() {
         if (currentStep < 2) {
