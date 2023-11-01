@@ -45,6 +45,9 @@
                         class="w-32 mx-auto"
                     />
                 </div>
+                <h1 class="flex flex-col items-center text-2xl font-bold">
+                    Sign In to Your Company
+                </h1>
 
                 <form on:submit|preventDefault={handleLogin} class="space-y-4">
                     <input
@@ -67,11 +70,12 @@
                 </form>
 
                 <div class="flex justify-between items-center mt-4">
-                    <a href="#" class="text-blue-400 hover:underline"
+                    <a href="#" class="text-blue-500 hover:underline"
                         >Forgot password?</a
                     >
-                    <a href="#" class="text-blue-400 hover:underline"
-                        >Register</a
+                    <a
+                        href="#/pharmaceuticalcompanysignup"
+                        class="text-blue-500 hover:underline">Register</a
                     >
                 </div>
             </div>
