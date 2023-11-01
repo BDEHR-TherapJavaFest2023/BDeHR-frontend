@@ -43,6 +43,7 @@ import Pharmacompanylogin from './lib/pharmCompanyLogin.svelte';
 import PharmaCompanyHome__SvelteComponent_ from './lib/pharmaCompanyHome.svelte';
 import PharmaAddDrug__SvelteComponent_ from './lib/pharmaAddDrug.svelte';
 import PharmaProducts__SvelteComponent_ from './lib/pharmaProducts.svelte';
+import Pharmafactories__SvelteComponent_ from './lib/pharmafactories.svelte';
 
 export const routes = {
     // Define your routes here
@@ -91,4 +92,5 @@ export const routes = {
     '/pharmaceuticalcompany/home': PharmaCompanyHome__SvelteComponent_,
     '/pharmaceuticalcompany/addproduct': PharmaAddDrug__SvelteComponent_,
     '/pharmaceuticalcompany/products': PharmaProducts__SvelteComponent_,
+    '/pharmaceuticalcompany/factories': Pharmafactories__SvelteComponent_,
 };
