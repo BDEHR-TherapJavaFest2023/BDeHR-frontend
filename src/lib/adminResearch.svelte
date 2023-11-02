@@ -29,14 +29,14 @@
     ];
     Messages.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime));
 
-    let activeMessage = null;
+    let activeMessage = [];
     let fileInput;
     let uid = 0;
 
     function showModal(index, id) {
         uid = id;
-        console.log(uid);
-        activeMessage = Messages[index];
+        console.log(index+","+uid);
+        activeMessage = messageList[index];
         const modalElement = document.getElementById("responseModal");
         modalElement.classList.remove("hidden");
     }
@@ -333,7 +333,7 @@
                     />
                     <div class="bg-white w-2/5 p-6 rounded-lg z-10">
                         <h2 class="text-xl font-semibold text-blue-600 mb-4">
-                            Responding to: {activeMessage?.orgName}
+                            Responding to: {activeMessage["sender"]}
                         </h2>
                         <form on:submit|preventDefault={handleSubmit}>
                             <div class="mb-4">
