@@ -249,7 +249,7 @@
       <!-- Company Logo -->
       <div class="text-center mb-10 mt-4">
         <img
-          src={get(companyInfo).companyInfo["logo"]}
+          src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
           alt="Company Logo"
           class="w-32 mx-auto"
         />

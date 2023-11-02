@@ -142,8 +142,8 @@
     <div class="w-64 h-screen bg-white shadow-md fixed z-0 py-4">
       <!-- Company Logo -->
       <div class="text-center mb-10 mt-4">
-        <imge
-          src={get(companyInfo).companyInfo["logo"]}
+        <img
+          src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
           alt="Company Logo"
           class="w-32 mx-auto"
         />

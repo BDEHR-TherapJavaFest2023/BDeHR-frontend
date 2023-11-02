@@ -413,7 +413,7 @@
       <!-- Company Logo -->
       <div class="text-center mb-10 mt-4">
         <img
-          src= {get(companyInfo).companyInfo["logo"]}
+          src= "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/mainlogoBag.png"
           alt="Company Logo"
           class="w-32 mx-auto"
         />
@@ -594,7 +594,7 @@
                     />
 
                     <h2 class="text-2xl font-bold">
-                        ={drug["name"]}
+                        {drug["name"]}
                     </h2>
 
                     <div class="flex items-center">
