@@ -87,7 +87,7 @@
             gender: patientData["gender"],
             form: JSON.stringify(newMedication),
             hospitalName: params.hospitalName,
-            doctorName: get(doctorInfo).doctorName
+            doctorName: get(doctorInfo).doctorName,
         };
         console.log(payload);
         await fetch(serverUrl + "medication/add-medication", {
@@ -164,7 +164,7 @@
 
     async function getReportList() {
         let payload = { patientId: patientData["patientId"] };
-        console.log(payload)
+        console.log(payload);
         await fetch(serverUrl + "report/get-report-list", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -216,7 +216,202 @@
                 "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/1905061_report.pdf",
         },
     ];
+
+    const images = {
+        Tablet: "https://medex.com.bd/img/dosage-forms/tablet.png",
+        Injection: "https://medex.com.bd/img/dosage-forms/injection.png",
+        Capsule:
+            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/noun-pill-7773.svg",
+        Syrup: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Syrup.svg",
+        Ointment:
+            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/ointment.svg",
+        Eyedrop:
+            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/eye-with-a-drop.svg",
+        Suppository:
+            "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/suppository-capsule.svg",
+    };
+
+    let products = [
+        /* Assuming you have an array of products */
+        // Sample product
+        {
+            id: "1",
+            name: "Napa",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Tablet",
+            chemicalName: "Paracetamol",
+            intensity: "10mg",
+            category: "Aspirin",
+            bestBefore: 10,
+            indications: "indications Headache",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 1000,
+        },
+        {
+            id: "2",
+            name: "Esonix",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Capsule",
+            chemicalName: "Esomeprazole",
+            intensity: "10mg",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 800,
+        },
+        {
+            id: "3",
+            name: "Cyclopen",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Syrup",
+            chemicalName: "Cyclopenazole",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 800,
+        },
+        {
+            id: "4",
+            name: "fortison",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Ointment",
+            chemicalName: "Cyclopenazole",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 800,
+        },
+        {
+            id: "5",
+            name: "Exephin",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Injection",
+            chemicalName: "Exephinazole",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 800,
+        },
+        {
+            id: "6",
+            name: "Moxquin",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Eyedrop",
+            chemicalName: "Moxquinon",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 800,
+        },
+        {
+            id: "7",
+            name: "Osartil",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Tablet",
+            chemicalName: "Moxquinon",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 900,
+        },
+        {
+            id: "8",
+            name: "Pantonix",
+            image: "https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/Untitled-removebg-preview%20(2).png",
+            variant: "Tablet",
+            chemicalName: "Moxquinon",
+            intensity: "10mL",
+            category: "Gastric resolver",
+            bestBefore: 10,
+            indications: "indications Gastric paim",
+            pharmacology: "pharmacology Lorem ipsum",
+            dosage: "5/day",
+            administration: "administration Lorem Ipsum",
+            interaction: "interaction Lorem Ipsum",
+            sideEffects: "sideEffects Lorem Ipsum",
+            precautions: "precautions Lorem Ipsum",
+            storageConditions: "storageConditions Lorem Ipsum",
+            numberOfUnitsSold: 1800,
+        },
+        // Add more products...
+    ];
     let showModal = false;
+    let showMedicineModal = false; // State for the Add Medicine modal
+    let selectedGeneric = ""; // State for the selected generic name
+    function addMedicine() {
+        showMedicineModal = true;
+    }
+    function closeAddMedicineModal() {
+        showMedicineModal = false;
+    }
+    function selectMedicine(medicine) {
+        // newMedication.prescribedMedicines.push(medicine);
+        newMedication.prescribedMedicines = [
+            ...newMedication.prescribedMedicines,
+            medicine,
+        ];
+        console.log(newMedication.prescribedMedicines);
+        closeAddMedicineModal();
+    }
+    function removeMedicine(medicineId) {
+        newMedication.prescribedMedicines =
+            newMedication.prescribedMedicines.filter(
+                (medicine) => medicine.id !== medicineId
+            );
+    }
 
     let newMedication = {
         Address: "",
@@ -269,6 +464,7 @@
         RelativeInvestigationFindings: "",
         SalientFeature: "",
         ConfirmatoryDiagnosis: "",
+        prescribedMedicines: [],
         Treatment: "",
         FollowUpAdvice: "",
         FollowUpDuration: "",
@@ -319,37 +515,37 @@
         return res2;
     }
 
-    async function reportUpload1(){
+    async function reportUpload1() {
         const currentTime = new Date().toISOString();
-        await createMedicationReport(currentTime).then((response1)=>{
+        await createMedicationReport(currentTime).then((response1) => {
             reportUpload2(currentTime, response1);
-        })
+        });
     }
 
-    async function reportUpload2(currentTime, response1){
-        await createDiagnosisReport(currentTime).then((response2)=>{
+    async function reportUpload2(currentTime, response1) {
+        await createDiagnosisReport(currentTime).then((response2) => {
             let payload = {
-            doctorId: get(doctorInfo).doctorId,
-            hospitalId: get(doctorHospital).hospitalId,
-            patientId: patientData["patientId"],
-            problem: newMedication["ConfirmatoryDiagnosis"],
-            medicationUrl: response1["publicUrl"],
-            diagnosisUrl: response2["publicUrl"],
-        };
+                doctorId: get(doctorInfo).doctorId,
+                hospitalId: get(doctorHospital).hospitalId,
+                patientId: patientData["patientId"],
+                problem: newMedication["ConfirmatoryDiagnosis"],
+                medicationUrl: response1["publicUrl"],
+                diagnosisUrl: response2["publicUrl"],
+            };
 
             fetch(serverUrl + "medication/add-others", {
                 method: "POST",
                 body: JSON.stringify(payload),
             });
-        })
+        });
     }
 
-    async function dischagePatient(){
-        let payload = {id: id}
+    async function dischagePatient() {
+        let payload = { id: id };
         await fetch(serverUrl + "h2p/discharge-patient", {
-                method: "POST",
-                body: JSON.stringify(payload),
-            });
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
     }
 
     async function handleSubmit() {
@@ -357,7 +553,7 @@
         reportUpload1();
         dischagePatient();
         showModal = false;
-        window.location.hash = `#/doctorhome/doctorPatient/${params.hospitalName}`
+        window.location.hash = `#/doctorhome/doctorPatient/${params.hospitalName}`;
     }
 
     const pastDiagnosisData = [
@@ -477,11 +673,13 @@
             <ul>
                 {#each medicationList as medication}
                     <li class="mb-4">
-                        <p class="font-semibold">Hospital: {medication['hospitalName']}</p>
-                        <p>Doctor: {medication['doctorName']}</p>
-                        <p>Date: {medication['createdAt']}</p>
+                        <p class="font-semibold">
+                            Hospital: {medication["hospitalName"]}
+                        </p>
+                        <p>Doctor: {medication["doctorName"]}</p>
+                        <p>Date: {medication["createdAt"]}</p>
                         <a
-                            href={medication['medicationUrl']}
+                            href={medication["medicationUrl"]}
                             target="_blank"
                             class="text-blue-500 underline">View PDF</a
                         >
@@ -507,13 +705,15 @@
                 <tbody>
                     {#each medicationList as diagnosis}
                         <tr class="bg-gray-100 hover:bg-gray-200">
-                            <td class="border px-4 py-2">{diagnosis['createdAt']}</td>
                             <td class="border px-4 py-2"
-                                >{diagnosis['problem']}</td
+                                >{diagnosis["createdAt"]}</td
+                            >
+                            <td class="border px-4 py-2"
+                                >{diagnosis["problem"]}</td
                             >
                             <td class="border px-4 py-2">
                                 <a
-                                    href={diagnosis['diagnosisUrl']}
+                                    href={diagnosis["diagnosisUrl"]}
                                     target="_blank"
                                     class="text-blue-500 underline">View PDF</a
                                 >
@@ -526,10 +726,12 @@
             <ul>
                 {#each reportList as report}
                     <li class="mb-4">
-                        <p class="font-semibold">Hospital: {report['hospitalName']}</p>
-                        <p>Date: {report['createdAt']}</p>
+                        <p class="font-semibold">
+                            Hospital: {report["hospitalName"]}
+                        </p>
+                        <p>Date: {report["createdAt"]}</p>
                         <a
-                            href={report['url']}
+                            href={report["url"]}
                             target="_blank"
                             class="text-blue-500 underline">View PDF</a
                         >
@@ -548,9 +750,16 @@
                         class="absolute top-2 right-2 text-xl"
                         on:click={() => (showModal = false)}>&times;</button
                     >
-                    <h3 class="text-2xl font-bold mb-4">
-                        New Medication Entry for {patientData.name}
-                    </h3>
+                    <div class="flex items-center">
+                        <img
+                            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/prescription-icon.svg"
+                            alt="prescription"
+                            class="w-10 h-10 mr-2 transform transition duration-300 hover:rotate-12"
+                        />
+                        <p class="text-2xl font-bold mb-6">
+                            Running Medication
+                        </p>
+                    </div>
 
                     <form
                         on:submit|preventDefault={handleSubmit}
@@ -558,8 +767,14 @@
                     >
                         <!-- Initial Info -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Initial Info</legend
+                            <legend
+                                class="flex items-center font-bold text-lg mb-4"
+                                ><img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/information-icon.svg?t=2023-11-02T10%3A55%3A30.544Z"
+                                    alt="prescription"
+                                    class="w-5 h-5 mr-2 transform transition duration-300 hover:rotate-12"
+                                />
+                                Initial Info</legend
                             >
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -618,8 +833,13 @@
 
                         <!-- Complaints -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Complaints</legend
+                            <legend
+                                class="flex items-center font-bold text-lg mb-4"
+                                ><img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/make_complaints.svg"
+                                    alt="prescription"
+                                    class="w-5 h-5 mr-2 transform transition duration-300 hover:rotate-12"
+                                />Complaints</legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -655,8 +875,13 @@
 
                         <!-- History -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >History</legend
+                            <legend
+                                class="flex items-center font-bold text-lg mb-4"
+                                ><img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/make_complaints.svg"
+                                    alt="prescription"
+                                    class="w-5 h-5 mr-2 transform transition duration-300 hover:rotate-12"
+                                />History</legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -771,8 +996,13 @@
                         </fieldset>
 
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >General Examination</legend
+                            <legend
+                                class="flex items-center font-bold text-lg mb-4"
+                                ><img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/analysis-svgrepo-com.svg"
+                                    alt="prescription"
+                                    class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                />General Examination</legend
                             >
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -1017,8 +1247,13 @@
 
                         <!-- Examination -->
                         <fieldset class="p-4 border rounded-md shadow-lg">
-                            <legend class="font-bold text-lg mb-4"
-                                >Systematic Examination</legend
+                            <legend
+                                class="flex items-center font-bold text-lg mb-4"
+                                ><img
+                                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/analysis-svgrepo-com.svg"
+                                    alt="prescription"
+                                    class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                />Systematic Examination</legend
                             >
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
@@ -1235,6 +1470,51 @@
                             <div>
                                 <!-- Fields: Address, Contact, Occupation, SocioEconomicCondition, OccupationalHistory -->
                                 <!-- ... Add your fields in the same format as below ... -->
+                                <button
+                                    class="mb-3 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+                                    on:click={addMedicine}
+                                >
+                                    + Add Medicine
+                                </button>
+                                {#if newMedication.prescribedMedicines.length > 0}
+                                    <h1 class="font-bold text-2xl">
+                                        Prescribed Medicines
+                                    </h1>
+                                    <ul class="list-disc pl-5">
+                                        {#each newMedication.prescribedMedicines as medicine (medicine.id)}
+                                            <li
+                                                class="flex items-center font-semibold mb-4 mt-2"
+                                            >
+                                                <h1
+                                                    class="text-xl font-semibold mr-3"
+                                                >
+                                                    {medicine.name}
+                                                </h1>
+                                                <div
+                                                    class="flex items-center mr-4"
+                                                >
+                                                    <img
+                                                        src={images[
+                                                            medicine.variant
+                                                        ]}
+                                                        alt={medicine.variant}
+                                                        class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    class="ml-4 bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded-md"
+                                                    on:click={() =>
+                                                        removeMedicine(
+                                                            medicine.id
+                                                        )}
+                                                >
+                                                    Remove
+                                                </button>
+                                            </li>
+                                        {/each}
+                                    </ul>
+                                {/if}
                                 <label class="block">
                                     <span class="block font-semibold mb-2"
                                         >Treatment*</span
@@ -1291,6 +1571,67 @@
                             >
                         </div>
                     </form>
+                </div>
+            </div>
+        {/if}
+        {#if showMedicineModal}
+            <!-- Add Medicine Modal -->
+            <div
+                class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50"
+            >
+                <div
+                    class="bg-white p-6 rounded-md shadow-md relative w-full max-w-lg max-h-screen overflow-y-auto my-8"
+                >
+                    <button
+                        class="absolute top-2 right-2 text-xl"
+                        on:click={() => (showMedicineModal = false)}
+                        >&times;</button
+                    >
+                    <h3 class="text-2xl font-bold mb-4">Select a Medicine</h3>
+                    <div class="mb-4">
+                        <label class="block">
+                            <span class="block font-semibold mb-2"
+                                >Generic*</span
+                            >
+                            <input
+                                class="w-full p-2 border rounded-md"
+                                placeholder="Enter generic name"
+                                bind:value={selectedGeneric}
+                            />
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {#each products as product}
+                            {#if product.chemicalName
+                                .toLowerCase()
+                                .includes(selectedGeneric.toLowerCase())}
+                                <div
+                                    class="border p-4 rounded-md cursor-pointer hover:shadow-lg"
+                                    on:click={() => selectMedicine(product)}
+                                >
+                                    <img
+                                        class="w-40 h-30 object-cover mx-auto transition-transform transform hover:scale-105"
+                                        src={product.image}
+                                        alt={product.name}
+                                    />
+                                    <h4 class="text-2xl font-bold mt-2">
+                                        {product.name}
+                                    </h4>
+                                    <div class="flex items-center">
+                                        <img
+                                            src={images[product.variant]}
+                                            alt={product.variant}
+                                            class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
+                                        />
+                                        <p>{product.variant}</p>
+                                    </div>
+                                    <p>
+                                        {product.chemicalName}
+                                    </p>
+                                </div>
+                            {/if}
+                        {/each}
+                    </div>
                 </div>
             </div>
         {/if}

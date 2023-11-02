@@ -276,7 +276,7 @@
             </div>
             <div class="flex justify-center mt-12 space-x-8">
                 <a
-                    href="#/bdehr/videodemo"
+                    href="https://www.youtube.com/playlist?list=PLW5antMpb-_P8iauv8Fe4pwLb0x1JXrfG"
                     class="w-1/5 flex items-center btn btn-outline text-2xl font-bold hover:bg-blue-600 rounded-xl"
                 >
                     Get Demo
