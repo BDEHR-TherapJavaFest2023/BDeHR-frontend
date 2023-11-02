@@ -317,7 +317,7 @@
                         alt="Messages Icon"
                         class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
                     />
-                    Factories
+                    Factory
                 </li>
             </ul>
         </div>

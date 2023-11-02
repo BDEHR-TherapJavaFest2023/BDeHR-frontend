@@ -4,7 +4,8 @@
         name: "",
         variant: "",
         intensity: "",
-        image: "",
+        image: null,
+        imagePreview: "",
         category: "",
         chemicalName: "",
         bestBefore: "",
@@ -16,7 +17,7 @@
         sideEffects: "",
         precautions: "",
         storageConditions: "",
-        numberOfUnitsSold:0,
+        numberOfUnitsSold: 0,
     };
 
     let currentStep = 0;
@@ -32,7 +33,21 @@
         currentStep -= 1;
     }
 
+    function handleImageChange(event) {
+        const file = event.target.files[0];
+        if (file) {
+            formData.image = file;
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                formData.imagePreview = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
     function handleSubmit() {
+        //supabase e image up dewa lagbe
         console.log(formData);
     }
 
@@ -134,7 +149,7 @@
                         alt="Messages Icon"
                         class="w-6 h-6 mr-2 transform transition duration-300 hover:rotate-12"
                     />
-                    Factories
+                    Factory
                 </li>
             </ul>
         </div>
@@ -335,20 +350,7 @@
                                             class="input input-bordered w-full"
                                         />
                                     </div>
-                                    <div class="mb-2">
-                                        <label
-                                            for="image"
-                                            class="block text-sm font-medium text-gray-700 text-left"
-                                            >Image</label
-                                        >
-                                        <input
-                                            type="text"
-                                            id="image"
-                                            bind:value={formData.image}
-                                            placeholder="Enter Image URL"
-                                            class="input input-bordered w-full"
-                                        />
-                                    </div>
+
                                     <div class="mb-2">
                                         <label
                                             for="category"
@@ -390,6 +392,29 @@
                                             placeholder="in weeks"
                                             class="input input-bordered w-full"
                                         />
+                                    </div>
+                                    <div class="mb-2">
+                                        <label
+                                            for="image"
+                                            class="block text-sm font-medium text-gray-700 text-left"
+                                            >Image</label
+                                        >
+                                        <input
+                                            type="file"
+                                            id="image"
+                                            accept="image/*"
+                                            on:change={handleImageChange}
+                                            class="input input-bordered w-full"
+                                        />
+                                        {#if formData.imagePreview}
+                                            <div class="mt-4">
+                                                <img
+                                                    src={formData.imagePreview}
+                                                    alt="Preview"
+                                                    class="w-36 h-36 transition-transform transform hover:scale-105"
+                                                />
+                                            </div>
+                                        {/if}
                                     </div>
                                     <button
                                         type="button"
@@ -558,9 +583,9 @@
                                             <div
                                                 class="border border-gray-300 p-2 rounded-lg shadow"
                                             >
-                                                {#if formData.image}
+                                                {#if formData.imagePreview}
                                                     <img
-                                                        src={formData.image}
+                                                        src={formData.imagePreview}
                                                         alt="Uploaded image"
                                                         class="w-full h-auto"
                                                     />
