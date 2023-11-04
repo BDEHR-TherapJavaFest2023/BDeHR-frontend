@@ -19,3 +19,6 @@ export const labInfo = persisted('labInfo', { labInfo: {} })
 
 //Research Org
 export const orgInfo = persisted('orgInfo', { orgInfo: {} })
+
+//Company Info
+export const companyInfo = persisted('companyIdfo', {companyInfo: {}})
