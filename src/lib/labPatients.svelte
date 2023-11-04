@@ -88,6 +88,7 @@
         await dbRow(patient, id, patientId, response).then((response) => {
             getPatientList();
             toast.success("Report Added");
+            tempOk = false;
         });
     }
 
@@ -104,6 +105,7 @@
         if (file) {
             // Indicate that the file is uploading for this patient
             uploadingFlags = { ...uploadingFlags, [patientID]: true };
+            tempOk = true;
 
             await UploadAndStuff(patient, id, patientID, file);
 
@@ -130,7 +132,7 @@
     function navigateBack() {
         window.location.hash = "#/labhome";
     }
-
+    let tempOk = false;
     $: patientList = [];
     async function getPatientList() {
         let payload = { labId: get(labInfo).labInfo["id"] };
@@ -215,31 +217,9 @@
                                     )
                                     .click()}>Add File</button
                         >
-                        {#if uploadingFlags[patient["id"]]}
-                            <!-- Spinner for upload indication -->
-                            <svg
-                                class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500 inline-block"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle
-                                    class="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    stroke-width="4"
-                                />
-                                <path
-                                    class="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                />
-                            </svg>
-                        {/if}
                     </div>
                 </div>
+
                 {#if showModal}
                     <div
                         class="fixed inset-0 flex items-center justify-center z-50"
@@ -274,10 +254,17 @@
                     </div>
                 {/if}
             {/each}
+            {#if tempOk}
+                <div
+                    class="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-opacity-0"
+                >
+                    <span class="loading loading-spinner loading-lg" />
+                    <h1>Test Report is Uploading...</h1>
+                </div>
+            {/if}
         </div>
     </div>
 </main>
 
 <style>
-    /* Add any additional styles here */
 </style>
