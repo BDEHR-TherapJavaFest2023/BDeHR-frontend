@@ -14,6 +14,7 @@ import doctorHospital from './lib/doctorHospital.svelte';
 import doctorResearch from './lib/doctorResearch.svelte';
 import doctorPatient from './lib/doctorPatient.svelte';
 import doctorOnPatient from './lib/doctorOnPatient.svelte';
+import DoctorOnPatientNew__SvelteComponent_ from './lib/doctorOnPatientNew.svelte';
 import adminHome from './lib/adminhome.svelte';
 import adminQuery from './lib/adminQuery.svelte';
 import AdminAddHospital from './lib/adminAddHospital.svelte';
@@ -74,7 +75,7 @@ export const routes = {
     '/hospitalhome/authorityLogin': dospitalAuthorityLogin,
     '/doctorhome/Authority': HospitalAuthority,
     '/doctorhome/doctorPatient/:hospitalName': doctorPatient,
-    '/doctorhome/doctorPatient/:hospitalName/:patientId': doctorOnPatient,
+    '/doctorhome/doctorPatient/:hospitalName/:patientId': DoctorOnPatientNew__SvelteComponent_,
     '/lablogin': labLogin,
     '/adminlogin': adminLogin,
     '/labhome': labHome,
