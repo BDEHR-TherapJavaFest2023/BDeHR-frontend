@@ -95,13 +95,18 @@
         </div>
 
         <div class="space-x-4">
-            <a href="#/researchlogin" class="text-white">Logout</a>
+            <a href="#/researchlogin" class="text-white hover:scale-110"
+                >Logout</a
+            >
         </div>
     </div>
 </nav>
 
-<main class="container mx-auto my-12 p-4 flex flex-col items-center space-y-12">
-    <section class="profile text-center space-y-4">
+<main
+    class="container mx-auto p-4 flex flex-col items-center space-y-12"
+    style="background-image: url('https://tailwindcss.com/_next/static/media/docs-dark@tinypng.1bbe175e.png'); background-size: cover; backdrop-filter: blur(10px);"
+>
+    <section class="profile text-center space-y-4 mt-3">
         <img
             src={get(orgInfo).orgInfo["photo"]}
             alt="Company Logo"
@@ -117,21 +122,37 @@
             {get(orgInfo).orgInfo["email"]}
         </p>
     </section>
+    <div class="divider" />
 
-    <section class="space-y-4">
-        <div class="mb-8">
+    <section>
+        <div class="flex items-center mb-2">
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/email-forward-icon.svg"
+                alt="Message Logo"
+                class="w-10 h-10 mr-2 transform transition duration-300 hover:rotate-12"
+            />
+            <p class="text-3xl font-bold">Place Request to Admin</p>
+        </div>
+        <div class="mb-8 mt-4">
             <textarea
                 bind:value={userMessage}
                 placeholder="Enter your message..."
                 class="w-full h-32 p-2 rounded border"
             />
-            <button on:click={sendMessageToAdmin} class="btn btn-primary mt-4">
+            <button on:click={sendMessageToAdmin} class="btn btn-accent mt-2">
                 Send Message to Admin
             </button>
         </div>
-        <h2 class="text-3xl font-bold">Past Communications</h2>
+        <div class="flex items-center mb-2">
+            <img
+                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/envelope-icon.svg"
+                alt="Message Logo"
+                class="w-10 h-10 mr-2 transform transition duration-300 hover:rotate-12"
+            />
+            <p class="text-3xl font-bold">Past Communications</p>
+        </div>
 
-        <button on:click={togglePending} class="btn btn-error">
+        <button on:click={togglePending} class="btn btn-error mb-4">
             Show Pending Requests
         </button>
 
@@ -139,20 +160,23 @@
             {#each messageList as message}
                 <div
                     class={`border rounded p-4 ${
-                        message['status'] === "pending"
+                        message["status"] === "pending"
                             ? "bg-yellow-200"
                             : "bg-green-200"
                     }`}
                 >
-                    <p><strong>Request:</strong> {message['sender']}</p>
-                    <p><strong>Sent time:</strong> {message['reqTime']}</p>
-                    <p><strong>Status:</strong> {message['status']}</p>
+                    <p><strong>Request:</strong> {message["sender"]}</p>
+                    <p><strong>Sent time:</strong> {message["reqTime"]}</p>
+                    <p><strong>Status:</strong> {message["status"]}</p>
                 </div>
                 <div class="border rounded p-4">
-                    <p><strong>Responce Time:</strong> {message['resTime'] || ""}</p>
-                    <p><strong>Content:</strong> {message['resText'] || ""}</p>
-                    {#if message['url']}
-                        <a href={message['url']} target="_blank">
+                    <p>
+                        <strong>Responce Time:</strong>
+                        {message["resTime"] || ""}
+                    </p>
+                    <p><strong>Content:</strong> {message["resText"] || ""}</p>
+                    {#if message["url"]}
+                        <a href={message["url"]} target="_blank">
                             <img
                                 class="w-6 h-6 inline hover:scale-110"
                                 src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/attachments-attach.svg"
@@ -177,13 +201,16 @@
                 </button>
                 <ul>
                     {#each messageList as message}
-                        {#if message['status'] === "pending"}
+                        {#if message["status"] === "pending"}
                             <li class="border-b py-2">
                                 <p>
                                     <strong>Reply To:</strong>
-                                    {message['reqText']}
+                                    {message["reqText"]}
                                 </p>
-                                <p><strong>Sent:</strong> {message['reqTime']}</p>
+                                <p>
+                                    <strong>Sent:</strong>
+                                    {message["reqTime"]}
+                                </p>
                             </li>
                         {/if}
                     {/each}
