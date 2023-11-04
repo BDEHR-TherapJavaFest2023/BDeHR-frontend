@@ -109,7 +109,7 @@ export async function createPDF2(data, hospitalName, doctorName, hospitalLogo) {
   });
 
   //Title
-  page.drawText(`Dhaka Medical College\n`, {
+  page.drawText(`${hospitalName}\n`, {
     x: 250,
     y: 750,
     size: 24,
@@ -119,7 +119,7 @@ export async function createPDF2(data, hospitalName, doctorName, hospitalLogo) {
   });
 
   //Doctor Name
-  page.drawText(`Dr. Rezaul Karim\n`, {
+  page.drawText(`${doctorName}\n`, {
     x: 250,
     y: 725,
     size: 16,
