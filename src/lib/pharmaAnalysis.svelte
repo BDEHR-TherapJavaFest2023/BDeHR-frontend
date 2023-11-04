@@ -177,6 +177,7 @@
       filterChemicalName: filterChemicalName,
       filterVariant: filterVariant,
       filterInterval: filterInterval.toString(),
+      company: get(companyInfo).companyInfo["name"]
     };
     await fetch(serverUrl + "drug-usage/get-query-list", {
       method: "POST",
