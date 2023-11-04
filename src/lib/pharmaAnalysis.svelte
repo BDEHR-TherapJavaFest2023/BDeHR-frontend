@@ -6,6 +6,7 @@
   import "leaflet/dist/leaflet.css";
   import { companyInfo } from "./store";
   import { get } from "svelte/store";
+  import { serverUrl } from "./constants";
 
   let companyData = {
     name: "Incepta Pharmaceutical Company",
@@ -58,105 +59,107 @@
     }
   }
 
-  const hospitalResponce = [
-    {
-      name: "Dhaka Medical College",
-      latitude: 23.726,
-      longitude: 90.3976,
-      count: 1200,
-    },
-    {
-      name: "Cumilla Medical College",
-      latitude: 23.4515,
-      longitude: 91.203,
-      count: 1010,
-    },
-    {
-      name: "Chittagong Medical College",
-      latitude: 22.3593,
-      longitude: 91.8308,
-      count: 120,
-    },
-    {
-      name: "Sylhet Medical College",
-      latitude: 24.9014962,
-      longitude: 91.8536165,
-      count: 100,
-    },
-    {
-      name: "Rajshahi Medical College",
-      latitude: 24.372,
-      longitude: 88.5864,
-      count: 1300,
-    },
-    {
-      name: "Barisal Medical College",
-      latitude: 22.6865,
-      longitude: 90.3613,
-      count: 1000,
-    },
-    {
-      name: "Mymensingh Medical College",
-      latitude: 24.7418,
-      longitude: 90.4094,
-      count: 750,
-    },
-    {
-      name: "Khulna Medical College",
-      latitude: 22.8285,
-      longitude: 89.5382,
-      count: 1500,
-    },
-    {
-      name: "Rangpur Medical College",
-      latitude: 25.7666,
-      longitude: 89.2338,
-      count: 90,
-    },
-    {
-      name: "Bogra Medical College",
-      latitude: 24.8279,
-      longitude: 89.3529,
-      count: 80,
-    },
-    {
-      name: "Pabne Medical College",
-      latitude: 24.0045,
-      longitude: 89.209,
-      count: 110,
-    },
-    {
-      name: "Patuakhali Medical College",
-      latitude: 22.3623,
-      longitude: 90.327,
-      count: 1230,
-    },
-    {
-      name: "Cox's Bazar Medical College",
-      latitude: 21.4202,
-      longitude: 92.0149,
-      count: 520,
-    },
-    {
-      name: "Noakhali Medical College",
-      latitude: 22.9515,
-      longitude: 91.1038,
-      count: 100,
-    },
-    {
-      name: "Sirajganj Medical College",
-      latitude: 24.4489,
-      longitude: 89.6738,
-      count: 100,
-    },
-  ];
+  // const hospitalResponce = [
+  //   {
+  //     name: "Dhaka Medical College",
+  //     latitude: 23.726,
+  //     longitude: 90.3976,
+  //     count: 1200,
+  //   },
+  //   {
+  //     name: "Cumilla Medical College",
+  //     latitude: 23.4515,
+  //     longitude: 91.203,
+  //     count: 1010,
+  //   },
+  //   {
+  //     name: "Chittagong Medical College",
+  //     latitude: 22.3593,
+  //     longitude: 91.8308,
+  //     count: 120,
+  //   },
+  //   {
+  //     name: "Sylhet Medical College",
+  //     latitude: 24.9014962,
+  //     longitude: 91.8536165,
+  //     count: 100,
+  //   },
+  //   {
+  //     name: "Rajshahi Medical College",
+  //     latitude: 24.372,
+  //     longitude: 88.5864,
+  //     count: 1300,
+  //   },
+  //   {
+  //     name: "Barisal Medical College",
+  //     latitude: 22.6865,
+  //     longitude: 90.3613,
+  //     count: 1000,
+  //   },
+  //   {
+  //     name: "Mymensingh Medical College",
+  //     latitude: 24.7418,
+  //     longitude: 90.4094,
+  //     count: 750,
+  //   },
+  //   {
+  //     name: "Khulna Medical College",
+  //     latitude: 22.8285,
+  //     longitude: 89.5382,
+  //     count: 1500,
+  //   },
+  //   {
+  //     name: "Rangpur Medical College",
+  //     latitude: 25.7666,
+  //     longitude: 89.2338,
+  //     count: 90,
+  //   },
+  //   {
+  //     name: "Bogra Medical College",
+  //     latitude: 24.8279,
+  //     longitude: 89.3529,
+  //     count: 80,
+  //   },
+  //   {
+  //     name: "Pabne Medical College",
+  //     latitude: 24.0045,
+  //     longitude: 89.209,
+  //     count: 110,
+  //   },
+  //   {
+  //     name: "Patuakhali Medical College",
+  //     latitude: 22.3623,
+  //     longitude: 90.327,
+  //     count: 1230,
+  //   },
+  //   {
+  //     name: "Cox's Bazar Medical College",
+  //     latitude: 21.4202,
+  //     longitude: 92.0149,
+  //     count: 520,
+  //   },
+  //   {
+  //     name: "Noakhali Medical College",
+  //     latitude: 22.9515,
+  //     longitude: 91.1038,
+  //     count: 100,
+  //   },
+  //   {
+  //     name: "Sirajganj Medical College",
+  //     latitude: 24.4489,
+  //     longitude: 89.6738,
+  //     count: 100,
+  //   },
+  // ];
 
   let filterBrand = "";
   let filterVariant = "";
   let filterCategory = "";
   let filterChemicalName = "";
-  let filterInterval;
+  let filterInterval = "";
   let showMap = false;
+
+  let hospitalResponce = [];
 
   function applyQuery() {
     showMap = true;
@@ -164,6 +167,32 @@
   }
   function returnFromQuery() {
     showMap = false;
+  }
+
+  async function handleSubmit(event) {
+    if (!filterInterval) filterInterval = "";
+    let payload = {
+      filterBrand: filterBrand,
+      filterCategory: filterCategory,
+      filterChemicalName: filterChemicalName,
+      filterVariant: filterVariant,
+      filterInterval: filterInterval.toString(),
+    };
+    await fetch(serverUrl + "drug-usage/get-query-list", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        hospitalResponce = [];
+        for (let i = 0; i < Object.keys(data).length; i++) {
+          hospitalResponce.push(JSON.parse(data[i]));
+        }
+        console.log(hospitalResponce);
+        applyQuery();
+      });
   }
 </script>
 
@@ -314,104 +343,106 @@
         <div
           class="w-1/4 bg-red-400 rounded-xl shadow-md min-h-screen right-0 z-20"
         >
-          <div class="p-4">
-            <div class="flex items-center space-x-2 mb-4 p-2">
-              <img
-                src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/analysis-svgrepo-com.svg"
-                class="w-10 h-10 transform transition duration-300 hover:rotate-12"
-                alt="Email Icon"
-              />
-              <p class="text-2xl font-extrabold text-blue-600">Run Query</p>
-            </div>
-            <div class="mb-2">
-              <label
-                for="filterBrand"
-                class="block text-sm font-bold text-black text-left"
-                >Brand</label
-              >
-              <input
-                type="text"
-                id="filterBrand"
-                bind:value={filterBrand}
-                placeholder="Enter Brand Name"
-                class="input input-bordered w-full"
-              />
-            </div>
-            <div class="mb-2">
-              <label
-                for="filterVariant"
-                class="block text-sm font-bold text-black text-left"
-                >Variant</label
-              >
-              <select
-                bind:value={filterVariant}
-                class="select select-bordered w-full"
-                placeholder="Choose Variant"
-              >
-                <option disabled="disabled" selected="selected"
-                  >Choose a variant</option
+          <form on:submit|preventDefault={handleSubmit}>
+            <div class="p-4">
+              <div class="flex items-center space-x-2 mb-4 p-2">
+                <img
+                  src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/analysis-svgrepo-com.svg"
+                  class="w-10 h-10 transform transition duration-300 hover:rotate-12"
+                  alt="Email Icon"
+                />
+                <p class="text-2xl font-extrabold text-blue-600">Run Query</p>
+              </div>
+              <div class="mb-2">
+                <label
+                  for="filterBrand"
+                  class="block text-sm font-bold text-black text-left"
+                  >Brand</label
                 >
-                <option value="Tablet">Tablet</option>
-                <option value="Capsule">Capsule</option>
-                <option value="Injection">Injection</option>
-                <option value="Syrup">Syrup</option>
-                <option value="Ointment">Ointment</option>
-                <option value="Eyedrop">Eyedrop</option>
-                <option value="Suppository">Suppository</option>
-                <!-- ... -->
-              </select>
+                <input
+                  type="text"
+                  id="filterBrand"
+                  bind:value={filterBrand}
+                  placeholder="Enter Brand Name"
+                  class="input input-bordered w-full"
+                />
+              </div>
+              <div class="mb-2">
+                <label
+                  for="filterVariant"
+                  class="block text-sm font-bold text-black text-left"
+                  >Variant</label
+                >
+                <select
+                  bind:value={filterVariant}
+                  class="select select-bordered w-full"
+                  placeholder="Choose Variant"
+                >
+                  <option disabled="disabled" selected="selected"
+                    >Choose a variant</option
+                  >
+                  <option value="Tablet">Tablet</option>
+                  <option value="Capsule">Capsule</option>
+                  <option value="Injection">Injection</option>
+                  <option value="Syrup">Syrup</option>
+                  <option value="Ointment">Ointment</option>
+                  <option value="Eyedrop">Eyedrop</option>
+                  <option value="Suppository">Suppository</option>
+                  <!-- ... -->
+                </select>
+              </div>
+              <div class="mb-2">
+                <label
+                  for="category"
+                  class="block text-sm font-bold text-black text-left"
+                  >Category</label
+                >
+                <input
+                  type="text"
+                  id="category"
+                  bind:value={filterCategory}
+                  placeholder="Enter Category"
+                  class="input input-bordered w-full"
+                />
+              </div>
+              <div class="mb-2">
+                <label
+                  for="filterChemicalName"
+                  class="block text-sm font-bold text-black text-left"
+                  >Generics</label
+                >
+                <input
+                  type="text"
+                  id="filterChemicalName"
+                  bind:value={filterChemicalName}
+                  placeholder="Enter Generics"
+                  class="input input-bordered w-full"
+                />
+              </div>
+              <div class="mb-4">
+                <label
+                  for="filterInterval"
+                  class="block text-sm font-bold text-black text-left"
+                  >Interval</label
+                >
+                <input
+                  type="number"
+                  id="filterInterval"
+                  bind:value={filterInterval}
+                  placeholder="For Last __weeks"
+                  class="input input-bordered w-full"
+                />
+              </div>
+              <div>
+                <button
+                  class="group w-full flex justify-center py-2 px-4 mt-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  type="submit"
+                >
+                  Run Query
+                </button>
+              </div>
             </div>
-            <div class="mb-2">
-              <label
-                for="category"
-                class="block text-sm font-bold text-black text-left"
-                >Category</label
-              >
-              <input
-                type="text"
-                id="category"
-                bind:value={filterCategory}
-                placeholder="Enter Category"
-                class="input input-bordered w-full"
-              />
-            </div>
-            <div class="mb-2">
-              <label
-                for="filterChemicalName"
-                class="block text-sm font-bold text-black text-left"
-                >Generics</label
-              >
-              <input
-                type="text"
-                id="filterChemicalName"
-                bind:value={filterChemicalName}
-                placeholder="Enter Generics"
-                class="input input-bordered w-full"
-              />
-            </div>
-            <div class="mb-4">
-              <label
-                for="filterInterval"
-                class="block text-sm font-bold text-black text-left"
-                >Interval</label
-              >
-              <input
-                type="number"
-                id="filterInterval"
-                bind:value={filterInterval}
-                placeholder="For Last __weeks"
-                class="input input-bordered w-full"
-              />
-            </div>
-            <div>
-              <button
-                class="group w-full flex justify-center py-2 px-4 mt-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                on:click={applyQuery}
-              >
-                Run Query
-              </button>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

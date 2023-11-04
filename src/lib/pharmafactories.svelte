@@ -184,8 +184,8 @@
 
       <div class="mx-8 mb-8">
         <img
-          src={companyData.factoryImage}
-          alt={companyData.name}
+          src={get(companyInfo).companyInfo["factoryImage"]}
+          alt={get(companyInfo).companyInfo["name"]}
           class="rounded-lg shadow-md w-full h-96 object-cover"
         />
       </div>
