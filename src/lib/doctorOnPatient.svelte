@@ -504,7 +504,12 @@
   }
 
   async function createMedicationReport(currentTime) {
-    const pdfBytes = await createPDF(newMedication);
+    const pdfBytes = await createPDF(
+      newMedication,
+      params.hospitalName,
+      get(doctorInfo).doctorName,
+      get(doctorHospital).hospitalLogo
+    );
     const blob = new Blob([pdfBytes], { type: "application/pdf" });
     const link = document.createElement("a");
 
@@ -583,7 +588,7 @@
         patientId: params.patientId,
         company: drug.company,
         hospital: params.hospitalName,
-        category: drug.category
+        category: drug.category,
       };
       await fetch(serverUrl + "drug-usage/add-usage", {
         method: "POST",
@@ -591,15 +596,12 @@
       });
     });
   }
-  
 
   async function handleSubmit() {
-   
     setFormData();
     uploadDrugUsage();
     reportUpload1();
     dischagePatient();
-    
 
     showModal = false;
     window.location.href = `#/doctorhome/doctorPatient/${params.hospitalName}`;
@@ -669,6 +671,22 @@
   //     };
   //     showModal = false;
   // }
+
+  async function handleDownload() {
+    const pdfBytes = await createPDF2(
+      newMedication,
+      params.hospitalName,
+      get(doctorInfo).doctorName,
+      get(doctorHospital).hospitalLogo
+    );
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = `Test.pdf`;
+    link.click();
+  }
+  
 </script>
 
 <div class="p-6 bg-gray-100 min-h-screen">

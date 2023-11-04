@@ -16,10 +16,10 @@
         // Navigate to the hospitals page
         window.location.hash = "#/doctorhome/researches";
     }
-    function navigateToPatients(hospitalName, id) {
+    function navigateToPatients(hospitalName, id, hospitalLogo) {
         // Set the hospital name in a global store or send as a parameter
         // For simplicity, sending as a parameter
-        doctorHospital.set({ hospitalId: id });
+        doctorHospital.set({ hospitalId: id , hospitalLogo: hospitalLogo});
         console.log("Navigating to patients for hospital:", hospitalName);
         window.location.hash = `#/doctorhome/doctorPatient/${hospitalName}`;
     }
@@ -82,7 +82,7 @@
                 class="bg-white p-6 rounded-lg shadow-md text-center transition-colors hover:bg-gray-200
         transition-transform transform hover:scale-90 cursor-pointer"
                 on:click={() =>
-                    navigateToPatients(hospital["name"], hospital["id"])}
+                    navigateToPatients(hospital["name"], hospital["id"],hospital["logo"])}
             >
                 <div class="flex items-center justify-center space-x-4">
                     <!-- Assuming you have an icon component or library, replace with your icon of choice -->

@@ -7,7 +7,7 @@ export const userInfo = persisted('userInfo', { userName: '', userId: '', userEm
 export const doctorInfo = persisted('doctorInfo', { doctorName: '', doctorId: '', doctorEmail: '', doctorBmdc: '', doctorDob: '', doctorAddress: '', doctorGender: '', doctorPhone: '', doctorPhoto: '' });
 export const doctorHospitalList = persisted('doctorHospitalList', { hospitalList: [] })
 export const doctorResearchList = persisted('doctorResearchList', { researchList: [] })
-export const doctorHospital = persisted('doctorHospital', { hospitalId: {} })
+export const doctorHospital = persisted('doctorHospital', { hospitalId: {} ,hospitalLogo: {} })
 
 //Hospital Stores
 export const hospitalPatientList = persisted('hospitalPatientList', { patientList: [] })
