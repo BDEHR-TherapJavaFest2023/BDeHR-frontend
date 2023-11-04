@@ -84,6 +84,14 @@
 
     $: hospitalName = params.hospitalName;
     $: patientList = [];
+    // let searchTerm = "";
+    // $: filteredPatients = searchTerm
+    //     ? patientList.filter((patient) =>
+    //           patient.patientName
+    //               .toLowerCase()
+    //               .includes(searchTerm.toLowerCase())
+    //       )
+    //     : patientList;
 
     async function getPatientList() {
         let payload = {
@@ -117,19 +125,43 @@
 
 <main class="bg-gray-100 min-h-screen p-6">
     <header
-        class="bg-blue-400 rounded-lg p-4 flex justify-between items-center"
+        class="rounded-lg p-4 flex justify-between items-center bg-gradient-to-r from-cyan-500 to-blue-500"
     >
         <img
-            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/return.svg"
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/back-button-new.svg"
             class="h-10 w-12 transition-transform transform hover:scale-125"
             on:click={navigateBack}
         />
-        <div class="text-white">
-            <h1 class="text-4xl font-semibold mb-4">
+
+        <div class="flex items-center text-white">
+            <h1 class="text-4xl font-bold mb-4">
                 Patients in {hospitalName}
             </h1>
         </div>
     </header>
+    <div class="w-full flex flex-row">
+        <div class="w-5/6">
+            <input
+                type="text"
+                placeholder="Type Patient Name Here"
+                class="mt-3 mb-5 input input-bordered input-accent w-full"
+            />
+        </div>
+        <div class="w-1/6 ml-2 mt-3">
+            <button class="btn bg-emerald-500 hover:bg-emerald-600">
+                <img
+                    src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/search-new.svg"
+                    class="transform transition duration-300 hover:rotate-12 hover:scale-110 mr-2"
+                    alt="Search Icon"
+                    width="20"
+                    height="20"
+                    style="vertical-align: middle;"
+                />
+                search
+            </button>
+        </div>
+    </div>
+    <h1 class="mb-4 mt-4 text-3xl font-bold">Patient List:</h1>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
         {#each patientList as patient (patient.id)}

@@ -607,6 +607,10 @@
     window.location.href = `#/doctorhome/doctorPatient/${params.hospitalName}`;
   }
 
+  function goBack() {
+    window.location.href = `#/doctorhome/doctorPatient/${params.hospitalName}`;
+  }
+
   const pastDiagnosisData = [
     {
       date: "2022-05-20",
@@ -686,12 +690,31 @@
     link.download = `Test.pdf`;
     link.click();
   }
-  
 </script>
 
 <div class="p-6 bg-gray-100 min-h-screen">
-  <div class="bg-white p-6 rounded-md shadow-xl">
-    <h2 class="text-2xl font-semibold mb-4">Patient Details</h2>
+  <div
+    class="bg-white p-6 rounded-md shadow-xl"
+    style="background-image: url('https://tailwindcss.com/_next/static/media/docs-dark@tinypng.1bbe175e.png'); background-size: cover; backdrop-filter: blur(10px);"
+  >
+    <div class="flex items-center space-x-2 mb-6 mt-2">
+      <img
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/back-button-new.svg"
+        class="w-8 h-8 transform transition duration-300 hover:rotate-12 hover:scale-110"
+        alt="Email Icon"
+        on:click={goBack}
+      />
+      <p class="font-semibold">Go Back</p>
+    </div>
+    <div class="flex items-center space-x-2 mb-4 mt-4">
+      <img
+        src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/information-icon.svg"
+        class="w-8 h-8 transform transition duration-300 hover:rotate-12 hover:scale-110"
+        alt="Email Icon"
+      />
+      <p class="text-2xl font-bold">Patient Details</p>
+    </div>
+
     <div class="grid grid-cols-2 gap-4">
       <p>
         <span class="font-semibold">Name: </span>{patientData["patientName"]}
@@ -704,15 +727,15 @@
       <p>
         <span class="font-semibold">Gender: </span>{patientData["gender"]}
       </p>
-      <p><span class="font-semibold">ID: </span>{id}</p>
+      <p><span class="font-semibold">Patient ID: </span>{id}</p>
     </div>
   </div>
   <div>
     <button
-      class="mb-4 mt-4 bg-green-400 hover:bg-green-700 text-white py-2 px-4 rounded-md"
+      class="mb-4 mt-4 bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md"
       on:click={() => (showModal = true)}
     >
-      Treatment on {todayDateTime}
+      + Treatment on {todayDateTime}
     </button>
   </div>
 
