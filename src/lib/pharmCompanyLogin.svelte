@@ -48,6 +48,9 @@
 
     form.reset();
   }
+  function navigateHome() {
+        window.location.hash = `#/`;
+    }
 </script>
 
 <Toaster/>
@@ -55,6 +58,12 @@
   {#if isLoading}
     <div class="loader" />
   {:else}
+  <img
+            src="https://aaitclybvvendvuswytq.supabase.co/storage/v1/object/public/BDeHR/back-button-new.svg"
+            alt="Notification Icon"
+            class="absolute top-4 left-4 h-10 w-10 transition-transform transform hover:scale-125"
+            on:click={navigateHome}
+        />
     <div
       class="flex bg-white p-8 rounded-xl shadow-lg w-full max-w-4xl transition-transform transform hover:scale-105"
     >
