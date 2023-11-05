@@ -1,6 +1,12 @@
 import { PDFDocument, PDFPage, rgb, StandardFonts } from "pdf-lib";
 
-export async function createPDF(data, hospitalName, doctorName, hospitalLogo) {
+export async function createPDF(
+  data,
+  hospitalName,
+  doctorName,
+  hospitalLogo,
+  patientData
+) {
   const doc = await PDFDocument.create();
   const regularFont = await doc.embedFont(StandardFonts.Helvetica);
   const boldFont = await doc.embedFont(StandardFonts.HelveticaBold);
@@ -201,6 +207,29 @@ export async function createPDF(data, hospitalName, doctorName, hospitalLogo) {
         remarks: "pialBoksod",
     */
 
+  function calculateAge(dob) {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  }
+
+  const startInitialInfoY_1 = drawFieldset("Patient Info");
+  drawText("Name:", fontSize, true);
+  drawText(`${patientData["patientName"]}`);
+  drawText("Gender:", fontSize, true);
+  drawText(`${patientData["gender"]}`);
+  drawText("Age:", fontSize, true);
+  drawText(`${calculateAge(patientData["dob"])}`);
+  endFieldset(startInitialInfoY_1);
+
   const startInitialInfoY = drawFieldset("Initial Info");
   drawText("Address:", fontSize, true);
   drawText(`${data["Address"]}`);
@@ -333,13 +362,13 @@ export async function createPDF(data, hospitalName, doctorName, hospitalLogo) {
   drawText(`${data["ConfirmatoryDiagnosis"]} `);
   endFieldset(startInitialInfoY5);
 
-  const startInitialInfoY6= drawFieldset("");
+  const startInitialInfoY6 = drawFieldset("");
   drawText("Prescribed Medicine:", fontSize, true);
 
-  Object.values(data["prescribedMedicines"]).forEach((drug, index)=>{
-    drawText(`${index+1}. ${drug["name"]}`);
-  })
-  
+  Object.values(data["prescribedMedicines"]).forEach((drug, index) => {
+    drawText(`${index + 1}. ${drug["name"]}`);
+  });
+
   endFieldset(startInitialInfoY6);
 
   const startInitialInfoY7 = drawFieldset("");
